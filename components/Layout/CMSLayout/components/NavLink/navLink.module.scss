@@ -1,0 +1,21 @@
+.popoverContentWrapper{
+  background: rgba(36, 46, 46, 0.9) !important;
+}
+
+.popoverMenuContentWrapper{
+  background:  #1D4044 !important;
+}
+
+.popoverArrow{
+  background: rgba(36, 46, 46, 0.9) !important;
+  box-shadow: none !important;
+}
+
+.disabled {
+  cursor: not-allowed !important;
+  opacity: 0.4;
+  box-shadow: none !important;
+  &:hover {
+    background: none !important;
+  }
+}
