@@ -1,10 +1,10 @@
-import React, { RefObject, useEffect, useState } from 'react'
-import { Box, Divider, Flex, Stack, Text, Center, Collapse, VStack, Image } from '@chakra-ui/react'
+import { Box, Center, Divider, Flex, Image, Stack, Text, VStack } from '@chakra-ui/react'
+import { CMSPageName as PageName } from 'components/pages/CMS/constant'
 import { useRouter } from 'next/router'
+import { RefObject, useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { maxMobileWidth, maxTabletWidth } from 'theme/globalStyles'
-import { CMSApplicationPageName, CMSInformationPageName, CMSPageName as PageName } from 'components/pages/CMS/constant'
 import routes from 'routes'
+import { maxMobileWidth, maxTabletWidth } from 'theme/globalStyles'
 import NavLink from '../NavLink'
 
 interface ISidebarProps {
@@ -97,90 +97,16 @@ const SideBar = (props: ISidebarProps) => {
       <VStack className="hideScrollBar" display="flex" height="full" overflowY="scroll" paddingBottom={6} paddingX={3}>
         <Stack spacing={5} marginX={3} marginY={6} width="full">
           <NavLink
-            label={PageName.APPLICATION}
-            icon="cms-application.svg"
-            isActive={route.includes(routes.cms.applicationManagement.value)}
-            isCollapsed={isCollapsed}
-            onClick={handleToggleApplication}
-            hasChildClose={!isOpenApplication}
-            hasChildExpand={isOpenApplication}
-          />
-          <Collapse in={isOpenApplication && !isCollapsed} animateOpacity style={{ marginTop: 8 }}>
-            <Box margin={1}>
-              <NavLink
-                label={CMSApplicationPageName.APPLICANT}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.applicationManagement.applicant.value)}
-                isChild
-              />
-              <NavLink
-                label={CMSApplicationPageName.POLICY_SETTING}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.applicationManagement.policySetting.value)}
-                isChild
-              />
-            </Box>
-          </Collapse>
-          <NavLink
-            label={PageName.PROPERTY}
+            label={PageName.BOOK}
             icon="cms-property.svg"
-            {...getLinkProps(routes.cms.propertyManagement.value)}
+            {...getLinkProps(routes.cms.bookManagement.value)}
           />
           <NavLink
             label={PageName.ACCOUNT}
             icon="cms-account.svg"
             {...getLinkProps(routes.cms.accountManagement.value)}
           />
-          <NavLink
-            label={PageName.GENERAL_SETTINGS}
-            icon="cms-general.svg"
-            {...getLinkProps(routes.cms.generalSettings.value)}
-          />
-          <NavLink
-            label={PageName.INFORMATION}
-            icon="cms-owner.svg"
-            isActive={route.includes(routes.cms.ownerPortalInformation.value)}
-            isCollapsed={isCollapsed}
-            onClick={handleToggleOwnerInformation}
-            hasChildClose={!isOpenOwnerInformation}
-            hasChildExpand={isOpenOwnerInformation}
-            disabled
-          />
-          <Collapse in={isOpenOwnerInformation && !isCollapsed} animateOpacity style={{ marginTop: 8 }}>
-            <Box margin={1}>
-              <NavLink
-                label={CMSInformationPageName.OWNER}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.ownerPortalInformation.owner.value)}
-                isChild
-              />
-              <NavLink
-                label={CMSInformationPageName.FINANCIAL}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.ownerPortalInformation.financial.value)}
-                isChild
-              />
-              <NavLink
-                label={CMSInformationPageName.LEASES}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.ownerPortalInformation.lease.value)}
-                isChild
-              />
-              <NavLink
-                label={CMSInformationPageName.INVOICE}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.ownerPortalInformation.invoice.value)}
-                isChild
-              />
-              <NavLink
-                label={CMSInformationPageName.PAYMENT}
-                icon="cms-agent.svg"
-                {...getLinkProps(routes.cms.ownerPortalInformation.payment.value)}
-                isChild
-              />
-            </Box>
-          </Collapse>
-        </Stack>
+         </Stack>
       </VStack>
       <Box position="absolute" bottom={0} height={12} width="full" background="teal.900">
         <Center background="blackAlpha.200" height={12} paddingY={3.5}>

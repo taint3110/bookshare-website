@@ -5,7 +5,7 @@ import AccountSettingPage from 'components/pages/AccountSettingPage'
 const AccountSetting = () => {
   return (
     <CMSLayout title={`Account Settings | Internal Portal`} topBarTitle="Account Settings">
-      <AccountSettingPage isCMS />
+      {/* <AccountSettingPage isCMS /> */}
     </CMSLayout>
   )
 }

@@ -1,23 +1,16 @@
-import { Flex, HStack, Avatar, Text, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
-import { useStores } from 'hooks/useStores'
+import { Avatar, Flex, HStack, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react'
+import IconWithText from 'components/IconWithText'
 import truncate from 'lodash/truncate'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
-import { PLATFORM } from 'API/constants'
-import IconWithText from 'components/IconWithText'
 import routes from 'routes'
 
 const UserProfile = () => {
-  const { authStore } = useStores()
-  const { user } = authStore
-  const { name, email, avatarUrl } = user
+  const { name= '', email= '', avatarUrl = '' } = {}
   const router = useRouter()
   const { route } = router
   const isActive: boolean = route.includes(routes.cms.accountSettings.value)
 
-  function logout() {
-    authStore.clearAccessToken(PLATFORM.CMS)
-  }
   function gotoAccountSetting() {
     router.push(routes.cms.accountSettings.value)
   }
@@ -53,7 +46,7 @@ const UserProfile = () => {
             color="gray.700"
           />
         </MenuItem>
-        <MenuItem maxH="40px" onClick={logout}>
+        <MenuItem maxH="40px" onClick={() => {}}>
           <IconWithText label="Log Out" iconName="logout.svg" size={16} className="noMarginBottom" color="red.600" />
         </MenuItem>
       </MenuList>
