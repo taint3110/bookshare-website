@@ -66,7 +66,7 @@ const Header = () => {
             width={isMobile ? 162.46 : 223}
             height={isMobile ? 24 : 33}
             onClick={goHomePage}
-            iconName={'logo_with_black_color.svg'}
+            iconName={'bookshare_logo.svg'}
             className="header-logo"
           />
         </Link>

@@ -3,15 +3,15 @@ import { IFooterNavLink } from 'interfaces/navigation'
 export const usefullLinks: IFooterNavLink = {
   title: 'Useful Links',
   links: [
-    { link: 'https://livehomeroom.com/podcasts', text: 'Podcasts & News' },
-    { link: 'https://livehomeroom.com/team', text: 'Team' },
-    { link: 'https://livehomeroom.com/contact-us', text: 'Contact Us' },
-    { link: 'https://livehomeroom.com/blog', text: 'Blog' },
-    { link: 'https://livehomeroom.com/careers', text: 'Careers at HomeRoom' },
-    { link: 'https://livehomeroom.com/registered-investment-advisor', text: 'For Investment Advisors' },
-    { link: 'https://livehomeroom.com/affiliates', text: 'Affiliate Program' },
-    { link: 'https://livehomeroom.com/privacy-policy', text: 'Privacy Policy' },
-    { link: 'https://livehomeroom.com/terms-of-service', text: 'Terms of Service' }
+    // { link: 'https://github.com/taint3110/bookshare', text: 'Podcasts & News' },
+    { link: 'https://github.com/taint3110/bookshare', text: 'Team' },
+    { link: 'https://github.com/taint3110/bookshare', text: 'Contact Us' },
+    { link: 'https://github.com/taint3110/bookshare', text: 'Blog' },
+    // { link: 'https://github.com/taint3110/bookshare', text: 'Careers at HomeRoom' },
+    // { link: 'https://github.com/taint3110/bookshare', text: 'For Investment Advisors' },
+    // { link: 'https://github.com/taint3110/bookshare', text: 'Affiliate Program' },
+    { link: 'https://github.com/taint3110/bookshare', text: 'Privacy Policy' },
+    { link: 'https://github.com/taint3110/bookshare', text: 'Terms of Service' }
   ]
 }
 
@@ -31,9 +31,9 @@ export const realEstateInvestors: IFooterNavLink = {
 export const renters: IFooterNavLink = {
   title: 'Renters',
   links: [
-    { link: 'https://livehomeroom.com/pretour-scheduler', text: 'Book A Tour' },
+    { link: 'https://github.com/taint3110/bookshare', text: 'Rent some books' },
     {
-      link: 'https://livehomeroom.com/blog/co-living-connected-theres-an-app-for-that',
+      link: 'https://github.com/taint3110/bookshare',
       text: 'Tenant App on iOS or Android'
     }
   ]
@@ -48,8 +48,8 @@ export interface ISocialLink {
 }
 
 export const socialLinks: ISocialLink[] = [
-  { label: 'LinkedIn', icon: 'linkedin.svg', href: 'https://www.linkedin.com/company/33219805' },
-  { label: 'Facebook', icon: 'facebook.svg', href: 'https://www.facebook.com/livehomeroom' },
-  { label: 'Instagram', icon: 'instagram.svg', href: 'https://www.instagram.com/livehomeroom/' },
-  { label: 'Mail', icon: 'mail.svg', href: 'mailto:info@livehomeroom.com' }
+  { label: 'LinkedIn', icon: 'linkedin.svg', href: 'https://github.com/taint3110/bookshare' },
+  { label: 'Facebook', icon: 'facebook.svg', href: 'https://github.com/taint3110/bookshare' },
+  { label: 'Instagram', icon: 'instagram.svg', href: 'https://github.com/taint3110/bookshare' },
+  { label: 'Mail', icon: 'mail.svg', href: 'mailto:21521087@gm.uit.edu.com' }
 ]

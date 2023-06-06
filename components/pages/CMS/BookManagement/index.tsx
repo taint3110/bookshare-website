@@ -24,10 +24,10 @@ const BookManagement = () => {
 
   const tabsData: ITabData[] = [
     // INFO
-    // {
-    //   label: 'Book',
-    //   content: <BookList />
-    // },
+    {
+      label: 'Book',
+      content: <BookList />
+    },
     // {
     //   label: 'Series',
     //   content: <SeriesList />

@@ -28,20 +28,20 @@ const FooterMobile = () => {
         <NavigationSection>
           <VStack spacing={8} flex={0} marginTop={10}>
             <VStack spacing={4} alignItems="flex-start">
-              <a href="mailto:info@livehomeroom.com">
+              <a href="mailto:info@bookshare.com">
                 <HStack spacing={2} flexWrap="wrap">
                   <Text isTitle>General:</Text>
-                  <Text>info@livehomeroom.com</Text>
+                  <Text>info@bookshare.com</Text>
                 </HStack>
               </a>
-              <a href="mailto:invest@livehomeroom.com">
+              <a href="mailto:invest@bookshare.com">
                 <HStack spacing={2} flexWrap="wrap">
                   <Text isTitle>Investing:</Text>
-                  <Text>invest@livehomeroom.com</Text>
+                  <Text>invest@bookshare.com</Text>
                 </HStack>
               </a>
               <HStack spacing={2} alignItems="flex-start" flexWrap="wrap">
-                <Text>HomeRoom, Prairie Village, KS 66208, United States</Text>
+                <Text>BookShare, Prairie Village, KS 66208, United States</Text>
               </HStack>
             </VStack>
             <HStack spacing={4} marginTop={8} alignSelf="flex-start">
@@ -54,7 +54,7 @@ const FooterMobile = () => {
           </VStack>
         </NavigationSection>
         <CommonDivider />
-        <Box>© Copyright {dayjs().year()} HomeRoom, Inc.</Box>
+        <Box>© Copyright {dayjs().year()} BookShare, Inc.</Box>
       </Container>
     </CkBox>
   )

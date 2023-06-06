@@ -17,25 +17,25 @@ export function getMetroItems(metroList?: IMetro[]): INavLinkItem[] {
 
 export function getNavLinks(metroList?: IMetro[]): INavLink[] {
   const navLinks: INavLink[] = [
-    {
-      type: NavLink.DROPDOWN,
-      text: 'Lease A Room',
-      items: getMetroItems(metroList)
-    },
-    {
-      type: NavLink.EMPTY_DROPDOWN,
-      text: 'List Your Home',
-      link: `${process.env.FE_BASE_URL}?placeType=entire-house`
-    },
-    {
-      type: NavLink.EMPTY_DROPDOWN,
-      text: 'List Your Room',
-      link: 'https://livehomeroom.com/convert-to-roommate-living'
-    },
+    // {
+    //   type: NavLink.DROPDOWN,
+    //   text: 'Lease A Room',
+    //   items: getMetroItems(metroList)
+    // },
+    // {
+    //   type: NavLink.EMPTY_DROPDOWN,
+    //   text: 'List Your Home',
+    //   link: `${process.env.FE_BASE_URL}?placeType=entire-house`
+    // },
+    // {
+    //   type: NavLink.EMPTY_DROPDOWN,
+    //   text: 'List Your Room',
+    //   link: 'https://livehomeroom.com/convert-to-roommate-living'
+    // },
     {
       type: NavLink.BUTTON,
-      link: 'https://livehomeroom.com/invest ',
-      text: 'Invest in a property'
+      link: 'https://github.com/taint3110/bookshare ',
+      text: 'Go to cart'
     }
   ]
 

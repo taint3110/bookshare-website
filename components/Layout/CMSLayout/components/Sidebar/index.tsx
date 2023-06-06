@@ -88,7 +88,7 @@ const SideBar = (props: ISidebarProps) => {
       <Box marginX="auto" marginY={isCollapsed ? 5 : 6} paddingX={6} height={isCollapsed ? 8 : 6} textAlign="center">
         <Image
           alt="homeroom_logo.svg"
-          src={`/assets/icons/${isCollapsed ? 'homeroom_logo.svg' : 'owner_portal_logo.svg'}`}
+          src={`/assets/icons/${isCollapsed ? 'homeroom_logo.svg' : 'bookshare_logo.svg'}`}
           width={isCollapsed ? 6 : '159px'}
           height={isCollapsed ? 8 : 6}
         />

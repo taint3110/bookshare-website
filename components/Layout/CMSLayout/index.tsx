@@ -25,7 +25,7 @@ const CMSLayout = (props: ICMSLayoutProps) => {
   return (
     <>
       <Head>
-        <title>{title || 'HomeRoom | Internal Portal'}</title>
+        <title>{title || 'BookShare | Internal Portal'}</title>
         <link rel="icon" href="/favicon_black.png" />
       </Head>
       <main>
