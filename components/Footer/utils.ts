@@ -2,7 +2,7 @@ import { IMetro } from 'interfaces/metro'
 import { IFooterNavLink, INavLinkItem } from 'interfaces/navigation'
 import routes from 'routes'
 import { getValidArray } from 'utils/common'
-import { realEstateInvestors, renters } from './constants'
+import { renters } from './constants'
 
 export function getLocationsLinks(metroList?: IMetro[]): INavLinkItem[] {
   const links: INavLinkItem[] = getValidArray(metroList).map((metro: IMetro) => {

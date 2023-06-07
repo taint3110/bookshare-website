@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import routes from 'routes'
 import { getQueryValue } from 'utils/common'
+import BookList from './BookList'
 
 const BookManagement = () => {
   const router = useRouter()
