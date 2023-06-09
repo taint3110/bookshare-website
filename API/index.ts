@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import { getAuthenticateStorageKey } from 'utils/common'
-import { ETokenKey, IHeader, IServerError, PLATFORM, ServerErrorMessage } from './constants'
+import { ETokenKey, PLATFORM } from './constants'
 
 const API_URL = 'http://localhost:3001/'
 

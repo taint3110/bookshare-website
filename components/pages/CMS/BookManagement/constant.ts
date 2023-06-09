@@ -25,11 +25,6 @@ export function getHeaderList(isMobileTablet: boolean): ITableHeader[] {
           Cell
         },
         {
-          Header: 'AUTHOR',
-          accessor: 'author',
-          Cell
-        },
-        {
           Header: 'SERIES',
           accessor: 'series',
           Cell
@@ -63,11 +58,6 @@ export function getHeaderList(isMobileTablet: boolean): ITableHeader[] {
       {
         Header: 'CATEGORIES',
         accessor: 'categories',
-        Cell
-      },
-      {
-        Header: 'AUTHOR',
-        accessor: 'author',
         Cell
       },
       {

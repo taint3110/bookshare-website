@@ -18,6 +18,10 @@ const moduleExports = {
     styledComponents: true,
     emotion: true
   },
+  env: {
+    FE_BASE_URL: process.env.FE_BASE_URL,
+    API_URL: process.env.API_URL,
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,

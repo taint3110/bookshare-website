@@ -148,7 +148,7 @@ const Table = (props: ITableProps) => {
                                 <TriangleUpIcon width={2} height={2} />
                               )
                             ) : column.Header ? (
-                              <Icon iconName="three-lines.svg" size={12} />
+                              <Icon iconName="three-lines.svg" className="inline-block-icon" size={12} />
                             ) : null}
                           </span>
                         )}
