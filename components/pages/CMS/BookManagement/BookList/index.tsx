@@ -1,6 +1,7 @@
 import { Search2Icon } from '@chakra-ui/icons'
 import { Box, HStack, Input, InputGroup, InputLeftElement, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { deleteBookById } from 'API/cms/book'
+import { handleError } from 'API/error'
 import ButtonWithIcon from 'components/ButtonWithIcon'
 import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
@@ -37,20 +38,22 @@ const RoomList = () => {
   )
 
   async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
-    spinnerStore.showLoading()
-    const filter = {
-      where: {
-        title
-      },
-      offset: isReset ? 0 : pageSize * (page - 1),
-      order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
-      limit: pageSize
-    }
-    await cmsBookStore.fetchCMSBookList(filter)
-    // if (isAppliedFilter) {
-    //   setIsAppliedFilter(false)
-    // }
-    spinnerStore.hideLoading()
+    try {
+      spinnerStore.showLoading()
+      const filter = {
+        where: {
+          title
+        },
+        offset: isReset ? 0 : pageSize * (page - 1),
+        order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
+        limit: pageSize
+      }
+      await cmsBookStore.fetchCMSBookList(filter)
+      } catch (error) {
+        handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
+      } finally {
+        spinnerStore.hideLoading()
+      }
   }
 
   async function deleteRoom(): Promise<void> {
@@ -63,6 +66,8 @@ const RoomList = () => {
       }
     } catch (error) {
       toast.error('Something wrong happened')
+    } finally {
+      toast.success('Delete Room Successfully')
     }
   }
 
@@ -115,12 +120,13 @@ const RoomList = () => {
     debounce((event: { target: { value: string } }) => {
       setTitle(event?.target?.value ?? '')
     }, 1000),
-    []
+    []  
   )
 
   useEffect(() => {
     router.replace(`${routes.cms.bookManagement.value}?index=1&page=${0}`)
     fetchData(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageSize, title, sort, orderBy])
 
   return (
