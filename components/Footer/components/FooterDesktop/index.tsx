@@ -94,7 +94,9 @@ const FooterDesktop = () => {
                 </HStack>
               </a>
               <HStack spacing={2} alignItems="flex-start">
-                <Text>BookShare, Prairie Village, KS 66208, United States</Text>
+                <NextLink href="https://goo.gl/maps/XuxndNZu2BAMf6rJ7">
+                  <Text>BookShare, Prairie Village, KS 66208, United States</Text>
+                </NextLink>
               </HStack>
             </VStack>
             {/* <HStack spacing={4} marginTop={8} alignSelf="flex-start">
