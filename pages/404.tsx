@@ -3,7 +3,7 @@ import NotFoundPage from 'components/pages/NotFoundPage'
 
 const ErrorNotFoundPage = () => {
   return (
-    <MainLayout title="Homeroom | Error Page">
+    <MainLayout title="BookShare | Error Page">
       <NotFoundPage />
     </MainLayout>
   )

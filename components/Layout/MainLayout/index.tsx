@@ -20,7 +20,7 @@ const MainLayout = (props: IMainLayoutProps) => {
   return (
     <>
       <Head>
-        <title>{title || 'HomeRoom'}</title>
+        <title>{title || 'BookShare'}</title>
         <link rel="icon" href="/favicon_black.png" />
       </Head>
       <Header />

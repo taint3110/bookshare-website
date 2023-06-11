@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons'
-import { Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { ChevronDownIcon, ChevronUpIcon, PhoneIcon, Search2Icon } from '@chakra-ui/icons'
+import { Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { NavLink } from 'enums/theme'
 import { INavLink, INavLinkItem } from 'interfaces/navigation'
 import { getValidArray } from 'utils/common'
@@ -15,6 +15,16 @@ const NavbarDesktop = (props: INavbarDesktopProps) => {
   const { navLinks } = props
   return (
     <Container>
+      <InputGroup ml={40} mr={40}>
+        <InputLeftElement pointerEvents="none">
+          <Search2Icon color="gray.300" />
+        </InputLeftElement>
+        <Input
+          placeholder="ie: ShakeSpear, horror, doraemon,..."
+          _placeholder={{ opacity: 1, color: 'gray.500' }}
+          bgColor={'white'}
+        />
+      </InputGroup>
       {getValidArray(navLinks).map((navLink: INavLink, index: number) => {
         if (navLink.type === NavLink.DROPDOWN) {
           return (

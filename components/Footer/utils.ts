@@ -23,9 +23,9 @@ export function getLocationFooterLinks(metroList?: IMetro[]): IFooterNavLink {
 
 export function getTabletFooterLinks(metroList?: IMetro[]): IFooterNavLink[] {
   return [
-    {
-      ...realEstateInvestors
-    },
+    // {
+    //   ...realEstateInvestors
+    // },
     {
       ...getLocationFooterLinks(metroList)
     }
@@ -37,8 +37,8 @@ export function getDesktopFooterLinks(): IFooterNavLink[] {
     {
       ...renters
     },
-    {
-      ...realEstateInvestors
-    }
+    // {
+    //   ...realEstateInvestors
+    // }
   ]
 }

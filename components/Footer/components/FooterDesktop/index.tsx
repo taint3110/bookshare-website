@@ -15,7 +15,6 @@ import {
   NavigationSection,
   SocialButton,
   Text,
-  TextWrapper,
   Title
 } from '../../footer.styles'
 
@@ -80,33 +79,37 @@ const FooterDesktop = () => {
           </NavigationLink>
           <VStack spacing={8} flex={0} marginTop={{ md: 10, lg: 0 }}>
             <VStack spacing={4} alignItems="flex-start">
-              <a href="mailto:info@livehomeroom.com">
+              {/* <a href="mailto:info@bookshare.com"> */}
+              <a href="mailto:21521087@gm.uit.edu.com">
                 <HStack spacing={2}>
                   <Text isTitle>General:</Text>
-                  <Text>info@livehomeroom.com</Text>
+                  <Text>info@bookshare.com</Text>
                 </HStack>
               </a>
-              <a href="mailto:invest@livehomeroom.com">
+              {/* <a href="mailto:invest@bookshare.com"> */}
+              <a href="mailto:21521087@gm.uit.edu.com">
                 <HStack spacing={2}>
                   <Text isTitle>Investing:</Text>
-                  <Text>invest@livehomeroom.com</Text>
+                  <Text>invest@bookshare.com</Text>
                 </HStack>
               </a>
               <HStack spacing={2} alignItems="flex-start">
-                <Text>HomeRoom, Prairie Village, KS 66208, United States</Text>
+                <NextLink href="https://goo.gl/maps/XuxndNZu2BAMf6rJ7">
+                  <Text>BookShare, Prairie Village, KS 66208, United States</Text>
+                </NextLink>
               </HStack>
             </VStack>
-            <HStack spacing={4} marginTop={8} alignSelf="flex-start">
+            {/* <HStack spacing={4} marginTop={8} alignSelf="flex-start">
               {socialLinks.map((social: ISocialLink) => (
                 <SocialButton key={social.label} href={social.href} target="_blank">
                   <Icon size={32} iconName={social.icon} />
                 </SocialButton>
               ))}
-            </HStack>
+            </HStack> */}
           </VStack>
         </NavigationSection>
         <CommonDivider />
-        <Box>© Copyright {dayjs().year()} HomeRoom, Inc.</Box>
+        <Box>© Copyright {dayjs().year()} BookShare, Inc.</Box>
       </Container>
     </CkBox>
   )
