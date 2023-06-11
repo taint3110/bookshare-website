@@ -177,7 +177,7 @@ const BookList = () => {
             lineHeight={6}
             onClick={goToBookAddNewPage}
           >
-            + Add Metro
+            + Add Book
           </Button>
         </Box>
       </HStack>
