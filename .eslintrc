@@ -1,0 +1,113 @@
+{
+  "plugins": ["@typescript-eslint", "unused-imports", "react-hooks", "prettier"],
+  "extends": ["next", "next/core-web-vitals"],
+  "rules": {
+    "react-hooks/exhaustive-deps": "off",
+    "array-callback-return": "error",
+    "consistent-return": "error",
+    "no-else-return": ["error", { "allowElseIf": false }],
+    "no-return-assign": ["error", "always"],
+    // note you must disable the base rule as it can report incorrect errors
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"],
+    "camelcase": ["error", { "allow": ["^UNSAFE_"] }],
+    "eqeqeq": "error",
+    // 'no-explicit-any': 'error',
+    "no-floating-decimal": "error",
+    // 'no-empty-function': 'error',
+    "no-multi-spaces": "error",
+    "no-return-await": "error",
+    "no-self-compare": "error",
+    "no-throw-literal": "error",
+    "no-useless-return": "error",
+    "max-lines": ["error", 250],
+    "no-undef": "off",
+    "react/react-in-jsx-scope": "off",
+    "prettier/prettier": [
+      "warn",
+      {
+        "arrowParens": "always",
+        "semi": false,
+        "endOfLine": "lf",
+        "tabWidth": 2,
+        "useTabs": false,
+        "printWidth": 120,
+        "singleQuote": true,
+        "trailingComma": "none",
+        "bracketSpacing": true
+      }
+    ],
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports-ts": "error",
+    "unused-imports/no-unused-vars-ts": [
+      "warn",
+      { "vars": "all", "varsIgnorePattern": "^_", "args": "after-used", "argsIgnorePattern": "^_" }
+    ],
+    "import/order": [
+      "warn",
+      {
+        "groups": ["builtin", "external", "internal", ["parent", "sibling"], "index", "object"],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            //*INFO: react at top
+            "position": "before"
+          },
+          {
+            "pattern": "components/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "interfaces/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "pages/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "API/**",
+            "group": "internal"
+          },
+          {
+            //* INFO: index file in API
+            "pattern": "API",
+            "group": "internal"
+          },
+          {
+            "pattern": "utils/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "stores/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "constants/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "routes/**",
+            "group": "internal"
+          },
+          {
+            "pattern": "routes",
+            "group": "internal"
+          },
+          {
+            "pattern": "./*.scss", //scss must at bottom
+            "group": "sibling",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": ["react"],
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "newlines-between": "ignore"
+      }
+    ]
+  }
+}

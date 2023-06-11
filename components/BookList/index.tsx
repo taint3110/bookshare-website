@@ -1,0 +1,131 @@
+import { useState } from 'react'
+import {
+  Button,
+  Checkbox,
+  Container,
+  Divider,
+  Flex,
+  Grid,
+  Text,
+  Menu,
+  MenuButton,
+  MenuItemOption,
+  MenuList,
+  MenuOptionGroup,
+  Stack
+} from '@chakra-ui/react'
+import { getValidArray } from 'utils/common'
+import { IMockBook, IMockCategory, mockCategories } from './components/BookCard/mockData'
+import BookCard from './components/BookCard'
+import { ChevronDownIcon } from '@chakra-ui/icons'
+import CategoriesList from './components/CategoriesList'
+import NextLink from 'components/NextLink'
+
+const BookList = ({ books }: { books: IMockBook[] }) => {
+  const [selectedFilters, setSelectedFilters] = useState<string | string[]>([])
+  const [isFilterCheckedAll, setisFilterCheckedAll] = useState<boolean>()
+  const [selectedSort, setSelectedSort] = useState<string | string[]>()
+  const categories = getValidArray(mockCategories)
+  // isFilterCheckedAll = true
+
+  const handleFilterChange = (selectedValues: string | string[]) => {
+    setSelectedFilters(selectedValues)
+    if (selectedValues.length < categories.length) {
+      setisFilterCheckedAll(false)
+    } else if (selectedValues.length === categories.length) {
+      setisFilterCheckedAll(true)
+    }
+  }
+
+  const handleCheckAllChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = event.target
+    setisFilterCheckedAll(checked)
+    if (checked) {
+      const allOptions = categories.map((item) => item.name)
+      setSelectedFilters(allOptions)
+    } else {
+      setSelectedFilters([])
+    }
+  }
+
+  const handleSortChange = (selectedSort: string | string[]) => {
+    setSelectedSort(selectedSort)
+    switch (selectedSort) {
+      case 'lowest':
+        filteredData.sort((a, b) => (a.price || 0) - (b.price || 0))
+        break
+      case 'highest':
+        filteredData.sort((a, b) => (b.price || 0) - (a.price || 0))
+        break
+      case 'newest':
+      case 'popularity':
+        break
+    }
+  }
+
+  const filteredData =
+    selectedFilters.length === 0 || isFilterCheckedAll
+      ? books
+      : books.filter((book) => book.categories?.some((category) => selectedFilters.indexOf(category.name) >= 0))
+
+  return (
+    <Stack pl="200px" pr="200px" mt="4" mb="40">
+      <Text fontSize="sm">Choose your favorite books, and pick them up at our store at:</Text>
+      <NextLink href="https://goo.gl/maps/5qzXdqKS7sTeToJy5">
+        <Text color={'teal.600'}>BookShare, Prairie Village, KS 66208, United States</Text>
+      </NextLink>
+      <Divider m="4" />
+
+      {/* Categories Section */}
+      <CategoriesList categories={categories} />
+      <Divider m="4" />
+
+      {/* Filter Section */}
+      <Container maxW="container.2xl" p="4" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
+        <Flex justify="space-between">
+          <Menu>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Sort by
+            </MenuButton>
+            <MenuList>
+              <MenuOptionGroup type="radio" defaultValue="popularity" value={selectedSort} onChange={handleSortChange}>
+                <MenuItemOption value="popularity">Popularity</MenuItemOption>
+                <MenuItemOption value="lowest">Price - Lowest</MenuItemOption>
+                <MenuItemOption value="highest">Price - Highest</MenuItemOption>
+                <MenuItemOption value="newest">Newest</MenuItemOption>
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+          <Menu closeOnSelect={false}>
+            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              Category
+            </MenuButton>
+            <MenuList>
+              <MenuOptionGroup type="checkbox" value={selectedFilters} onChange={handleFilterChange}>
+                <Checkbox ml="3" defaultChecked isChecked={isFilterCheckedAll} onChange={handleCheckAllChanged}>
+                  All
+                </Checkbox>
+                {categories.map((category: IMockCategory, indexCategory: number) => (
+                  <MenuItemOption value={category.name} key={indexCategory}>
+                    {category.name}
+                  </MenuItemOption>
+                ))}
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+        </Flex>
+      </Container>
+
+      {/* BookList Section */}
+      <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+        {filteredData.map((book: IMockBook, indexBook: number) => (
+          <a href="/">
+            <BookCard {...book} key={indexBook} />
+          </a>
+        ))}
+      </Grid>
+    </Stack>
+  )
+}
+
+export default BookList
