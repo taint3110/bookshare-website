@@ -21,6 +21,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 const BookList = ({ books }: { books: IMockBook[] }) => {
   const [selectedFilters, setSelectedFilters] = useState<string | string[]>([])
   const [isFilterCheckedAll, setisFilterCheckedAll] = useState<boolean>()
+  const [selectedSort, setSelectedSort] = useState<string | string[]>()
   const categories = getValidArray(mockCategories)
   // isFilterCheckedAll = true
 
@@ -44,6 +45,21 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
     }
   }
 
+  const handleSortChange = (selectedSort: string | string[]) => {
+    setSelectedSort(selectedSort)
+    switch (selectedSort) {
+      case 'lowest':
+        filteredData.sort((a, b) => (a.price || 0) - (b.price || 0))
+        break
+      case 'highest':
+        filteredData.sort((a, b) => (b.price || 0) - (a.price || 0))
+        break
+      case 'newest':
+      case 'popularity':
+        break
+    }
+  }
+
   const filteredData = isFilterCheckedAll
     ? books
     : books.filter((book) => book.categories?.some((category) => selectedFilters.indexOf(category.name) >= 0))
@@ -58,7 +74,7 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
               Sort by
             </MenuButton>
             <MenuList>
-              <MenuOptionGroup type="radio" defaultValue="popularity">
+              <MenuOptionGroup type="radio" defaultValue="popularity" value={selectedSort} onChange={handleSortChange}>
                 <MenuItemOption value="popularity">Popularity</MenuItemOption>
                 <MenuItemOption value="lowest">Price - Lowest</MenuItemOption>
                 <MenuItemOption value="highest">Price - Highest</MenuItemOption>
@@ -76,7 +92,7 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
                   All
                 </Checkbox>
                 {categories.map((category: IMockCategory, indexCategory: number) => (
-                  <MenuItemOption value={category.name} key={indexCategory}>
+                  <MenuItemOption value={category.name} key={indexCategory} defaultChecked={true}>
                     {category.name}
                   </MenuItemOption>
                 ))}

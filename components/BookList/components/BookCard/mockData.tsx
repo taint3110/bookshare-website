@@ -35,8 +35,8 @@ export const mockBooks: IMockBook[] = [
   {
     title: 'My Book',
     author: ['Me Name'],
-    price: 100,
-    bonusPointPrice: 10,
+    price: 80,
+    bonusPointPrice: 8,
     bookStatus: 'unavailable',
     bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
