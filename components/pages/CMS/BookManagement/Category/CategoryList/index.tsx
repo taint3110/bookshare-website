@@ -1,5 +1,5 @@
 import { Search2Icon } from '@chakra-ui/icons'
-import { Box, HStack, Image, Input, InputGroup, InputLeftElement, Link, Text, useDisclosure } from '@chakra-ui/react'
+import { Box, HStack, Input, InputGroup, InputLeftElement, Link, Text, useDisclosure } from '@chakra-ui/react'
 import { deleteBookById } from 'API/cms/book'
 import { handleError } from 'API/error'
 import ButtonWithIcon from 'components/ButtonWithIcon'
@@ -18,9 +18,9 @@ import { toast } from 'react-toastify'
 import routes from 'routes'
 import { maxTabletWidth } from 'theme/globalStyles'
 import { getQueryValue, getValidArray } from 'utils/common'
-import { getHeaderList } from '../constant'
+import { getHeaderList } from '../../Book/BookList/constant'
 
-const BookList = () => {
+const CategoryList = () => {
   const router = useRouter()
   const pageIndex: number = getQueryValue(router, 'page', 1)
   const { cmsBookStore, spinnerStore } = useStores()
@@ -72,22 +72,22 @@ const BookList = () => {
   }
 
   function gotoPage(page: number): void {
-    router.push(`${routes.cms.bookManagement.value}?index=0&page=${page}&pageSize=${pageSize}`)
+    router.push(`${routes.cms.bookManagement.value}?index=1&page=${page}&pageSize=${pageSize}`)
     fetchData(false, page)
   }
   const pagination = { pageIndex, tableLength, gotoPage }
   const dataInTable = getValidArray(bookList).map((book: IBook) => {
-    const detailUrl: string = `${routes.cms.bookManagement.book.value(book.id)}`
+    const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
     function goToDetail() {
       router.push(
         {
-          pathname: `${routes.cms.bookManagement.book.value(book.id)}`,
+          pathname: `${routes.cms.bookManagement.book.value(book?.id ?? '')}`,
           query: {
             page: pagination.pageIndex,
             pageSize
           }
         },
-        `${routes.cms.bookManagement.book.value(book.id)}`
+        `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
       )
     }
 
@@ -98,28 +98,7 @@ const BookList = () => {
 
     return {
       ...book,
-      image: 1 ? (
-        <Image
-          objectFit="cover"
-          borderRadius="6px"
-          marginLeft={1}
-          src="/assets/images/metro_default_image.png"
-          alt="imageUrl"
-          width={8}
-          height={8}
-        />
-      ) : (
-        <Image
-          objectFit="cover"
-          marginLeft={1}
-          alignSelf="center"
-          borderRadius="6px"
-          src="/assets/images/metro_default_image.png"
-          alt="imageUrl"
-          width={8}
-          height={8}
-        />
-      ),
+      image: 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg',
       title: book?.title ?? 'Kaguya',
       category: 'Romance',  
       author: 'Aka Akasaka',
@@ -145,7 +124,7 @@ const BookList = () => {
   )
 
   useEffect(() => {
-    router.replace(`${routes.cms.bookManagement.value}?index=0&page=1`)
+    router.replace(`${routes.cms.bookManagement.value}?index=1&page=1`)
     fetchData(true)
   }, [pageSize, title, sort, orderBy])
 
@@ -192,4 +171,4 @@ const BookList = () => {
   )
 }
 
-export default observer(BookList)
+export default observer(CategoryList)

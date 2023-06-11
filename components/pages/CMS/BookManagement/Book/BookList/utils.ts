@@ -1,4 +1,6 @@
 import dayjs from 'dayjs'
+import router from 'next/router'
+import routes from 'routes'
 
 export function getAvailableDates(
   availableStartDate?: Date,
@@ -13,4 +15,8 @@ export function getAvailableDates(
           'YYYY/MM/DD'
         )}`
   return availableDates
+}
+
+export function goToBookAddNewPage(): void {
+  router.push(`${routes.cms.bookManagement.book.addNew.value}`)
 }

@@ -1,11 +1,12 @@
 import CMSLayout from 'components/Layout/CMSLayout'
+import AddNewBook from 'components/pages/CMS/BookManagement/Book/AddNewBook'
 
-const BookDetailPage = () => {
+const HouseDetailPage = () => {
   return (
     <CMSLayout title={`Book Management | Internal Portal`} topBarTitle="Book Management">
-      {/* <BookDetail /> */}
+      <AddNewBook />
     </CMSLayout>
   )
 }
 
-export default BookDetailPage
+export default HouseDetailPage

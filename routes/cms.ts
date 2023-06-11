@@ -16,7 +16,10 @@ const cmsRoutes = {
     bookManagement: {
       value: '/cms/book-management',
       book: {
-        value: (bookId: string) => `/cms/book-management/book/${bookId}`
+        value: (bookId: string) => `/cms/book-management/book/${bookId}`,
+        addNew: {
+          value: '/cms/book-management/book/add-new'
+        }
       },
       series: {
         value: (seriesId: string) => `/cms/book-management/series/${seriesId}`

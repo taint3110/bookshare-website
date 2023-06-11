@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 import routes from 'routes'
 import { getQueryValue } from 'utils/common'
 const BookList = dynamic(
-  () => import('./BookList'),
+  () => import('./Book/BookList'),
   { ssr: false }
 )
 const CategoryList = dynamic(
-  () => import('./CategoryList'),
+  () => import('./Category/CategoryList'),
   { ssr: false }
 )
 
