@@ -27,15 +27,15 @@ export function getNavLinks(metroList?: IMetro[]): INavLink[] {
     //   text: 'List Your Home',
     //   link: `${process.env.FE_BASE_URL}?placeType=entire-house`
     // },
-    // {
-    //   type: NavLink.EMPTY_DROPDOWN,
-    //   text: 'List Your Room',
-    //   link: 'https://livehomeroom.com/convert-to-roommate-living'
-    // },
     {
       type: NavLink.BUTTON,
       link: 'https://github.com/taint3110/bookshare ',
       text: 'Go to cart'
+    },
+    {
+      type: NavLink.BUTTON,
+      text: 'User Name',
+      link: '/'
     }
   ]
 

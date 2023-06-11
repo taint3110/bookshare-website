@@ -6,6 +6,7 @@ import {
   Divider,
   Flex,
   Grid,
+  Text,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -17,6 +18,8 @@ import { getValidArray } from 'utils/common'
 import { IMockBook, IMockCategory, mockCategories } from './components/BookCard/mockData'
 import BookCard from './components/BookCard'
 import { ChevronDownIcon } from '@chakra-ui/icons'
+import CategoriesList from './components/CategoriesList'
+import NextLink from 'components/NextLink'
 
 const BookList = ({ books }: { books: IMockBook[] }) => {
   const [selectedFilters, setSelectedFilters] = useState<string | string[]>([])
@@ -60,12 +63,23 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
     }
   }
 
-  const filteredData = isFilterCheckedAll
-    ? books
-    : books.filter((book) => book.categories?.some((category) => selectedFilters.indexOf(category.name) >= 0))
+  const filteredData =
+    selectedFilters.length === 0 || isFilterCheckedAll
+      ? books
+      : books.filter((book) => book.categories?.some((category) => selectedFilters.indexOf(category.name) >= 0))
 
   return (
     <Stack pl="200px" pr="200px" mt="4" mb="40">
+      <Text fontSize="sm">Choose your favorite books, and pick them up at our store at:</Text>
+      <NextLink href="https://goo.gl/maps/5qzXdqKS7sTeToJy5">
+        <Text color={'teal.600'}>BookShare, Prairie Village, KS 66208, United States</Text>
+      </NextLink>
+      <Divider m="4" />
+
+      {/* Categories Section */}
+      <CategoriesList categories={categories} />
+      <Divider m="4" />
+
       {/* Filter Section */}
       <Container maxW="container.2xl" p="4" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
         <Flex justify="space-between">
@@ -92,7 +106,7 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
                   All
                 </Checkbox>
                 {categories.map((category: IMockCategory, indexCategory: number) => (
-                  <MenuItemOption value={category.name} key={indexCategory} defaultChecked={true}>
+                  <MenuItemOption value={category.name} key={indexCategory}>
                     {category.name}
                   </MenuItemOption>
                 ))}
@@ -101,12 +115,13 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
           </Menu>
         </Flex>
       </Container>
-      <Divider m="4" />
 
       {/* BookList Section */}
       <Grid templateColumns="repeat(4, 1fr)" gap={2}>
         {filteredData.map((book: IMockBook, indexBook: number) => (
-          <BookCard {...book} key={indexBook} />
+          <a href="/">
+            <BookCard {...book} key={indexBook} />
+          </a>
         ))}
       </Grid>
     </Stack>
