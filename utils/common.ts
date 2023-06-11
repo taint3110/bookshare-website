@@ -22,3 +22,7 @@ export function getAuthenticateStorageKey(platform: PLATFORM): ETokenKey {
 export function getQueryValue(router: NextRouter, param: string = 'page', defaultValue: number = 0): number {
   return Number(get(router, `query.${param}`, defaultValue)) || defaultValue
 }
+
+export function convertQueryParamToBoolean(queryValue?: string): boolean {
+  return (queryValue ?? '').toLowerCase() === 'true'
+}

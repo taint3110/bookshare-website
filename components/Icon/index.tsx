@@ -4,8 +4,8 @@ import { SyntheticEvent } from 'react'
 export interface IIconProps {
   iconName: string
   size?: number
-  width?: number | `${number}` | undefined
-  height?: number | `${number}` | undefined
+  width?: number | `${number}`
+  height?: number | `${number}`
   alt?: string
   className?: string
   onClick?: (event?: SyntheticEvent) => void

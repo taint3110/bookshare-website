@@ -1,6 +1,6 @@
 import CMSLayout from 'components/Layout/CMSLayout'
 
-const HouseDetailPage = () => {
+const BookDetailPage = () => {
   return (
     <CMSLayout title={`Book Management | Internal Portal`} topBarTitle="Book Management">
       {/* <BookDetail /> */}
@@ -8,4 +8,4 @@ const HouseDetailPage = () => {
   )
 }
 
-export default HouseDetailPage
+export default BookDetailPage

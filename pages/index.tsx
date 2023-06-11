@@ -17,12 +17,12 @@ const ListPage = () => {
 
 export default ListPage
 
-// export async function getServerSideProps(context: { query: any }) {
-//   try {
-//     // TODO: May use later
-//     return {}
-//   } catch (error) {
-//     console.log('listing-page: getServerSideProps -> error', error)
-//     return {}
-//   }
-// }
+export async function getServerSideProps(context: { query: any }) {
+  try {
+    // TODO: May use later
+    return {}
+  } catch (error) {
+    console.log('listing-page: getServerSideProps -> error', error)
+    return {}
+  }
+}
