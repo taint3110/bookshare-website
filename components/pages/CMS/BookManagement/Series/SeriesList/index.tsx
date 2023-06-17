@@ -1,14 +1,26 @@
 import { Search2Icon } from '@chakra-ui/icons'
-import { Box, HStack, Input, InputGroup, InputLeftElement, Link, Text, useDisclosure } from '@chakra-ui/react'
-import { deleteBookById } from 'API/cms/book'
+import {
+  Box,
+  Button,
+  HStack,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
+  Text,
+  useDisclosure
+} from '@chakra-ui/react'
+import { deleteSeriesById } from 'API/cms/series'
 import { handleError } from 'API/error'
 import ButtonWithIcon from 'components/ButtonWithIcon'
 import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
+import dayjs from 'dayjs'
 import { useStores } from 'hooks/useStores'
-import { IBook } from 'interfaces/book'
+import { ISeries } from 'interfaces/series'
 import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
@@ -18,24 +30,26 @@ import { toast } from 'react-toastify'
 import routes from 'routes'
 import { maxTabletWidth } from 'theme/globalStyles'
 import { getQueryValue, getValidArray } from 'utils/common'
-import { getHeaderList } from '../../Book/BookList/constant'
+import { getHeaderList } from './constant'
+import { goToSeriesAddNewPage } from './utils'
 
-const CategoryList = () => {
+const SeriesList = () => {
   const router = useRouter()
   const pageIndex: number = getQueryValue(router, 'page', 1)
-  const { cmsBookStore, spinnerStore } = useStores()
+  const { cmsSeriesStore, spinnerStore } = useStores()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const isNotDesktop: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
-  const { cmsBookList } = cmsBookStore
-  const { results: bookList, totalCount: tableLength } = cmsBookList
+  const { cmsSeriesList } = cmsSeriesStore
+  const { results: seriesList, totalCount: tableLength } = cmsSeriesList
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const [sort, setSort] = useState('title')
   const [orderBy, setOrderBy] = useState(1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = (
-    <Text>Are you sure to delete this room?{<br />}This action can not be undo</Text>
+    <Text>Are you sure to delete this series?{<br />}This action can not be undo</Text>
   )
+  const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
 
   async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
     try {
@@ -48,63 +62,81 @@ const CategoryList = () => {
         order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
         limit: pageSize
       }
-      await cmsBookStore.fetchCMSBookList(filter)
-      } catch (error) {
-        handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
-      } finally {
-        spinnerStore.hideLoading()
-      }
+      await cmsSeriesStore.fetchCMSSeriesList(filter)
+    } catch (error) {
+      handleError(error as Error, 'components/pages/CMS/BookManagement/SeriesList', 'fetchData')
+    } finally {
+      spinnerStore.hideLoading()
+    }
   }
 
-  async function deleteBook(): Promise<void> {
+  async function deleteSeries(): Promise<void> {
     try {
       if (targetId) {
-        await deleteBookById(targetId)
+        await deleteSeriesById(targetId)
         closeConfirm()
         fetchData()
-        toast.success('Delete Room Successfully')
+        toast.success('Delete Series Successfully')
       }
     } catch (error) {
       toast.error('Something wrong happened')
-    } finally {
-      toast.success('Delete Room Successfully')
     }
   }
 
   function gotoPage(page: number): void {
-    router.push(`${routes.cms.bookManagement.value}?index=2&page=${page}&pageSize=${pageSize}`)
+    router.push(`${routes.cms.bookManagement.value}?index=1&page=${page}&pageSize=${pageSize}`)
     fetchData(false, page)
   }
+
   const pagination = { pageIndex, tableLength, gotoPage }
-  const dataInTable = getValidArray(bookList).map((book: IBook) => {
-    const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
+  const dataInTable = getValidArray(seriesList).map((series: ISeries) => {
+    const detailUrl: string = `${routes.cms.bookManagement.series.value(series?.id ?? '')}`
     function goToDetail() {
       router.push(
         {
-          pathname: `${routes.cms.bookManagement.book.value(book?.id ?? '')}`,
+          pathname: `${routes.cms.bookManagement.series.value(series?.id ?? '')}`,
           query: {
             page: pagination.pageIndex,
             pageSize
           }
         },
-        `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
+        `${routes.cms.bookManagement.series.value(series?.id ?? '')}`
       )
     }
 
     function handleDelete(): void {
       onConfirm()
-      setTargetId(book?.id ?? '')
+      setTargetId(series?.id ?? '')
     }
 
     return {
-      ...book,
-      image: 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg',
-      title: book?.title ?? 'Kaguya',
+      ...series,
+      image: 1 ? (
+        <Image
+          objectFit="cover"
+          borderRadius="6px"
+          marginLeft={1}
+          src={mockImage}
+          alt="imageUrl"
+          width={8}
+          height={8}
+        />
+      ) : (
+        <Image
+          objectFit="cover"
+          marginLeft={1}
+          alignSelf="center"
+          borderRadius="6px"
+          src={mockImage}
+          alt="imageUrl"
+          width={8}
+          height={8}
+        />
+      ),
+      title: series?.title ?? 'Kaguya',
       category: 'Romance',
-      author: 'Aka Akasaka',
-      series: 'Kaguya-sama: Love is War',
-      price: book?.price ?? 100000,
-      status: 'Available',
+      author: getValidArray(series?.author).join(', '),
+      releaseDate: dayjs(series?.releaseDate).format('YYYY/MM/DD') ?? new Date(),
       actions: (
         <HStack width="62px" cursor="pointer" marginLeft="auto">
           <Link href={detailUrl} marginTop="5px">
@@ -124,7 +156,7 @@ const CategoryList = () => {
   )
 
   useEffect(() => {
-    router.replace(`${routes.cms.bookManagement.value}?index=2&page=1`)
+    router.replace(`${routes.cms.bookManagement.value}?index=1&page=1`)
     fetchData(true)
   }, [pageSize, title, sort, orderBy])
 
@@ -135,10 +167,22 @@ const CategoryList = () => {
           <InputLeftElement pointerEvents="none">
             <Search2Icon color="gray.400" />
           </InputLeftElement>
-          <Input type="search" placeholder="Search book by Title" onChange={changeName} />
+          <Input type="search" placeholder="Search series by Title" onChange={changeName} />
         </InputGroup>
         <Box borderRadius="6px" bg="white">
           <ButtonWithIcon label="Filter" iconName="filter.svg" size={16} border="1px solid #E2E8F0" color="gray.800" />
+        </Box>
+        <Box display="flex" justifyContent="flex-end" width="100%">
+          <Button
+            padding="2"
+            paddingInline="4"
+            color="white"
+            colorScheme="teal"
+            lineHeight={6}
+            onClick={goToSeriesAddNewPage}
+          >
+            + Add Series
+          </Button>
         </Box>
       </HStack>
       <Table
@@ -153,16 +197,16 @@ const CategoryList = () => {
         subComponent={getSubComponent(getHeaderList(false), 3)}
       />
       <ConfirmModal
-        titleText="Delete Room"
+        titleText="Delete series"
         bodyText={confirmModalContent}
-        cancelButtonText="No, keep this room"
+        cancelButtonText="No, keep this series"
         confirmButtonText="Yes, Delete"
         isOpen={isConfirming}
         onClose={closeConfirm}
-        onClickAccept={deleteBook}
+        onClickAccept={deleteSeries}
       />
     </Box>
   )
 }
 
-export default observer(CategoryList)
+export default observer(SeriesList)

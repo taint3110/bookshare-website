@@ -30,3 +30,15 @@ export async function deleteBookById(id: string): Promise<void> {
     throw new Error(errorMessage)
   }
 }
+
+export async function createNewBook(book: IBook): Promise<void> {
+  try {
+    return api.post(`/staff/books`, book, {
+      headers: auth(PLATFORM.CMS)
+    })
+  } catch (error) {
+    const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
+    handleError(error as Error, 'API/cms/book', 'createNewBook')
+    throw new Error(errorMessage)
+  }
+}

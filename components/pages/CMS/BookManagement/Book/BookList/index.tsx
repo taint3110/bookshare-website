@@ -8,7 +8,7 @@ import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { useStores } from 'hooks/useStores'
-import { IBook } from 'interfaces/book'
+import { IBookWithRelations } from 'interfaces/book'
 import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
@@ -35,8 +35,9 @@ const BookList = () => {
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = (
-    <Text>Are you sure to delete this room?{<br />}This action can not be undo</Text>
+    <Text>Are you sure to delete this Book?{<br />}This action can not be undo</Text>
   )
+  const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
 
   async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
     try {
@@ -50,25 +51,23 @@ const BookList = () => {
         limit: pageSize
       }
       await cmsBookStore.fetchCMSBookList(filter)
-      } catch (error) {
-        handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
-      } finally {
-        spinnerStore.hideLoading()
-      }
+    } catch (error) {
+      handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
+    } finally {
+      spinnerStore.hideLoading()
+    }
   }
 
-  async function deleteRoom(): Promise<void> {
+  async function deleteBook(): Promise<void> {
     try {
       if (targetId) {
         await deleteBookById(targetId)
         closeConfirm()
         fetchData()
-        toast.success('Delete Room Successfully')
+        toast.success('Delete Book Successfully')
       }
     } catch (error) {
       toast.error('Something wrong happened')
-    } finally {
-      toast.success('Delete Room Successfully')
     }
   }
 
@@ -77,7 +76,7 @@ const BookList = () => {
     fetchData(false, page)
   }
   const pagination = { pageIndex, tableLength, gotoPage }
-  const dataInTable = getValidArray(bookList).map((book: IBook) => {
+  const dataInTable = getValidArray(bookList).map((book: IBookWithRelations) => {
     const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
     function goToDetail() {
       router.push(
@@ -104,7 +103,7 @@ const BookList = () => {
           objectFit="cover"
           borderRadius="6px"
           marginLeft={1}
-          src="/assets/images/metro_default_image.png"
+          src={mockImage}
           alt="imageUrl"
           width={8}
           height={8}
@@ -115,16 +114,16 @@ const BookList = () => {
           marginLeft={1}
           alignSelf="center"
           borderRadius="6px"
-          src="/assets/images/metro_default_image.png"
+          src={mockImage}
           alt="imageUrl"
           width={8}
           height={8}
         />
       ),
       title: book?.title ?? 'Kaguya',
-      category: 'Romance',  
+      category: 'Romance',
       author: 'Aka Akasaka',
-      series: 'Kaguya-sama: Love is War',
+      series: book?.series?.title ?? '',
       price: book?.price ?? 100000,
       status: 'Available',
       actions: (
@@ -142,7 +141,7 @@ const BookList = () => {
     debounce((event: { target: { value: string } }) => {
       setTitle(event?.target?.value ?? '')
     }, 1000),
-    []  
+    []
   )
 
   useEffect(() => {
@@ -160,13 +159,7 @@ const BookList = () => {
           <Input type="search" placeholder="Search book by Title" onChange={changeName} />
         </InputGroup>
         <Box borderRadius="6px" bg="white">
-          <ButtonWithIcon
-            label='Filter'
-            iconName='filter.svg'
-            size={16}
-            border='1px solid #E2E8F0'
-            color='gray.800'
-          />
+          <ButtonWithIcon label="Filter" iconName="filter.svg" size={16} border="1px solid #E2E8F0" color="gray.800" />
         </Box>
         <Box display="flex" justifyContent="flex-end" width="100%">
           <Button
@@ -193,13 +186,13 @@ const BookList = () => {
         subComponent={getSubComponent(getHeaderList(false), 3)}
       />
       <ConfirmModal
-        titleText="Delete Room"
+        titleText="Delete Book"
         bodyText={confirmModalContent}
-        cancelButtonText="No, keep this room"
+        cancelButtonText="No, keep this book"
         confirmButtonText="Yes, Delete"
         isOpen={isConfirming}
         onClose={closeConfirm}
-        onClickAccept={deleteRoom}
+        onClickAccept={deleteBook}
       />
     </Box>
   )

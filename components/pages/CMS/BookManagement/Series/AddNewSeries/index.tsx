@@ -15,11 +15,9 @@ import {
 } from '@chakra-ui/react'
 import { createNewBook } from 'API/cms/book'
 import { handleError } from 'API/error'
-import ChakraInputDropdown from 'components/ChakraInputDropdown'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
 import { EBookConditionEnum, EBookCoverEnum, EBookStatusEnum } from 'enums/book'
-import { EZIndexLayer } from 'enums/theme'
 import { useStores } from 'hooks/useStores'
 import { IBook } from 'interfaces/book'
 import capitalize from 'lodash/capitalize'
@@ -31,8 +29,7 @@ import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import CustomDatePicker from './components/CustomDatepicker'
-import { IBookForm } from './constants'
-import { getOptionsSelect, mapAuthor, redirect } from './utils'
+import { mapAuthor, redirect } from './utils'
 
 const AddNewBook = () => {
   const methods = useForm({
@@ -40,7 +37,6 @@ const AddNewBook = () => {
   })
   const router = useRouter()
   const { spinnerStore, cmsSeriesStore } = useStores()
-  const { cmsSeriesList } = cmsSeriesStore
   const { isLoading } = spinnerStore
   const {
     handleSubmit,
@@ -53,7 +49,7 @@ const AddNewBook = () => {
   const fromDate = useWatch({ control, name: 'availableStartDate', defaultValue: new Date() })
   const toDate = useWatch({ control, name: 'availableEndDate', defaultValue: new Date() })
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
-  const isFormDirty: boolean = isDirty
+  const isFormDirty = isDirty
 
   function onCancel(): void {
     if (isDirty && !isSubmitSuccessful) {
@@ -63,11 +59,10 @@ const AddNewBook = () => {
     }
   }
 
-  async function onSubmit(data: IBookForm): Promise<void> {
+  async function onSubmit(data: IBook): Promise<void> {
     spinnerStore.showLoading()
-    console.log(data)
     try {
-      const formattedData: IBook = {
+      const formattedData = {
         ...omit(data, 'series'),
         availableStartDate: fromDate,
         availableEndDate: toDate,
@@ -77,8 +72,7 @@ const AddNewBook = () => {
         bookStatus: data?.bookStatus ?? EBookStatusEnum.AVAILABLE,
         author: mapAuthor(String(data?.author)),
         price: Number(data?.price),
-        bonusPointPrice: Number(data?.bonusPointPrice),
-        seriesId: String(data?.series?.value ?? '')
+        bonusPointPrice: Number(data?.bonusPointPrice)
       }
       await createNewBook(formattedData)
       toast.success('Create book successfully!')
@@ -151,12 +145,7 @@ const AddNewBook = () => {
               width="full"
             >
               <FormInput name="title" label="Title" placeholder="Enter Title" />
-              <ChakraInputDropdown
-                zIndex={EZIndexLayer.FILTER_BAR}
-                name="series"
-                label="Series"
-                optionsData={getOptionsSelect(cmsSeriesList)}
-              />
+              <FormInput name="series" label="Series" placeholder="Enter Series" isRequired={false} />
               <FormInput name="author" label="Authors" placeholder="Enter Authors" />
               <FormInput name="price" type="number" label="Price" placeholder="Enter Price" />
               <FormInput
@@ -321,4 +310,4 @@ const AddNewBook = () => {
   )
 }
 
-export default observer(AddNewBook) 
+export default observer(AddNewBook)

@@ -22,11 +22,17 @@ const cmsRoutes = {
         }
       },
       series: {
-        value: (seriesId: string) => `/cms/book-management/series/${seriesId}`
+        value: (seriesId: string) => `/cms/book-management/series/${seriesId}`,
+        addNew: {
+          value: '/cms/book-management/series/add-new'
+        }
       },
       category: {
-        value: (categoryId: string) => `/cms/book-management/category/${categoryId}`
-      },
+        value: (categoryId: string) => `/cms/book-management/category/${categoryId}`,
+        addNew: {
+          value: '/cms/book-management/category/add-new'
+        }
+      }
     },
     accountManagement: {
       value: '/cms/account-management',
@@ -41,7 +47,7 @@ const cmsRoutes = {
         detail: {
           value: (orderId: string) => `/cms/order-management/order/detail/${orderId}`
         }
-      },
+      }
     }
   }
 }

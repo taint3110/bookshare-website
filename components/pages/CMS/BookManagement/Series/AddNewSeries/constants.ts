@@ -1,7 +1,5 @@
 import { ITableHeader } from 'components/Table'
 import Cell from 'components/Table/components/ExpandableCell'
-import { IBook } from 'interfaces/book'
-import { IOption } from 'interfaces/common'
 
 export function getTenantHeaderList(isMobileTablet: boolean): ITableHeader[] {
   const headers: ITableHeader[] = isMobileTablet
@@ -96,7 +94,3 @@ export const subHeaderList: ITableHeader[] = [
     accessor: 'actions'
   }
 ]
-
-export interface IBookForm extends IBook {
-  series: IOption
-}

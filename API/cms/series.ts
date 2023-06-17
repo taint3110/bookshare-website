@@ -6,9 +6,9 @@ import get from 'lodash/get'
 import { PaginationList } from 'types'
 import { IFilter } from 'types/query'
 
-export async function getCMSSeries(filter: IFilter<ISeries>): Promise<ISeries[]> {
+export async function getCMSSeries(filter: IFilter<ISeries>): Promise<PaginationList<ISeries>> {
   try {
-    const response = await api.get(`/staff/series?filter=${JSON.stringify(filter)}`, {
+    const response = await api.get(`/staff/series/paginate?filter=${JSON.stringify(filter)}`, {
       headers: auth(PLATFORM.CMS)
     })
     return response.data

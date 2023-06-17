@@ -1,4 +1,3 @@
-import { getValidArray } from 'utils/common';
 import { getCMSSeries } from 'API/cms/series'
 import { handleError } from 'API/error'
 import { ISeries } from 'interfaces/series'
@@ -21,9 +20,8 @@ class CMSSeriesStore {
 
   async fetchCMSSeriesList(filter: IFilter<ISeries> = {}) {
     try {
-      const seriesList: ISeries[] = await getCMSSeries(filter)
-      this.cmsSeriesList.results = getValidArray(seriesList)
-      this.cmsSeriesList.totalCount = getValidArray(seriesList).length
+      const seriesList: PaginationList<ISeries> = await getCMSSeries(filter)
+      this.cmsSeriesList = seriesList
     } catch (error) {
       handleError(error as Error, 'stores/CMSSeriesStore.ts', 'fetchCMSSeriesList')
     }

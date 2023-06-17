@@ -20,23 +20,13 @@ export function getHeaderList(isMobileTablet: boolean): ITableHeader[] {
           Cell
         },
         {
-          Header: 'CATEGORIES',
-          accessor: 'categories',
+          Header: 'AUTHOR',
+          accessor: 'author',
           Cell
         },
         {
-          Header: 'SERIES',
-          accessor: 'series',
-          Cell
-        },
-        {
-          Header: 'PRICE',
-          accessor: 'price',
-          Cell
-        },
-        {
-          Header: 'STATUS',
-          accessor: 'status',
+          Header: 'RELEASE DATE',
+          accessor: 'releaseDate',
           Cell
         },
         {
@@ -56,23 +46,13 @@ export function getHeaderList(isMobileTablet: boolean): ITableHeader[] {
           Cell
         },
         {
-          Header: 'CATEGORIES',
-          accessor: 'categories',
+          Header: 'AUTHOR',
+          accessor: 'author',
           Cell
         },
         {
-          Header: 'SERIES',
-          accessor: 'series',
-          Cell
-        },
-        {
-          Header: 'PRICE',
-          accessor: 'price',
-          Cell
-        },
-        {
-          Header: 'STATUS',
-          accessor: 'status',
+          Header: 'RELEASE DATE',
+          accessor: 'releaseDate',
           Cell
         },
         {

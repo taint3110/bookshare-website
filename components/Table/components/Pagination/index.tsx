@@ -25,7 +25,8 @@ const Pagination = (props: IPaginationProps) => {
   const pageSizeOptions: number[] = [5, 10, 15, 20, 40]
 
   const numberOfPages: number = Math.ceil(tableLength / pageSize)
-
+  console.log(tableLength)
+  console.log(pageSize)
   const truncatedPagination: string[] = truncatePagination(Number(pageIndex), Number(numberOfPages))
 
   function goPreviousPage(): void {
@@ -87,7 +88,7 @@ const Pagination = (props: IPaginationProps) => {
           borderColor="gray.200"
           paddingX={{ base: 6, md: 2 }}
           marginRight={{ base: 0, md: 2 }}
-          disabled={pageIndex === 1}
+          isDisabled={pageIndex === 1}
           onClick={goPreviousPage}
           color={{ base: 'white', md: 'gray.800' }}
           _hover={{ backgroundColor: { base: 'teal.600', md: 'unset' } }}
@@ -126,7 +127,7 @@ const Pagination = (props: IPaginationProps) => {
           marginLeft={{ base: 4, md: 0 }}
           background={{ base: 'teal.500', md: 'gray.50' }}
           borderColor="gray.200"
-          disabled={pageIndex === numberOfPages}
+          isDisabled={pageIndex === numberOfPages}
           onClick={goNextPage}
           color={{ base: 'white', md: 'gray.800' }}
           _hover={{ backgroundColor: { base: 'teal.600', md: 'unset' } }}
