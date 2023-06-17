@@ -6,7 +6,29 @@ export interface IMockBook {
   bookStatus?: string
   bookImages?: string
   categories?: IMockCategory[]
+  condition: EBookConditionEnum
+  cover: EBookCoverEnum
 }
+
+export enum EBookStatusEnum {
+  AVAILABLE = 'available',
+  UNAVAILABLE = 'unavailable',
+  RENTED = 'rented'
+}
+
+export enum EBookCoverEnum {
+  SOFT = 'soft',
+  HARD = 'hard'
+}
+
+export enum EBookConditionEnum {
+  NEW = 'new',
+  OLD = 'old',
+  DAMAGED = 'damaged'
+}
+
+export const MockBookConditions = Object.values(EBookConditionEnum)
+export const MockBookCovers = Object.values(EBookCoverEnum)
 
 export interface IMockCategory {
   name: string
@@ -30,7 +52,9 @@ export const mockBooks: IMockBook[] = [
         name: 'manga',
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
-    ]
+    ],
+    condition: EBookConditionEnum.NEW,
+    cover: EBookCoverEnum.HARD
   },
   {
     title: 'My Book',
@@ -48,7 +72,9 @@ export const mockBooks: IMockBook[] = [
         name: 'manga',
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
-    ]
+    ],
+    condition: EBookConditionEnum.DAMAGED,
+    cover: EBookCoverEnum.SOFT
   }
 ]
 
@@ -78,9 +104,3 @@ export const mockCategories: IMockCategory[] = [
     image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
   }
 ]
-
-export enum EBookStatusEnum {
-  AVAILABLE = 'available',
-  UNAVAILABLE = 'unavailable',
-  RENTED = 'rented'
-}
