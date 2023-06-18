@@ -85,7 +85,7 @@ export const mockBooks: IMockBook[] = [
     bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
-        name: 'textbook',
+        name: 'horror',
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       },
       {
@@ -129,7 +129,7 @@ export const mockBooks: IMockBook[] = [
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       },
       {
-        name: 'manga',
+        name: 'cooking',
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
     ],
@@ -149,7 +149,7 @@ export const mockBooks: IMockBook[] = [
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       },
       {
-        name: 'manga',
+        name: 'cooking',
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
     ],
@@ -193,7 +193,7 @@ export const mockBooks: IMockBook[] = [
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
     ],
-    condition: EBookConditionEnum.DAMAGED,
+    condition: EBookConditionEnum.OLD,
     cover: EBookCoverEnum.SOFT
   },
   {
@@ -213,7 +213,7 @@ export const mockBooks: IMockBook[] = [
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
     ],
-    condition: EBookConditionEnum.NEW,
+    condition: EBookConditionEnum.OLD,
     cover: EBookCoverEnum.HARD
   },
   {
@@ -253,7 +253,7 @@ export const mockBooks: IMockBook[] = [
         image: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg'
       }
     ],
-    condition: EBookConditionEnum.DAMAGED,
+    condition: EBookConditionEnum.OLD,
     cover: EBookCoverEnum.SOFT
   },
   {
@@ -300,31 +300,27 @@ export const mockCategories: IMockCategory[] = [
     image: 'https://bizweb.dktcdn.net/100/477/947/products/tv-1.jpg?v=1685157952070'
   },
   {
-    name: 'cooking',
-    image: 'https://m.media-amazon.com/images/I/81r0N5Q1ifL._AC_UF1000,1000_QL80_.jpg'
-  },
-  {
-    name: 'comedy',
-    image: 'https://cdn-amz.woka.io/images/I/71vmpcJWq7L.jpg'
-  },
-  {
-    name: 'horror',
-    image: 'https://content.wepik.com/statics/5394216/preview-page0.jpg'
-  },
-  {
-    name: 'detective',
-    image: 'https://beetifulbookcovers.com/wp-content/uploads/2017/10/LondonDetective.jpg'
-  },
-  {
-    name: 'manga',
-    image: 'https://cdn-amz.woka.io/images/I/91D07epNE9L.jpg'
-  },
-  {
-    name: 'textbook',
-    image: 'https://bizweb.dktcdn.net/100/477/947/products/tv-1.jpg?v=1685157952070'
+    name: 'technology',
+    image: 'https://dcassetcdn.com/design_img/3662268/71899/71899_21031517_3662268_52ca5b0e_thumbnail.png'
   },
   {
     name: 'cooking',
     image: 'https://m.media-amazon.com/images/I/81r0N5Q1ifL._AC_UF1000,1000_QL80_.jpg'
+  },
+  {
+    name: 'selfhelp',
+    image: 'https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcROEPlwnazgd6XynLAsFo0-YW51K-kBFn_c1zYMAjYk46UM7txQ'
+  },
+  {
+    name: 'religous',
+    image: 'https://www.creativeparamita.com/wp-content/uploads/2020/05/The-Power-of-Prayer-1.jpg'
+  },
+  {
+    name: 'philosophy',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTlZSVkAOnrYDl-5vsASEGRVgTZwejWaUxeQ&usqp=CAU'
+  },
+  {
+    name: 'fitness',
+    image: 'https://m.media-amazon.com/images/I/51BnS3spI8L.jpg'
   }
 ]

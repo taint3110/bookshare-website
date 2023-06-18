@@ -30,7 +30,15 @@ import CategoriesList from './components/CategoriesList'
 import NextLink from 'components/NextLink'
 import Pagination from 'components/BookList/components/Pagination'
 
-const BookList = ({ books }: { books: IMockBook[] }) => {
+export interface IBookListProps {
+  books: IMockBook[]
+  pageSize: number
+  listLength: number
+  showGoToPage?: boolean
+}
+
+const BookList = (props: IBookListProps) => {
+  const { books, pageSize = 12, listLength, showGoToPage = false } = props
   // Filter for categories
   const [selectedCategories, setSelectedCategories] = useState<string | string[]>([])
   const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>()
@@ -128,9 +136,11 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
       ? books
       : books.filter(
           (book) =>
-            book.categories?.some((category) => selectedCategories.indexOf(category.name) >= 0) &&
-            selectedConditions.indexOf(book.condition.toString()) >= 0 &&
-            selectedCovers.indexOf(book.cover.toString()) >= 0
+            (selectedCategories.length === 0
+              ? true
+              : book.categories?.some((category) => selectedCategories.indexOf(category.name) >= 0)) &&
+            (selectedConditions.length === 0 ? true : selectedConditions.indexOf(book.condition.toString()) >= 0) &&
+            (selectedCovers.length === 0 ? true : selectedCovers.indexOf(book.cover.toString()) >= 0)
         )
 
   return (
@@ -228,20 +238,25 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
           </Flex>
         </Flex>
       </Container>
-
       {/* BookList Section */}
-      <Grid templateColumns="repeat(4, 1fr)" gap={2}>
-        {filteredData.map((book: IMockBook, indexBook: number) => (
-          <a href="/">
-            <BookCard {...book} key={indexBook} />
-          </a>
-        ))}
-      </Grid>
+      {filteredData.length > 0 ? (
+        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+          {filteredData.map((book: IMockBook, indexBook: number) => (
+            <a href="/">
+              <BookCard {...book} key={indexBook} />
+            </a>
+          ))}
+        </Grid>
+      ) : (
+        <Center>
+          <Text>No book available!</Text>
+        </Center>
+      )}
       <Center mt={8}>
         <Pagination
-          pagination={{ pageIndex: 1, tableLength: books.length, gotoPage: () => {} }}
+          pagination={{ pageIndex: 1, tableLength: listLength, gotoPage: () => {} }}
           showPageSize={false}
-          pageSize={12}
+          pageSize={pageSize}
         />
       </Center>
     </Stack>

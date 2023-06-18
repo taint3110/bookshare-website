@@ -9,7 +9,7 @@ const books = mockBooks
 const ListPage = () => {
   return (
     <MainLayout title="BookShare | Landing Page">
-      <BookList books={[...books]} />
+      <BookList books={[...books]} pageSize={12} listLength={books.length} />
     </MainLayout>
   )
 }
