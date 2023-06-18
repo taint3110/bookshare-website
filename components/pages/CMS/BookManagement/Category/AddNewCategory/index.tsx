@@ -1,19 +1,16 @@
 /* eslint-disable max-lines */
-import { Button, Divider, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
-import { createNewSeries } from 'API/cms/series'
+import { Button, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
+import { createNewCategory } from 'API/cms/category'
 import { handleError } from 'API/error'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
 import { useStores } from 'hooks/useStores'
-import { ISeries } from 'interfaces/series'
-import omit from 'lodash/omit'
+import { ICategory } from 'interfaces/category'
 import { observer } from 'mobx-react'
-import { createElement, forwardRef, useEffect } from 'react'
-import DatePicker from 'react-datepicker'
-import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
+import { useEffect } from 'react'
+import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import CustomDatePicker from './components/CustomDatepicker'
-import { mapAuthor, redirect } from './utils'
+import { redirect } from './utils'
 
 const AddNewSeries = () => {
   const methods = useForm({
@@ -25,11 +22,9 @@ const AddNewSeries = () => {
     handleSubmit,
     formState: { isSubmitting, isDirty, isSubmitSuccessful },
     control,
-    reset,
-    setValue
+    reset
   } = methods
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
-  const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
   const isFormDirty = isDirty
 
   function onCancel(): void {
@@ -40,21 +35,18 @@ const AddNewSeries = () => {
     }
   }
 
-  async function onSubmit(data: ISeries): Promise<void> {
+  async function onSubmit(data: ICategory): Promise<void> {
     spinnerStore.showLoading()
     try {
       const formattedData = {
-        ...omit(data, 'series'),
-        title: data?.title || '',
-        author: mapAuthor(String(data?.author)),
-        description: data?.description || '',
-        releaseDate
+        name: data?.name || '',
+        description: data?.description || ''
       }
-      await createNewSeries(formattedData)
-      toast.success('Create series successfully!')
+      await createNewCategory(formattedData)
+      toast.success('Create category successfully!')
     } catch (error) {
-      toast.error('Create series failed!')
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Series/AddNewSeries', 'onSubmit')
+      toast.error('Create category failed!')
+      handleError(error as Error, 'components/pages/CMS/BookManagement/Category/AddNewSeries', 'onSubmit')
     } finally {
       spinnerStore.hideLoading()
     }
@@ -70,7 +62,7 @@ const AddNewSeries = () => {
         <VStack padding={6} paddingInline={{ base: 6, lg: 8 }} paddingStart={{ base: '27px' }}>
           <HStack justifyContent="space-between" width="full">
             <Text fontSize="lg" fontWeight="600" color="gray.700" marginBottom={2}>
-              Create new series
+              Create new category
             </Text>
             <HStack spacing={4}>
               <Button
@@ -107,8 +99,7 @@ const AddNewSeries = () => {
               templateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
               width="full"
             >
-              <FormInput name="title" label="Title" placeholder="Enter Title" />
-              <FormInput name="author" label="Authors" placeholder="Enter Authors" />
+              <FormInput name="name" label="Name" placeholder="Enter Name" />
               <GridItem colSpan={{ base: 3, lg: 2 }}>
                 <FormInput name="description" label="Description">
                   <Controller
@@ -120,28 +111,7 @@ const AddNewSeries = () => {
                   />
                 </FormInput>
               </GridItem>
-              <GridItem colSpan={{ md: 2, lg: 1 }} width="full">
-                <FormInput name="releaseDate" label="Release Date">
-                  <Controller
-                    name="releaseDate"
-                    control={control}
-                    rules={{ required: false }}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        selected={releaseDate}
-                        onChange={(date: Date | null) => {
-                          setValue('releaseDate', date, { shouldDirty: true })
-                        }}
-                        value={releaseDate}
-                        customInput={createElement(forwardRef(CustomDatePicker))}
-                      />
-                    )}
-                  />
-                </FormInput>
-              </GridItem>
             </Grid>
-            <Divider borderColor="gray.200" borderBottomWidth="2px" />
           </VStack>
         </VStack>
       </form>

@@ -96,7 +96,3 @@ export const subHeaderList: ITableHeader[] = [
     accessor: 'actions'
   }
 ]
-
-export interface IBookForm extends IBook {
-  series: IOption
-}

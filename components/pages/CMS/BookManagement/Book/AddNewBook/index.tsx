@@ -31,7 +31,6 @@ import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import CustomDatePicker from './components/CustomDatepicker'
-import { IBookForm } from './constants'
 import { getOptionsSelect, mapAuthor, redirect } from './utils'
 
 const AddNewBook = () => {
@@ -63,12 +62,11 @@ const AddNewBook = () => {
     }
   }
 
-  async function onSubmit(data: IBookForm): Promise<void> {
+  async function onSubmit(data: IBook): Promise<void> {
     spinnerStore.showLoading()
-    console.log(data)
     try {
       const formattedData: IBook = {
-        ...omit(data, 'series'),
+        ...omit(data, 'formSeries'),
         availableStartDate: fromDate,
         availableEndDate: toDate,
         releaseDate: releaseDate,
@@ -78,11 +76,10 @@ const AddNewBook = () => {
         author: mapAuthor(String(data?.author)),
         price: Number(data?.price),
         bonusPointPrice: Number(data?.bonusPointPrice),
-        seriesId: String(data?.series?.value ?? '')
+        seriesId: String(data?.formSeries?.value ?? '')
       }
       await createNewBook(formattedData)
       toast.success('Create book successfully!')
-      // redirect()
     } catch (error) {
       toast.error('Create book failed!')
       handleError(error as Error, 'components/pages/CMS/BookManagement/Book/AddNewBook', 'onSubmit')
@@ -153,7 +150,7 @@ const AddNewBook = () => {
               <FormInput name="title" label="Title" placeholder="Enter Title" />
               <ChakraInputDropdown
                 zIndex={EZIndexLayer.FILTER_BAR}
-                name="series"
+                name="formSeries"
                 label="Series"
                 optionsData={getOptionsSelect(cmsSeriesList)}
               />
