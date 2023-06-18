@@ -16,7 +16,8 @@ import {
   ModalContent,
   ModalFooter,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
+  Flex
 } from '@chakra-ui/react'
 import { IMockBook } from './mockData'
 
@@ -38,7 +39,7 @@ const BookCard = (props: IMockBook) => {
         </CardBody>
         <Divider />
         <CardFooter>
-          <ButtonGroup spacing="1">
+          <Flex justify={'space-between'} w={'100%'}>
             <Button
               // onClick={onOpen}
               variant={bookStatus == 'available' ? 'solid' : 'flushed'}
@@ -47,7 +48,7 @@ const BookCard = (props: IMockBook) => {
               {bookStatus == 'available' ? 'Add to cart' : 'Unavailable'}
             </Button>
             <Button variant="ghost">Save</Button>
-          </ButtonGroup>
+          </Flex>
         </CardFooter>
       </Card>
 

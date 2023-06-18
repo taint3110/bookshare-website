@@ -13,7 +13,8 @@ import {
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  Stack
+  Stack,
+  Center
 } from '@chakra-ui/react'
 import { getValidArray } from 'utils/common'
 import {
@@ -27,6 +28,7 @@ import BookCard from './components/BookCard'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import CategoriesList from './components/CategoriesList'
 import NextLink from 'components/NextLink'
+import Pagination from 'components/BookList/components/Pagination'
 
 const BookList = ({ books }: { books: IMockBook[] }) => {
   // Filter for categories
@@ -161,7 +163,7 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
           </Menu>
           <Flex>
             <Menu closeOnSelect={false}>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              <MenuButton variant={'outline'} as={Button} rightIcon={<ChevronDownIcon />}>
                 Category
               </MenuButton>
               <MenuList>
@@ -184,7 +186,7 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
             </Menu>
             <Box w="4" />
             <Menu closeOnSelect={false}>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              <MenuButton variant={'outline'} as={Button} rightIcon={<ChevronDownIcon />}>
                 Condition
               </MenuButton>
               <MenuList>
@@ -207,7 +209,7 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
             </Menu>
             <Box w="4" />
             <Menu closeOnSelect={false}>
-              <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
+              <MenuButton variant={'outline'} as={Button} rightIcon={<ChevronDownIcon />}>
                 Cover
               </MenuButton>
               <MenuList>
@@ -235,6 +237,13 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
           </a>
         ))}
       </Grid>
+      <Center mt={8}>
+        <Pagination
+          pagination={{ pageIndex: 1, tableLength: books.length, gotoPage: () => {} }}
+          showPageSize={false}
+          pageSize={12}
+        />
+      </Center>
     </Stack>
   )
 }
