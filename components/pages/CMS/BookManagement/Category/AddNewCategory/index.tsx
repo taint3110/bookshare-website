@@ -12,7 +12,7 @@ import { Controller, FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { redirect } from './utils'
 
-const AddNewSeries = () => {
+const AddNewCategory = () => {
   const methods = useForm({
     mode: 'onChange'
   })
@@ -46,7 +46,7 @@ const AddNewSeries = () => {
       toast.success('Create category successfully!')
     } catch (error) {
       toast.error('Create category failed!')
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Category/AddNewSeries', 'onSubmit')
+      handleError(error as Error, 'components/pages/CMS/BookManagement/Category/AddNewCategory', 'onSubmit')
     } finally {
       spinnerStore.hideLoading()
     }
@@ -127,4 +127,4 @@ const AddNewSeries = () => {
   )
 }
 
-export default observer(AddNewSeries)
+export default observer(AddNewCategory)

@@ -25,8 +25,6 @@ const Pagination = (props: IPaginationProps) => {
   const pageSizeOptions: number[] = [5, 10, 15, 20, 40]
 
   const numberOfPages: number = Math.ceil(tableLength / pageSize)
-  console.log(tableLength)
-  console.log(pageSize)
   const truncatedPagination: string[] = truncatePagination(Number(pageIndex), Number(numberOfPages))
 
   function goPreviousPage(): void {

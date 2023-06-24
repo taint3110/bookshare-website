@@ -1,6 +1,6 @@
-import { getCMSBooks } from 'API/cms/book'
+import { getCMSBookDetail, getCMSBooks } from 'API/cms/book'
 import { handleError } from 'API/error'
-import { IBook } from 'interfaces/book'
+import { IBook, IBookWithRelations } from 'interfaces/book'
 import { makeAutoObservable } from 'mobx'
 import { RootStore } from 'stores'
 import { PaginationList } from 'types'
@@ -18,10 +18,20 @@ class CMSBookStore {
     totalCount: 0
   }
 
+  bookDetail: IBookWithRelations = {} as IBookWithRelations
+
   async fetchCMSBookList(filter: IFilter<IBook> = {}) {
     try {
       const bookList: PaginationList<IBook> = await getCMSBooks(filter)
       this.cmsBookList = bookList
+    } catch (error) {
+      handleError(error as Error, 'stores/CMSBookStore.ts', 'fetchCMSBookList')
+    }
+  }
+  async fetchCMSBookDetail(id: string) {
+    try {
+      const bookList: IBookWithRelations = await getCMSBookDetail(id)
+      this.bookDetail = bookList
     } catch (error) {
       handleError(error as Error, 'stores/CMSBookStore.ts', 'fetchCMSBookList')
     }

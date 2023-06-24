@@ -2,6 +2,7 @@ import { IMedia } from 'interfaces/media'
 
 //*INFO: Unit is room in house
 export interface ICategory {
+  _id?: string
   id?: string
   name?: string
   description?: string
@@ -9,6 +10,8 @@ export interface ICategory {
   isDeleted?: boolean
   createdAt?: Date
   updatedAt?: Date
+  bookId?: string
+  categoryId?: string
 }
 
 export interface ICategoryWithRelations extends ICategory {}

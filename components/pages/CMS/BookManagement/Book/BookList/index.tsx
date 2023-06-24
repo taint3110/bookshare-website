@@ -30,7 +30,7 @@ const BookList = () => {
   const { cmsBookList } = cmsBookStore
   const { results: bookList, totalCount: tableLength } = cmsBookList
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
-  const [sort, setSort] = useState('title')
+  const [sort, setSort] = useState('updatedAt')
   const [orderBy, setOrderBy] = useState(1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
@@ -78,18 +78,6 @@ const BookList = () => {
   const pagination = { pageIndex, tableLength, gotoPage }
   const dataInTable = getValidArray(bookList).map((book: IBookWithRelations) => {
     const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
-    function goToDetail() {
-      router.push(
-        {
-          pathname: `${routes.cms.bookManagement.book.value(book?.id ?? '')}`,
-          query: {
-            page: pagination.pageIndex,
-            pageSize
-          }
-        },
-        `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
-      )
-    }
 
     function handleDelete(): void {
       onConfirm()
@@ -129,7 +117,7 @@ const BookList = () => {
       actions: (
         <HStack width="62px" cursor="pointer" marginLeft="auto">
           <Link href={detailUrl} marginTop="5px">
-            <Icon iconName="edit.svg" size={32} onClick={goToDetail} />
+            <Icon iconName="edit.svg" size={32} />
           </Link>
           <Icon iconName="trash.svg" size={32} onClick={handleDelete} />
         </HStack>

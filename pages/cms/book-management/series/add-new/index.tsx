@@ -1,7 +1,7 @@
 import CMSLayout from 'components/Layout/CMSLayout'
 import AddNewSeries from 'components/pages/CMS/BookManagement/Series/AddNewSeries'
 
-const HouseDetailPage = () => {
+const SeriesAddNewPage = () => {
   return (
     <CMSLayout title={`Book Management | Internal Portal`} topBarTitle="Book Management">
       <AddNewSeries />
@@ -9,4 +9,4 @@ const HouseDetailPage = () => {
   )
 }
 
-export default HouseDetailPage
+export default SeriesAddNewPage
