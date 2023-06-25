@@ -27,6 +27,7 @@ export function convertQueryParamToBoolean(queryValue?: string): boolean {
   return (queryValue ?? '').toLowerCase() === 'true'
 }
 
-export function formatText(text: string): string {
-  return text.charAt(0).toUpperCase() + text.slice(1)
+export function formatText(text: string | undefined): string {
+  if (text) return text.charAt(0).toUpperCase() + text.slice(1)
+  return ''
 }

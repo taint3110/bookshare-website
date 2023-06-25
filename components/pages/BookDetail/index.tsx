@@ -17,12 +17,26 @@ import {
 } from '@chakra-ui/react'
 import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
 import BookListNoFilter from 'components/BookListNoFilter'
-import { textGrey500, textGrey700 } from 'theme/globalStyles'
+import { textGrey500 } from 'theme/globalStyles'
 import { formatText, getValidArray } from 'utils/common'
 import Paragraph from './FadedParagraph'
 
 const BookDetail = (props: IMockBook) => {
-  const { title, author, price, bonusPointPrice, bookStatus, bookImages, categories, condition, cover } = props
+  const {
+    title,
+    author,
+    price,
+    bonusPointPrice,
+    bookStatus,
+    publisher,
+    language,
+    bookImages,
+    categories,
+    condition,
+    cover
+  } = props
+
+  // Cái này đúng ra cũng lấy từ props luôn
   const bookDescription =
     'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis adipisci libero veritatis dolorum eos voluptatibus quos, doloribus molestiae ad quasi odit et.'
   const relatedBooks: IMockBook[] = getValidArray(mockBooks)
@@ -50,24 +64,24 @@ const BookDetail = (props: IMockBook) => {
             <Table variant="striped" colorScheme="teal" size={'sm'}>
               <Tbody>
                 <Tr>
-                  <Td minWidth={160}>Author</Td>
-                  <Td minWidth={240}>{author}</Td>
+                  <Td minWidth={120}>Author</Td>
+                  <Td minWidth={280}>{author}</Td>
                 </Tr>
                 <Tr>
-                  <Td minWidth={160}>Cover</Td>
-                  <Td minWidth={240}>{formatText(cover)}</Td>
+                  <Td minWidth={120}>Cover</Td>
+                  <Td minWidth={280}>{formatText(cover)}</Td>
                 </Tr>
                 <Tr>
-                  <Td minWidth={160}>Publisher</Td>
-                  <Td minWidth={240}></Td>
+                  <Td minWidth={120}>Publisher</Td>
+                  <Td minWidth={280}>{formatText(publisher)}</Td>
                 </Tr>
                 <Tr>
-                  <Td minWidth={160}>Language</Td>
-                  <Td minWidth={240}>{}</Td>
+                  <Td minWidth={120}>Language</Td>
+                  <Td minWidth={280}>{formatText(language)}</Td>
                 </Tr>
                 <Tr>
-                  <Td minWidth={160}>Condition</Td>
-                  <Td minWidth={240}>{formatText(condition)}</Td>
+                  <Td minWidth={120}>Condition</Td>
+                  <Td minWidth={280}>{formatText(condition)}</Td>
                 </Tr>
               </Tbody>
             </Table>

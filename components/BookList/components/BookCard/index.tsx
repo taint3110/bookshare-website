@@ -13,11 +13,20 @@ import {
   Flex
 } from '@chakra-ui/react'
 import { IMockBook } from './mockData'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { MouseEventHandler } from 'react'
 
 const BookCard = (props: IMockBook) => {
-  const { title, author, price, bonusPointPrice, bookStatus, bookImages } = props
+  const { _id, title, author, price, bonusPointPrice, publisher, language, bookStatus, bookImages } = props
+  const router = useRouter()
+
+  const handleClick = (id: string) => {
+    router.push('/books/' + id) // Replace with the desired path
+  }
+
   return (
-    <>
+    <Link href={'/books/' + _id}>
       <Card>
         <CardBody>
           <Image src={bookImages} boxSize="sm" objectFit="contain" alt={title} borderRadius="sm" />
@@ -64,7 +73,7 @@ const BookCard = (props: IMockBook) => {
           </ModalFooter>
         </ModalContent>
       </Modal> */}
-    </>
+    </Link>
   )
 }
 
