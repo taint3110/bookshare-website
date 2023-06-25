@@ -4,25 +4,24 @@ import { mockBooks } from 'components/BookList/components/BookCard/mockData'
 import MainLayout from 'components/Layout/MainLayout'
 import { getValidArray } from 'utils/common'
 
-const books = mockBooks;
+const books = mockBooks
 
 const ListPage = () => {
-
   return (
     <MainLayout title="BookShare | Landing Page">
-      <BookList books={[...books]}/>
+      <BookList books={[...books]} pageSize={12} listLength={books.length} />
     </MainLayout>
   )
 }
 
 export default ListPage
 
-export async function getServerSideProps(context: { query: any }) {
-  try {
-    // TODO: May use later
-    return {}
-  } catch (error) {
-    console.log('listing-page: getServerSideProps -> error', error)
-    return {}
-  }
-}
+// export async function getServerSideProps(context: { query: any }) {
+//   try {
+//     // TODO: May use later
+//     return {}
+//   } catch (error) {
+//     console.log('listing-page: getServerSideProps -> error', error)
+//     return {}
+//   }
+// }

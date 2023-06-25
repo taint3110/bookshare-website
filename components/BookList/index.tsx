@@ -5,6 +5,7 @@ import {
   Container,
   Divider,
   Flex,
+  Box,
   Grid,
   Text,
   Menu,
@@ -12,39 +13,104 @@ import {
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
-  Stack
+  Stack,
+  Center
 } from '@chakra-ui/react'
 import { getValidArray } from 'utils/common'
-import { IMockBook, IMockCategory, mockCategories } from './components/BookCard/mockData'
+import {
+  IMockBook,
+  IMockCategory,
+  MockBookConditions,
+  MockBookCovers,
+  mockCategories
+} from './components/BookCard/mockData'
 import BookCard from './components/BookCard'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import CategoriesList from './components/CategoriesList'
 import NextLink from 'components/NextLink'
+import Pagination from 'components/BookList/components/Pagination'
 
-const BookList = ({ books }: { books: IMockBook[] }) => {
-  const [selectedFilters, setSelectedFilters] = useState<string | string[]>([])
-  const [isFilterCheckedAll, setisFilterCheckedAll] = useState<boolean>()
+export interface IBookListProps {
+  books: IMockBook[]
+  pageSize: number
+  listLength: number
+  showGoToPage?: boolean
+}
+
+const BookList = (props: IBookListProps) => {
+  const { books, pageSize = 12, listLength, showGoToPage = false } = props
+  // Filter for categories
+  const [selectedCategories, setSelectedCategories] = useState<string | string[]>([])
+  const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>()
+  // Filter for condition
+  const [selectedConditions, setSelectedConditions] = useState<string | string[]>([])
+  const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>()
+  // Filter for covers
+  const [selectedCovers, setSelectedCovers] = useState<string | string[]>([])
+  const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>()
+
   const [selectedSort, setSelectedSort] = useState<string | string[]>()
   const categories = getValidArray(mockCategories)
-  // isFilterCheckedAll = true
+  const bookConditions = getValidArray(MockBookConditions)
+  const bookCovers = getValidArray(MockBookCovers)
 
-  const handleFilterChange = (selectedValues: string | string[]) => {
-    setSelectedFilters(selectedValues)
+  const handleCategoryChange = (selectedValues: string | string[]) => {
+    setSelectedCategories(selectedValues)
     if (selectedValues.length < categories.length) {
-      setisFilterCheckedAll(false)
+      setisCategoryCheckedAll(false)
     } else if (selectedValues.length === categories.length) {
-      setisFilterCheckedAll(true)
+      setisCategoryCheckedAll(true)
     }
   }
 
-  const handleCheckAllChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCategoryCheckAllChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { checked } = event.target
-    setisFilterCheckedAll(checked)
+    setisCategoryCheckedAll(checked)
     if (checked) {
       const allOptions = categories.map((item) => item.name)
-      setSelectedFilters(allOptions)
+      setSelectedCategories(allOptions)
     } else {
-      setSelectedFilters([])
+      setSelectedCategories([])
+    }
+  }
+
+  const handleConditionChange = (selectedValues: string | string[]) => {
+    setSelectedConditions(selectedValues)
+    if (selectedValues.length < bookConditions.length) {
+      setisConditionCheckedAll(false)
+    } else if (selectedValues.length === bookConditions.length) {
+      setisConditionCheckedAll(true)
+    }
+  }
+
+  const handleConditionCheckAllChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = event.target
+    setisConditionCheckedAll(checked)
+    if (checked) {
+      const allOptions = bookConditions.map((item) => item)
+      setSelectedConditions(allOptions)
+    } else {
+      setSelectedConditions([])
+    }
+  }
+
+  const handleCoverChange = (selectedValues: string | string[]) => {
+    setSelectedCovers(selectedValues)
+    if (selectedValues.length < bookCovers.length) {
+      setisCoverCheckedAll(false)
+    } else if (selectedValues.length === bookCovers.length) {
+      setisCoverCheckedAll(true)
+    }
+  }
+
+  const handleCoverCheckAllChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { checked } = event.target
+    setisCoverCheckedAll(checked)
+    if (checked) {
+      const allOptions = bookCovers.map((item) => item)
+      setSelectedCovers(allOptions)
+    } else {
+      setSelectedCovers([])
     }
   }
 
@@ -64,9 +130,18 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
   }
 
   const filteredData =
-    selectedFilters.length === 0 || isFilterCheckedAll
+    (selectedCategories.length === 0 || isCategoryCheckedAll) &&
+    (selectedConditions.length === 0 || isConditionCheckedAll) &&
+    (selectedCovers.length === 0 || isCoverCheckedAll)
       ? books
-      : books.filter((book) => book.categories?.some((category) => selectedFilters.indexOf(category.name) >= 0))
+      : books.filter(
+          (book) =>
+            (selectedCategories.length === 0
+              ? true
+              : book.categories?.some((category) => selectedCategories.indexOf(category.name) >= 0)) &&
+            (selectedConditions.length === 0 ? true : selectedConditions.indexOf(book.condition.toString()) >= 0) &&
+            (selectedCovers.length === 0 ? true : selectedCovers.indexOf(book.cover.toString()) >= 0)
+        )
 
   return (
     <Stack pl="200px" pr="200px" mt="4" mb="40">
@@ -96,34 +171,94 @@ const BookList = ({ books }: { books: IMockBook[] }) => {
               </MenuOptionGroup>
             </MenuList>
           </Menu>
-          <Menu closeOnSelect={false}>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Category
-            </MenuButton>
-            <MenuList>
-              <MenuOptionGroup type="checkbox" value={selectedFilters} onChange={handleFilterChange}>
-                <Checkbox ml="3" defaultChecked isChecked={isFilterCheckedAll} onChange={handleCheckAllChanged}>
-                  All
-                </Checkbox>
-                {categories.map((category: IMockCategory, indexCategory: number) => (
-                  <MenuItemOption value={category.name} key={indexCategory}>
-                    {category.name}
-                  </MenuItemOption>
-                ))}
-              </MenuOptionGroup>
-            </MenuList>
-          </Menu>
+          <Flex>
+            <Menu closeOnSelect={false}>
+              <MenuButton variant={'outline'} as={Button} rightIcon={<ChevronDownIcon />}>
+                Category
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup type="checkbox" value={selectedCategories} onChange={handleCategoryChange}>
+                  <Checkbox
+                    ml="3"
+                    defaultChecked
+                    isChecked={isCategoryCheckedAll}
+                    onChange={handleCategoryCheckAllChanged}
+                  >
+                    All
+                  </Checkbox>
+                  {categories.map((category: IMockCategory, indexCategory: number) => (
+                    <MenuItemOption value={category.name} key={indexCategory}>
+                      {category.name}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+            <Box w="4" />
+            <Menu closeOnSelect={false}>
+              <MenuButton variant={'outline'} as={Button} rightIcon={<ChevronDownIcon />}>
+                Condition
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup type="checkbox" value={selectedConditions} onChange={handleConditionChange}>
+                  <Checkbox
+                    ml="3"
+                    defaultChecked
+                    isChecked={isConditionCheckedAll}
+                    onChange={handleConditionCheckAllChanged}
+                  >
+                    All
+                  </Checkbox>
+                  {bookConditions.map((condition: string, indexCondition: number) => (
+                    <MenuItemOption value={condition} key={indexCondition}>
+                      {condition}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+            <Box w="4" />
+            <Menu closeOnSelect={false}>
+              <MenuButton variant={'outline'} as={Button} rightIcon={<ChevronDownIcon />}>
+                Cover
+              </MenuButton>
+              <MenuList>
+                <MenuOptionGroup type="checkbox" value={selectedCovers} onChange={handleCoverChange}>
+                  <Checkbox ml="3" defaultChecked isChecked={isCoverCheckedAll} onChange={handleCoverCheckAllChanged}>
+                    All
+                  </Checkbox>
+                  {bookCovers.map((cover: string, indexCover: number) => (
+                    <MenuItemOption value={cover} key={indexCover}>
+                      {cover}
+                    </MenuItemOption>
+                  ))}
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Flex>
       </Container>
-
       {/* BookList Section */}
-      <Grid templateColumns="repeat(4, 1fr)" gap={2}>
-        {filteredData.map((book: IMockBook, indexBook: number) => (
-          <a href="/">
-            <BookCard {...book} key={indexBook} />
-          </a>
-        ))}
-      </Grid>
+      {filteredData.length > 0 ? (
+        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+          {filteredData.map((book: IMockBook, indexBook: number) => (
+            <a href="/">
+              <BookCard {...book} key={indexBook} />
+            </a>
+          ))}
+        </Grid>
+      ) : (
+        <Center>
+          <Text>No book available!</Text>
+        </Center>
+      )}
+      <Center mt={8}>
+        <Pagination
+          pagination={{ pageIndex: 1, tableLength: listLength, gotoPage: () => {} }}
+          showPageSize={false}
+          pageSize={pageSize}
+        />
+      </Center>
     </Stack>
   )
 }

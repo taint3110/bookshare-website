@@ -31,11 +31,11 @@ export const realEstateInvestors: IFooterNavLink = {
 export const renters: IFooterNavLink = {
   title: 'Renters',
   links: [
-    { link: 'https://github.com/taint3110/bookshare', text: 'Rent some books' },
-    {
-      link: 'https://github.com/taint3110/bookshare',
-      text: 'Tenant App on iOS or Android'
-    }
+    { link: 'https://github.com/taint3110/bookshare', text: 'Rent some books' }
+    // {
+    //   link: 'https://github.com/taint3110/bookshare',
+    //   text: 'Tenant App on iOS or Android'
+    // }
   ]
 }
 
