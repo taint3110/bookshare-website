@@ -1,15 +1,26 @@
 import { Search2Icon } from '@chakra-ui/icons'
-import { Box, Button, HStack, Image, Input, InputGroup, InputLeftElement, Link, Text, useDisclosure } from '@chakra-ui/react'
-import { deleteBookById } from 'API/cms/book'
+import {
+  Box,
+  Button,
+  HStack,
+  Image,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  Link,
+  Text,
+  useDisclosure
+} from '@chakra-ui/react'
+import { deleteSeriesById } from 'API/cms/series'
 import { handleError } from 'API/error'
 import ButtonWithIcon from 'components/ButtonWithIcon'
 import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
+import dayjs from 'dayjs'
 import { useStores } from 'hooks/useStores'
-import { IBookWithRelations } from 'interfaces/book'
-import { ICategory } from 'interfaces/category'
+import { ISeries } from 'interfaces/series'
 import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
@@ -20,23 +31,23 @@ import routes from 'routes'
 import { maxTabletWidth } from 'theme/globalStyles'
 import { getQueryValue, getValidArray } from 'utils/common'
 import { getHeaderList } from './constant'
-import { goToBookAddNewPage } from './utils'
+import { goToSeriesAddNewPage } from './utils'
 
-const BookList = () => {
+const SeriesList = () => {
   const router = useRouter()
   const pageIndex: number = getQueryValue(router, 'page', 1)
-  const { cmsBookStore, spinnerStore } = useStores()
+  const { cmsSeriesStore, spinnerStore } = useStores()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const isNotDesktop: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
-  const { cmsBookList } = cmsBookStore
-  const { results: bookList, totalCount: tableLength } = cmsBookList
+  const { cmsSeriesList } = cmsSeriesStore
+  const { results: seriesList, totalCount: tableLength } = cmsSeriesList
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const [sort, setSort] = useState('updatedAt')
   const [orderBy, setOrderBy] = useState(1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = (
-    <Text>Are you sure to delete this Book?{<br />}This action can not be undo</Text>
+    <Text>Are you sure to delete this series?{<br />}This action can not be undo</Text>
   )
   const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
 
@@ -51,21 +62,21 @@ const BookList = () => {
         order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
         limit: pageSize
       }
-      await cmsBookStore.fetchCMSBookList(filter)
+      await cmsSeriesStore.fetchCMSSeriesList(filter)
     } catch (error) {
-      handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
+      handleError(error as Error, 'components/pages/CMS/BookManagement/SeriesList', 'fetchData')
     } finally {
       spinnerStore.hideLoading()
     }
   }
 
-  async function deleteBook(): Promise<void> {
+  async function deleteSeries(): Promise<void> {
     try {
       if (targetId) {
-        await deleteBookById(targetId)
+        await deleteSeriesById(targetId)
         closeConfirm()
         fetchData()
-        toast.success('Delete Book Successfully')
+        toast.success('Delete Series Successfully')
       }
     } catch (error) {
       toast.error('Something wrong happened')
@@ -73,20 +84,20 @@ const BookList = () => {
   }
 
   function gotoPage(page: number): void {
-    router.push(`${routes.cms.bookManagement.value}?index=0&page=${page}&pageSize=${pageSize}`)
+    router.push(`${routes.cms.bookManagement.value}?index=1&page=${page}&pageSize=${pageSize}`)
     fetchData(false, page)
   }
-  const pagination = { pageIndex, tableLength, gotoPage }
-  const dataInTable = getValidArray(bookList).map((book: IBookWithRelations) => {
-    const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
 
+  const pagination = { pageIndex, tableLength, gotoPage }
+  const dataInTable = getValidArray(seriesList).map((series: ISeries) => {
+    const detailUrl: string = `${routes.cms.bookManagement.series.value(series?.id ?? '')}`
     function handleDelete(): void {
       onConfirm()
-      setTargetId(book?.id ?? '')
+      setTargetId(series?.id ?? '')
     }
 
     return {
-      ...book,
+      ...series,
       image: 1 ? (
         <Image
           objectFit="cover"
@@ -109,13 +120,10 @@ const BookList = () => {
           height={8}
         />
       ),
-      title: book?.title ?? 'Kaguya',
-      categories: getValidArray(book?.categories)
-        .map((category: ICategory) => category?.name)
-        .join(', '),
-      series: book?.series?.title ?? '',
-      price: book?.price ?? 100000,
-      status: 'Available',
+      title: series?.title ?? 'Kaguya',
+      category: 'Romance',
+      author: getValidArray(series?.author).join(', '),
+      releaseDate: dayjs(series?.releaseDate).format('YYYY/MM/DD') ?? new Date(),
       actions: (
         <HStack width="62px" cursor="pointer" marginLeft="auto">
           <Link href={detailUrl} marginTop="5px">
@@ -135,7 +143,7 @@ const BookList = () => {
   )
 
   useEffect(() => {
-    router.replace(`${routes.cms.bookManagement.value}?index=0&page=1`)
+    router.replace(`${routes.cms.bookManagement.value}?index=1&page=1`)
     fetchData(true)
   }, [pageSize, title, sort, orderBy])
 
@@ -146,7 +154,7 @@ const BookList = () => {
           <InputLeftElement pointerEvents="none">
             <Search2Icon color="gray.400" />
           </InputLeftElement>
-          <Input type="search" placeholder="Search book by Title" onChange={changeName} />
+          <Input type="search" placeholder="Search series by Title" onChange={changeName} />
         </InputGroup>
         <Box borderRadius="6px" bg="white">
           <ButtonWithIcon label="Filter" iconName="filter.svg" size={16} border="1px solid #E2E8F0" color="gray.800" />
@@ -158,9 +166,9 @@ const BookList = () => {
             color="white"
             colorScheme="teal"
             lineHeight={6}
-            onClick={goToBookAddNewPage}
+            onClick={goToSeriesAddNewPage}
           >
-            + Add Book
+            + Add Series
           </Button>
         </Box>
       </HStack>
@@ -176,16 +184,16 @@ const BookList = () => {
         subComponent={getSubComponent(getHeaderList(false), 3)}
       />
       <ConfirmModal
-        titleText="Delete Book"
+        titleText="Delete series"
         bodyText={confirmModalContent}
-        cancelButtonText="No, keep this book"
+        cancelButtonText="No, keep this series"
         confirmButtonText="Yes, Delete"
         isOpen={isConfirming}
         onClose={closeConfirm}
-        onClickAccept={deleteBook}
+        onClickAccept={deleteSeries}
       />
     </Box>
   )
 }
 
-export default observer(BookList)
+export default observer(SeriesList)

@@ -13,7 +13,7 @@ import {
   VStack,
   useDisclosure
 } from '@chakra-ui/react'
-import { createNewBook } from 'API/cms/book'
+import { updateBookById } from 'API/cms/book'
 import { handleError } from 'API/error'
 import ChakraInputDropdown from 'components/ChakraInputDropdown'
 import ConfirmModal from 'components/ConfirmModal'
@@ -21,25 +21,33 @@ import FormInput from 'components/FormInput'
 import { EBookConditionEnum, EBookCoverEnum, EBookStatusEnum } from 'enums/book'
 import { EZIndexLayer } from 'enums/theme'
 import { useStores } from 'hooks/useStores'
-import { IBook } from 'interfaces/book'
+import { IBookWithRelations } from 'interfaces/book'
+import { IOption } from 'interfaces/common'
 import capitalize from 'lodash/capitalize'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
-import { createElement, forwardRef, useEffect } from 'react'
+import { createElement, forwardRef, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import { getValidArray } from 'utils/common'
 import CustomDatePicker from './components/CustomDatepicker'
-import { getOptionsSelect, mapAuthor, redirect } from './utils'
+import SelectCategories from './components/SelectCategories'
+import { getBookFormValues, getCategoriesOptionsSelect, getOptionsSelect, mapAuthor, redirect } from './utils'
 
-const AddNewBook = () => {
+const BookDetail = () => {
   const methods = useForm({
     mode: 'onChange'
   })
   const router = useRouter()
-  const { spinnerStore, cmsSeriesStore } = useStores()
+  const bookId: string = String(get(router, 'query.bookId', ''))
+  const { spinnerStore, cmsSeriesStore, cmsBookStore, cmsCategoryStore } = useStores()
   const { cmsSeriesList } = cmsSeriesStore
+  const { cmsCategoryList } = cmsCategoryStore
+
+  const { bookDetail } = cmsBookStore
   const { isLoading } = spinnerStore
   const {
     handleSubmit,
@@ -52,8 +60,9 @@ const AddNewBook = () => {
   const fromDate = useWatch({ control, name: 'availableStartDate', defaultValue: new Date() })
   const toDate = useWatch({ control, name: 'availableEndDate', defaultValue: new Date() })
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
+  const categories: IOption[] = useWatch({ control, name: 'categories', defaultValue: [] })
+  const [checkedItems, setCheckedItems] = useState<string[]>([])
   const isFormDirty: boolean = isDirty
-
   function onCancel(): void {
     if (isDirty && !isSubmitSuccessful) {
       onConfirm()
@@ -62,28 +71,24 @@ const AddNewBook = () => {
     }
   }
 
-  async function onSubmit(data: IBook): Promise<void> {
+  async function onSubmit(data: IBookWithRelations): Promise<void> {
     spinnerStore.showLoading()
     try {
-      const formattedData: IBook = {
-        ...omit(data, 'formSeries'),
+      const formattedData: IBookWithRelations = {
+        ...omit(data, 'formSeries', 'formCategories', 'series', 'categories'),
         availableStartDate: fromDate,
         availableEndDate: toDate,
         releaseDate: releaseDate,
-        bookCondition: data?.bookCondition ?? EBookConditionEnum.NEW,
-        bookCover: data?.bookCover ?? EBookCoverEnum.SOFT,
-        bookStatus: data?.bookStatus ?? EBookStatusEnum.AVAILABLE,
         author: mapAuthor(String(data?.author)),
         price: Number(data?.price),
         bonusPointPrice: Number(data?.bonusPointPrice),
         seriesId: String(data?.formSeries?.value ?? '')
       }
-      await createNewBook(formattedData)
-      toast.success('Create book successfully!')
-      redirect()
+      await updateBookById(formattedData, checkedItems)
+      toast.success('Update book successfully!')
     } catch (error) {
-      toast.error('Create book failed!')
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Book/AddNewBook', 'onSubmit')
+      toast.error('Update book failed!')
+      handleError(error as Error, 'components/pages/CMS/BookManagement/Book/BookDetail', 'onSubmit')
     } finally {
       spinnerStore.hideLoading()
     }
@@ -92,18 +97,32 @@ const AddNewBook = () => {
   async function fetchData(): Promise<void> {
     spinnerStore.showLoading()
     try {
-      await Promise.all([cmsSeriesStore.fetchCMSSeriesList()])
+      await Promise.all([
+        cmsBookStore.fetchCMSBookDetail(bookId),
+        cmsSeriesStore.fetchCMSSeriesList(),
+        cmsCategoryStore.fetchCMSCategoryList()
+      ])
     } catch (error) {
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Book/AddNewBook', 'fetchData')
+      handleError(error as Error, 'components/pages/CMS/BookManagement/Book/BookDetail', 'fetchData')
     } finally {
       spinnerStore.hideLoading()
     }
   }
 
   useEffect(() => {
-    reset({})
-    fetchData()
-  }, [])
+    if (bookId) {
+      reset({})
+      fetchData()
+    }
+  }, [bookId])
+
+  useEffect(() => {
+    if (bookDetail?.id) {
+      const bookFormValues: IBookWithRelations = getBookFormValues(bookDetail)
+      setCheckedItems(getValidArray(bookFormValues?.formCategories).map((item: IOption) => item?.value))
+      reset({ ...bookFormValues, categories: getCategoriesOptionsSelect(getValidArray(cmsCategoryList?.results)) })
+    }
+  }, [bookDetail])
 
   return (
     <FormProvider {...methods}>
@@ -111,7 +130,7 @@ const AddNewBook = () => {
         <VStack padding={6} paddingInline={{ base: 6, lg: 8 }} paddingStart={{ base: '27px' }}>
           <HStack justifyContent="space-between" width="full">
             <Text fontSize="lg" fontWeight="600" color="gray.700" marginBottom={2}>
-              Create new book
+              Update Book Detail
             </Text>
             <HStack spacing={4}>
               <Button
@@ -234,6 +253,13 @@ const AddNewBook = () => {
                   )}
                 />
               </FormInput>
+              <GridItem>
+                <SelectCategories
+                  categories={categories}
+                  checkedItems={checkedItems}
+                  setCheckedItems={setCheckedItems}
+                />
+              </GridItem>
             </Grid>
             <Divider borderColor="gray.200" borderBottomWidth="2px" />
             <Grid
@@ -319,4 +345,4 @@ const AddNewBook = () => {
   )
 }
 
-export default observer(AddNewBook) 
+export default observer(BookDetail)

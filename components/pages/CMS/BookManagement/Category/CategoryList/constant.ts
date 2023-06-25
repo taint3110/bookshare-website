@@ -15,28 +15,13 @@ export function getHeaderList(isMobileTablet: boolean): ITableHeader[] {
           disableSortBy: true
         },
         {
-          Header: 'TITLE',
-          accessor: 'title',
+          Header: 'NAME',
+          accessor: 'name',
           Cell
         },
         {
-          Header: 'CATEGORIES',
-          accessor: 'categories',
-          Cell
-        },
-        {
-          Header: 'SERIES',
-          accessor: 'series',
-          Cell
-        },
-        {
-          Header: 'PRICE',
-          accessor: 'price',
-          Cell
-        },
-        {
-          Header: 'STATUS',
-          accessor: 'status',
+          Header: 'DESCRIPTION',
+          accessor: 'description',
           Cell
         },
         {
@@ -51,28 +36,13 @@ export function getHeaderList(isMobileTablet: boolean): ITableHeader[] {
           disableSortBy: true
         },
         {
-          Header: 'TITLE',
-          accessor: 'title',
+          Header: 'NAME',
+          accessor: 'name',
           Cell
         },
         {
-          Header: 'CATEGORIES',
-          accessor: 'categories',
-          Cell
-        },
-        {
-          Header: 'SERIES',
-          accessor: 'series',
-          Cell
-        },
-        {
-          Header: 'PRICE',
-          accessor: 'price',
-          Cell
-        },
-        {
-          Header: 'STATUS',
-          accessor: 'status',
+          Header: 'DESCRIPTION',
+          accessor: 'description',
           Cell
         },
         {

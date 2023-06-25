@@ -1,7 +1,7 @@
 import { api, auth } from 'API'
 import { PLATFORM } from 'API/constants'
 import { handleError } from 'API/error'
-import { IBook } from 'interfaces/book'
+import { IBook, IBookWithRelations } from 'interfaces/book'
 import get from 'lodash/get'
 import { PaginationList } from 'types'
 import { IFilter } from 'types/query'
@@ -27,6 +27,41 @@ export async function deleteBookById(id: string): Promise<void> {
   } catch (error) {
     const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
     handleError(error as Error, 'API/cms/book', 'deleteBookById')
+    throw new Error(errorMessage)
+  }
+}
+
+export async function createNewBook(book: IBook): Promise<void> {
+  try {
+    return api.post(`/staff/books`, book, {
+      headers: auth(PLATFORM.CMS)
+    })
+  } catch (error) {
+    const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
+    handleError(error as Error, 'API/cms/book', 'createNewBook')
+    throw new Error(errorMessage)
+  }
+}
+
+export async function updateBookById(book: IBook, categoryIds?: string[]): Promise<void> {
+  try {
+    return api.patch(`/staff/books/${book?.id}?categoryIds=${categoryIds}`, book, {
+      headers: auth(PLATFORM.CMS)
+    })
+  } catch (error) {
+    const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
+    handleError(error as Error, 'API/cms/book', 'updateBookById')
+    throw new Error(errorMessage)
+  }
+}
+
+export async function getCMSBookDetail(id?: string): Promise<IBookWithRelations> {
+  try {
+    const response = await api.get(`/staff/books/${id}`, { headers: auth(PLATFORM.CMS) })
+    return response.data
+  } catch (error) {
+    const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
+    handleError(error as Error, 'API/cms/book', 'getCMSBookDetail')
     throw new Error(errorMessage)
   }
 }

@@ -4,14 +4,9 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import routes from 'routes'
 import { getQueryValue } from 'utils/common'
-const BookList = dynamic(
-  () => import('./Book/BookList'),
-  { ssr: false }
-)
-const CategoryList = dynamic(
-  () => import('./Category/CategoryList'),
-  { ssr: false }
-)
+import SeriesList from './Series/SeriesList'
+const BookList = dynamic(() => import('./Book/BookList'), { ssr: false })
+const CategoryList = dynamic(() => import('./Category/CategoryList'), { ssr: false })
 
 const BookManagement = () => {
   const router = useRouter()
@@ -27,33 +22,23 @@ const BookManagement = () => {
 
   useEffect(() => {
     if (Number(pageIndex) > 0 && isReady) {
-      console.log(pageIndex)
       setTabIndex(Number(pageIndex))
     }
   }, [pageIndex, isReady])
 
   const tabsData: ITabData[] = [
-    // INFO
     {
       label: 'Book',
       content: <BookList />
     },
     {
+      label: 'Series',
+      content: <SeriesList />
+    },
+    {
       label: 'Category',
       content: <CategoryList />
-    },
-    // {
-    //   label: 'Book',
-    //   content: <BookList />
-    // },
-    // {
-    //   label: 'Series',
-    //   content: <SeriesList />
-    // },
-    // {
-    //   label: 'Category',
-    //   content: <CategoryList />
-    // }
+    }
   ]
   return <Tabs data={tabsData} tabIndex={tabIndex} onChange={changeIndex} />
 }

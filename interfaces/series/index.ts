@@ -3,6 +3,7 @@ import { IBook } from "interfaces/book"
 
 //*INFO: Unit is room in house
 export interface ISeries {
+  _id?: string
   id?: string
   title?: string
   author?: string[]
