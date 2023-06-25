@@ -1,8 +1,11 @@
 import {
+  Button,
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
+  Divider,
+  Flex,
+  Heading,
   Image,
   Stack,
   Text,
@@ -17,19 +20,25 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { MouseEventHandler } from 'react'
 
-const BookCard = (props: IMockBook) => {
+const BookCard = (props: IBook) => {
   const { _id, title, author, price, bonusPointPrice, publisher, language, bookStatus, bookImages } = props
   const router = useRouter()
 
   const handleClick = (id: string) => {
-    router.push('/books/' + id) // Replace with the desired path
   }
 
+    router.push('/books/' + id) // Replace with the desired path
   return (
     <Link href={'/books/' + _id}>
       <Card>
         <CardBody>
-          <Image src={bookImages} boxSize="sm" objectFit="contain" alt={title} borderRadius="sm" />
+          <Image
+            src="https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg"
+            boxSize="sm"
+            objectFit="contain"
+            alt={title}
+            borderRadius="sm"
+          />
           <Stack mt="4" spacing="1">
             <Heading size="sm">{title}</Heading>
             <Text>{author}</Text>

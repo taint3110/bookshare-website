@@ -1,21 +1,32 @@
-import { Card, CardBody, Grid, Heading, Stack, Image, Text } from '@chakra-ui/react'
-import { IMockCategory } from '../BookCard/mockData'
-import { Label } from 'components/IconWithText/iconWithText.styles'
+import { Card, CardBody, Grid, Image, Text } from '@chakra-ui/react'
+import { ICategory } from 'interfaces/category'
+import Link from 'next/link'
 
-const CategoriesList = ({ categories }: { categories: IMockCategory[] }) => {
+export interface ICategoriesListProps {
+  categories: ICategory[]
+}
+
+const CategoriesList = (props: ICategoriesListProps) => {
+  const { categories } = props
   return (
     <Grid templateColumns="repeat(8, 1fr)" gap={1}>
-      {categories.map((category: IMockCategory, categoryIndex: number) => (
-        <a href="/">
+      {categories.map((category: ICategory, categoryIndex: number) => (
+        <Link href="/" key={category?.id}>
           <Card maxW="sm" key={categoryIndex}>
             <CardBody>
-              <Image boxSize={'200'} objectFit="contain" src={category.image} alt={category.name} borderRadius="lg" />
+              <Image
+                boxSize={'200'}
+                objectFit="contain"
+                src="https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg"
+                alt={category?.name}
+                borderRadius="lg"
+              />
               <Text align={'center'} size="md" mt={4}>
-                {category.name.toUpperCase()}
+                {category?.name && category?.name.toUpperCase()}
               </Text>
             </CardBody>
           </Card>
-        </a>
+        </Link>
       ))}
     </Grid>
   )

@@ -1,43 +1,43 @@
 import React, { useState } from 'react'
 import {
+  Box,
   Button,
+  Center,
   Checkbox,
   Container,
   Divider,
   Flex,
-  Box,
   Grid,
-  Text,
   Menu,
   MenuButton,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
   Stack,
-  Center
+  Text
 } from '@chakra-ui/react'
+import Pagination from 'components/BookList/components/Pagination'
+import NextLink from 'components/NextLink'
+import { IBookWithRelations } from 'interfaces/book'
+import { ICategory } from 'interfaces/category'
+import Link from 'next/link'
+import { useState } from 'react'
 import { getValidArray } from 'utils/common'
-import {
-  IMockBook,
-  IMockCategory,
-  MockBookConditions,
-  MockBookCovers,
-  mockCategories
-} from './components/BookCard/mockData'
 import BookCard from './components/BookCard'
+import { MockBookConditions, MockBookCovers } from './components/BookCard/mockData'
+import CategoriesList from './components/CategoriesList'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import Pagination from 'components/BookList/components/Pagination'
 
-export interface IBookListProps {
-  books: IMockBook[]
-  pageSize: number
-  listLength: number
-  showGoToPage?: boolean
+export interface IBookWithRelationsListProps {
+  bookList: IBookWithRelations[]
+  countBookList: number
+  categoryList: ICategory[]
 }
 
-const BookList = (props: IBookListProps) => {
-  const { books, pageSize = 12, listLength, showGoToPage = false } = props
-  // Filter for categories
+const BookList = (props: IBookWithRelationsListProps) => {
+  const { bookList, countBookList, categoryList } = props
+  // Filter for categoryList
   const [selectedCategories, setSelectedCategories] = useState<string | string[]>([])
   const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>()
   // Filter for condition
@@ -48,15 +48,14 @@ const BookList = (props: IBookListProps) => {
   const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>()
 
   const [selectedSort, setSelectedSort] = useState<string | string[]>()
-  const categories = getValidArray(mockCategories)
   const bookConditions = getValidArray(MockBookConditions)
   const bookCovers = getValidArray(MockBookCovers)
 
   const handleCategoryChange = (selectedValues: string | string[]) => {
     setSelectedCategories(selectedValues)
-    if (selectedValues.length < categories.length) {
+    if (selectedValues.length < categoryList.length) {
       setisCategoryCheckedAll(false)
-    } else if (selectedValues.length === categories.length) {
+    } else if (selectedValues.length === categoryList.length) {
       setisCategoryCheckedAll(true)
     }
   }
@@ -65,7 +64,7 @@ const BookList = (props: IBookListProps) => {
     const { checked } = event.target
     setisCategoryCheckedAll(checked)
     if (checked) {
-      const allOptions = categories.map((item) => item.name)
+      const allOptions: string[] = getValidArray(categoryList).map((item) => item?.name ?? '')
       setSelectedCategories(allOptions)
     } else {
       setSelectedCategories([])
@@ -127,19 +126,21 @@ const BookList = (props: IBookListProps) => {
     }
   }
 
-  const filteredData =
-    (selectedCategories.length === 0 || isCategoryCheckedAll) &&
-    (selectedConditions.length === 0 || isConditionCheckedAll) &&
-    (selectedCovers.length === 0 || isCoverCheckedAll)
-      ? books
-      : books.filter(
-          (book) =>
-            (selectedCategories.length === 0
-              ? true
-              : book.categories?.some((category) => selectedCategories.indexOf(category.name) >= 0)) &&
-            (selectedConditions.length === 0 ? true : selectedConditions.indexOf(book.condition.toString()) >= 0) &&
-            (selectedCovers.length === 0 ? true : selectedCovers.indexOf(book.cover.toString()) >= 0)
-        )
+  // const filteredData =
+  //   (selectedCategories.length === 0 || isCategoryCheckedAll) &&
+  //   (selectedConditions.length === 0 || isConditionCheckedAll) &&
+  //   (selectedCovers.length === 0 || isCoverCheckedAll)
+  //     ? bookList
+  //     : bookList.filter(
+  //         (book: IBookWithRelations) =>
+  //           (selectedCategories.length === 0
+  //             ? true
+  //             : book?.categories?.some((category) => selectedCategories.indexOf(category?.name) >= 0)) &&
+  //           (selectedConditions.length === 0 ? true : selectedConditions.indexOf(book?.bookCondition.toString()) >= 0) &&
+  //           (selectedCovers.length === 0 ? true : selectedCovers.indexOf(book?.bookCover.toString()) >= 0)
+  //       )
+
+  const filteredData = bookList
 
   return (
     <Stack>
@@ -174,7 +175,7 @@ const BookList = (props: IBookListProps) => {
                   >
                     All
                   </Checkbox>
-                  {categories.map((category: IMockCategory, indexCategory: number) => (
+                  {getValidArray(categoryList).map((category: ICategory, indexCategory: number) => (
                     <MenuItemOption value={category.name} key={indexCategory}>
                       {category.name}
                     </MenuItemOption>
@@ -227,7 +228,7 @@ const BookList = (props: IBookListProps) => {
         </Flex>
       </Container>
       {/* BookList Section */}
-      {filteredData.length > 0 ? (
+      {filteredData?.length > 0 ? (
         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
           <React.Fragment>
             {filteredData.map((book: IMockBook, indexBook: number) => (
@@ -242,9 +243,9 @@ const BookList = (props: IBookListProps) => {
       )}
       <Center mt={8}>
         <Pagination
-          pagination={{ pageIndex: 1, tableLength: listLength, gotoPage: () => {} }}
+          pagination={{ pageIndex: 1, tableLength: countBookList, gotoPage: () => {} }}
           showPageSize={false}
-          pageSize={pageSize}
+          pageSize={12}
         />
       </Center>
     </Stack>
