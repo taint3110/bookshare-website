@@ -26,8 +26,6 @@ import {
 } from './components/BookCard/mockData'
 import BookCard from './components/BookCard'
 import { ChevronDownIcon } from '@chakra-ui/icons'
-import CategoriesList from './components/CategoriesList'
-import NextLink from 'components/NextLink'
 import Pagination from 'components/BookList/components/Pagination'
 
 export interface IBookListProps {
@@ -144,17 +142,7 @@ const BookList = (props: IBookListProps) => {
         )
 
   return (
-    <Stack pl="200px" pr="200px" mt="4" mb="40">
-      <Text fontSize="sm">Choose your favorite books, and pick them up at our store at:</Text>
-      <NextLink href="https://goo.gl/maps/5qzXdqKS7sTeToJy5">
-        <Text color={'teal.600'}>BookShare, Prairie Village, KS 66208, United States</Text>
-      </NextLink>
-      <Divider m="4" />
-
-      {/* Categories Section */}
-      <CategoriesList categories={categories} />
-      <Divider m="4" />
-
+    <Stack>
       {/* Filter Section */}
       <Container maxW="container.2xl" p="4" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
         <Flex justify="space-between">

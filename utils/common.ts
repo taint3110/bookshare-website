@@ -1,6 +1,6 @@
-import { ETokenKey, PLATFORM } from "API/constants"
-import get from "lodash/get"
-import { NextRouter } from "next/router"
+import { ETokenKey, PLATFORM } from 'API/constants'
+import get from 'lodash/get'
+import { NextRouter } from 'next/router'
 
 export function checkValidArray<T>(array?: T[]): boolean {
   return array ? Array.isArray(array) && array.length > 0 : false
@@ -25,4 +25,8 @@ export function getQueryValue(router: NextRouter, param: string = 'page', defaul
 
 export function convertQueryParamToBoolean(queryValue?: string): boolean {
   return (queryValue ?? '').toLowerCase() === 'true'
+}
+
+export function formatText(text: string): string {
+  return text.charAt(0).toUpperCase() + text.slice(1)
 }
