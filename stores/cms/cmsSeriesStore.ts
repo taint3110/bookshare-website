@@ -1,4 +1,4 @@
-import { getCMSSeries } from 'API/cms/series'
+import { getCMSSeries, getCMSSeriesDetail } from 'API/cms/series'
 import { handleError } from 'API/error'
 import { ISeries } from 'interfaces/series'
 import { makeAutoObservable } from 'mobx'
@@ -17,6 +17,7 @@ class CMSSeriesStore {
     results: [],
     totalCount: 0
   }
+  cmsSeriesDetail: ISeries = {}
 
   async fetchCMSSeriesList(filter: IFilter<ISeries> = {}) {
     try {
@@ -24,6 +25,15 @@ class CMSSeriesStore {
       this.cmsSeriesList = seriesList
     } catch (error) {
       handleError(error as Error, 'stores/CMSSeriesStore.ts', 'fetchCMSSeriesList')
+    }
+  }
+
+  async fetchCMSSeriesDetail(id: string) {
+    try {
+      const seriesDetail: ISeries = await getCMSSeriesDetail(id)
+      this.cmsSeriesDetail = seriesDetail
+    } catch (error) {
+      handleError(error as Error, 'stores/CMSSeriesStore.ts', 'fetchCMSSeries')
     }
   }
 }

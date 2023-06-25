@@ -8,5 +8,5 @@ export function mapAuthor(author: string): string[] {
 }
 
 export function redirect(): void {
-  router.push(`${routes.cms.bookManagement.value}?index=2&page=${router.query.page}`)
+  router.push(`${routes.cms.bookManagement.value}?index=1&page=${router.query.page}&pageSize=${router.query.pageSize}`)
 }

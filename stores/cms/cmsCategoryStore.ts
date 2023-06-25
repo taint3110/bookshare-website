@@ -1,4 +1,4 @@
-import { getCMSCategory } from 'API/cms/category'
+import { getCMSCategory, getCMSCategoryDetail } from 'API/cms/category'
 import { handleError } from 'API/error'
 import { ICategory } from 'interfaces/category'
 import { makeAutoObservable } from 'mobx'
@@ -18,6 +18,7 @@ class CMSCategoryStore {
     results: [],
     totalCount: 0
   }
+  cmsCategory: ICategory = {}
 
   async fetchCMSCategoryList(filter: IFilter<ICategory> = {}) {
     try {
@@ -27,6 +28,15 @@ class CMSCategoryStore {
           results: categoryList,
           totalCount: categoryList.length
         }
+    } catch (error) {
+      handleError(error as Error, 'stores/CMSCategory.ts', 'fetchCMSCategoryList')
+    }
+  }
+
+  async fetchCMSCategory(id: string) {
+    try {
+      const category: ICategory = await getCMSCategoryDetail(id)
+      this.cmsCategory = category
     } catch (error) {
       handleError(error as Error, 'stores/CMSCategory.ts', 'fetchCMSCategoryList')
     }

@@ -44,6 +44,7 @@ const AddNewCategory = () => {
       }
       await createNewCategory(formattedData)
       toast.success('Create category successfully!')
+      redirect()
     } catch (error) {
       toast.error('Create category failed!')
       handleError(error as Error, 'components/pages/CMS/BookManagement/Category/AddNewCategory', 'onSubmit')

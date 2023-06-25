@@ -9,6 +9,7 @@ import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { useStores } from 'hooks/useStores'
 import { IBookWithRelations } from 'interfaces/book'
+import { ICategory } from 'interfaces/category'
 import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
@@ -109,8 +110,9 @@ const BookList = () => {
         />
       ),
       title: book?.title ?? 'Kaguya',
-      category: 'Romance',
-      author: 'Aka Akasaka',
+      categories: getValidArray(book?.categories)
+        .map((category: ICategory) => category?.name)
+        .join(', '),
       series: book?.series?.title ?? '',
       price: book?.price ?? 100000,
       status: 'Available',

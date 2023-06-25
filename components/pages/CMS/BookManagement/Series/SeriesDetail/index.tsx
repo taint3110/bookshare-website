@@ -1,26 +1,32 @@
 /* eslint-disable max-lines */
 import { Button, Divider, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
-import { createNewSeries } from 'API/cms/series'
+import { createNewSeries, updateCMSSeriesDetail } from 'API/cms/series'
 import { handleError } from 'API/error'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
+import dayjs from 'dayjs'
 import { useStores } from 'hooks/useStores'
 import { ISeries } from 'interfaces/series'
+import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
+import { useRouter } from 'next/router'
 import { createElement, forwardRef, useEffect } from 'react'
 import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import CustomDatePicker from './components/CustomDatepicker'
+import CustomDatePicker from '../AddNewSeries/components/CustomDatepicker'
 import { mapAuthor, redirect } from './utils'
 
-const AddNewSeries = () => {
+const SeriesDetail = () => {
   const methods = useForm({
     mode: 'onChange'
   })
-  const { spinnerStore } = useStores()
+  const { spinnerStore, cmsSeriesStore } = useStores()
   const { isLoading } = spinnerStore
+  const router = useRouter()
+  const { cmsSeriesDetail } = cmsSeriesStore
+  const seriesId: string = String(get(router, 'query.seriesId', ''))
   const {
     handleSubmit,
     formState: { isSubmitting, isDirty, isSubmitSuccessful },
@@ -43,27 +49,51 @@ const AddNewSeries = () => {
   async function onSubmit(data: ISeries): Promise<void> {
     spinnerStore.showLoading()
     try {
-      const formattedData = {
-        ...omit(data, 'series'),
+      const formattedData: ISeries = {
+        ...omit(data, 'series', 'id'),
         title: data?.title || '',
         author: mapAuthor(String(data?.author)),
         description: data?.description || '',
         releaseDate
       }
-      await createNewSeries(formattedData)
-      toast.success('Create series successfully!')
+      await updateCMSSeriesDetail(seriesId, formattedData)
+      toast.success('Update series successfully!')
       redirect()
     } catch (error) {
-      toast.error('Create series failed!')
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Series/AddNewSeries', 'onSubmit')
+      toast.error('Update series failed!')
+      handleError(error as Error, 'components/pages/CMS/BookManagement/Series/SeriesDetail', 'onSubmit')
+    } finally {
+      spinnerStore.hideLoading()
+    }
+  }
+
+  async function fetchData(): Promise<void> {
+    spinnerStore.showLoading()
+    try {
+      await cmsSeriesStore.fetchCMSSeriesDetail(seriesId)
+    } catch (error) {
+      handleError(error as Error, 'components/pages/CMS/BookManagement/Series/SeriesDetail', 'fetchData')
     } finally {
       spinnerStore.hideLoading()
     }
   }
 
   useEffect(() => {
-    reset({})
-  }, [])
+    if (seriesId) {
+      reset({})
+      fetchData()
+    }
+  }, [seriesId])
+
+  useEffect(() => {
+    if (cmsSeriesDetail?.id) {
+      const seriesFormValue: ISeries = {
+        ...cmsSeriesDetail,
+        releaseDate: dayjs(cmsSeriesDetail?.releaseDate).toDate()
+      }
+      reset(seriesFormValue)
+    }
+  }, [cmsSeriesDetail])
 
   return (
     <FormProvider {...methods}>
@@ -158,4 +188,4 @@ const AddNewSeries = () => {
   )
 }
 
-export default observer(AddNewSeries)
+export default observer(SeriesDetail)

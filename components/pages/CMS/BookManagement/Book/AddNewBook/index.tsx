@@ -80,6 +80,7 @@ const AddNewBook = () => {
       }
       await createNewBook(formattedData)
       toast.success('Create book successfully!')
+      redirect()
     } catch (error) {
       toast.error('Create book failed!')
       handleError(error as Error, 'components/pages/CMS/BookManagement/Book/AddNewBook', 'onSubmit')

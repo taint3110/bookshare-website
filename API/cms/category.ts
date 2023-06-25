@@ -3,7 +3,6 @@ import { PLATFORM } from 'API/constants'
 import { handleError } from 'API/error'
 import { ICategory } from 'interfaces/category'
 import get from 'lodash/get'
-import { PaginationList } from 'types'
 import { IFilter } from 'types/query'
 
 export async function getCMSCategory(filter: IFilter<ICategory>): Promise<ICategory[]> {
@@ -18,6 +17,33 @@ export async function getCMSCategory(filter: IFilter<ICategory>): Promise<ICateg
     throw new Error(errorMessage)
   }
 }
+
+export async function getCMSCategoryDetail(id: string): Promise<ICategory> {
+  try {
+    const response = await api.get(`/staff/categories/${id}`, {
+      headers: auth(PLATFORM.CMS)
+    })
+    return response.data
+  } catch (error) {
+    const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
+    handleError(error as Error, 'API/cms/category', 'getCMSCategoryDetail')
+    throw new Error(errorMessage)
+  }
+}
+
+export async function updateCMSCategoryDetail(id: string, category: ICategory): Promise<void> {
+  try {
+    const response = await api.patch(`/staff/categories/${id}`, category, {
+      headers: auth(PLATFORM.CMS)
+    })
+    return response.data
+  } catch (error) {
+    const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
+    handleError(error as Error, 'API/cms/category', 'updateCMSCategoryDetail')
+    throw new Error(errorMessage)
+  }
+}
+
 
 export async function deleteCategoryById(id: string): Promise<void> {
   try {

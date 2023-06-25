@@ -54,7 +54,8 @@ export function getBookFormValues(bookDetail: Partial<IBookWithRelations>): Part
     availableStartDate: dayjs(bookDetail?.availableStartDate).toDate(),
     availableEndDate: dayjs(bookDetail?.availableEndDate).toDate(),
     releaseDate: dayjs(bookDetail?.releaseDate).toDate(),
-    bookStatus: bookDetail?.bookStatus
+    bookStatus: bookDetail?.bookStatus,
+    author: bookDetail?.author
   }
   return bookFormValues
 }
