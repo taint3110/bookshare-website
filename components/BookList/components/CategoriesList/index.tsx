@@ -9,7 +9,7 @@ const CategoriesList = ({ categories }: { categories: IMockCategory[] }) => {
         <a href="/">
           <Card maxW="sm" key={categoryIndex}>
             <CardBody>
-              <Image src={category.image} alt={category.name} borderRadius="lg" />
+              <Image boxSize={'200'} objectFit="contain" src={category.image} alt={category.name} borderRadius="lg" />
               <Text align={'center'} size="md" mt={4}>
                 {category.name.toUpperCase()}
               </Text>
