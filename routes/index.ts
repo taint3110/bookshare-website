@@ -11,10 +11,7 @@ const routes = {
     value: '/404'
   },
   detail: {
-    value: (houseId: number) => `/house-detail/${houseId}`,
-    room: {
-      value: (houseId: number, roomId: number) => `/house-detail/${houseId}/room-detail/${roomId}`
-    }
+    value: (bookId: number) => `/book-detail/${bookId}`
   },
   myProfile: {
     value: '/my-profile'

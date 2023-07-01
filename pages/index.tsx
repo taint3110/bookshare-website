@@ -2,6 +2,7 @@ import BookList from 'components/BookList'
 import BookCard from 'components/BookList/components/BookCard'
 import { mockBooks } from 'components/BookList/components/BookCard/mockData'
 import MainLayout from 'components/Layout/MainLayout'
+import LandingPage from 'components/pages/LandingPage'
 import { getValidArray } from 'utils/common'
 
 const books = mockBooks
@@ -9,7 +10,7 @@ const books = mockBooks
 const ListPage = () => {
   return (
     <MainLayout title="BookShare | Landing Page">
-      <BookList books={[...books]} pageSize={12} listLength={books.length} />
+      <LandingPage />
     </MainLayout>
   )
 }

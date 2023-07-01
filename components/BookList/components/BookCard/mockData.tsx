@@ -1,8 +1,11 @@
 export interface IMockBook {
+  _id: string
   title?: string
   author?: string[]
   price?: number
   bonusPointPrice?: number
+  publisher?: string
+  language?: string
   bookStatus?: string
   bookImages?: string
   categories?: IMockCategory[]
@@ -37,10 +40,13 @@ export interface IMockCategory {
 
 export const mockBooks: IMockBook[] = [
   {
+    _id: '1',
     title: 'Tomie',
     author: ['Junji Ito'],
     price: 100,
     bonusPointPrice: 10,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'available',
     bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
@@ -57,10 +63,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.HARD
   },
   {
+    _id: '2',
     title: 'My Book',
     author: ['Me Name'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'unavailable',
     bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
@@ -77,10 +86,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '3',
     title: 'The Fall of Iromouth',
     author: ['Thalia Blake'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'unavailable',
     bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
@@ -97,10 +109,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '4',
     title: 'Sisters',
     author: ['Daisy Johnson'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'available',
     bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
@@ -117,10 +132,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '5',
     title: 'Tomie',
     author: ['Junji Ito'],
     price: 100,
     bonusPointPrice: 10,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'available',
     bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
@@ -137,10 +155,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.HARD
   },
   {
+    _id: '6',
     title: 'My Book',
     author: ['Me Name'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'unavailable',
     bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
@@ -157,10 +178,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '7',
     title: 'The Fall of Iromouth',
     author: ['Thalia Blake'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'unavailable',
     bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
@@ -177,10 +201,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '8',
     title: 'Sisters',
     author: ['Daisy Johnson'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'available',
     bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
@@ -197,10 +224,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '9',
     title: 'Tomie',
     author: ['Junji Ito'],
     price: 100,
     bonusPointPrice: 10,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'available',
     bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
@@ -217,10 +247,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.HARD
   },
   {
+    _id: '10',
     title: 'My Book',
     author: ['Me Name'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'unavailable',
     bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
@@ -237,10 +270,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '11',
     title: 'The Fall of Iromouth',
     author: ['Thalia Blake'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'unavailable',
     bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
@@ -257,10 +293,13 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   },
   {
+    _id: '12',
     title: 'Sisters',
     author: ['Daisy Johnson'],
     price: 80,
     bonusPointPrice: 8,
+    publisher: 'NXB Kim Đồng',
+    language: 'Tiếng Việt',
     bookStatus: 'available',
     bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
