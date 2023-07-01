@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Checkbox,
@@ -229,11 +229,11 @@ const BookList = (props: IBookListProps) => {
       {/* BookList Section */}
       {filteredData.length > 0 ? (
         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
-          {filteredData.map((book: IMockBook, indexBook: number) => (
-            <a href="/">
+          <React.Fragment>
+            {filteredData.map((book: IMockBook, indexBook: number) => (
               <BookCard {...book} key={indexBook} />
-            </a>
-          ))}
+            ))}
+          </React.Fragment>
         </Grid>
       ) : (
         <Center>

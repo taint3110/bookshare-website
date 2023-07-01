@@ -12,7 +12,7 @@ import ErrorNotFoundPage from 'pages/404'
 import { getValidArray } from 'utils/common'
 
 function getBookById(id: string): IMockBook | any {
-  return getValidArray(mockBooks)[+id + 1]
+  return getValidArray(mockBooks)[+id - 1]
 }
 
 function BookPage() {
