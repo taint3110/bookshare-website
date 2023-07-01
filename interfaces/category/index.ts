@@ -12,6 +12,7 @@ export interface ICategory {
   updatedAt?: Date
   bookId?: string
   categoryId?: string
+  formMedia?: string
 }
 
 export interface ICategoryWithRelations extends ICategory {}

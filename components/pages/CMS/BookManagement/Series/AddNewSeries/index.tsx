@@ -30,6 +30,8 @@ const AddNewSeries = () => {
   } = methods
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const isFormDirty = isDirty
 
   function onCancel(): void {
@@ -50,7 +52,14 @@ const AddNewSeries = () => {
         description: data?.description || '',
         releaseDate
       }
-      await createNewSeries(formattedData)
+      const newSeries: ISeries = await createNewSeries(formattedData)
+      if (data?.formMedia && newCategory?.id) {
+        await uploadMedia({
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          categoryId: newCategory?.id
+        })
+      }
       toast.success('Create series successfully!')
       redirect()
     } catch (error) {

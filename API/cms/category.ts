@@ -57,11 +57,12 @@ export async function deleteCategoryById(id: string): Promise<void> {
   }
 }
 
-export async function createNewCategory(category: ICategory): Promise<void> {
+export async function createNewCategory(category: ICategory): Promise<ICategory> {
   try {
-    return api.post(`/staff/categories`, category, {
+    const response = await api.post(`/staff/categories`, category, {
       headers: auth(PLATFORM.CMS)
     })
+    return response.data
   } catch (error) {
     const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
     handleError(error as Error, 'API/cms/category', 'createNewCategory')

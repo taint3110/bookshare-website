@@ -14,6 +14,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { createNewBook } from 'API/cms/book'
+import { uploadMedia } from 'API/cms/media'
 import { handleError } from 'API/error'
 import ChakraInputDropdown from 'components/ChakraInputDropdown'
 import ConfirmModal from 'components/ConfirmModal'
@@ -26,10 +27,11 @@ import capitalize from 'lodash/capitalize'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
-import { createElement, forwardRef, useEffect } from 'react'
+import { createElement, forwardRef, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import MediaImage from '../BookDetail/components/MediaImage'
 import CustomDatePicker from './components/CustomDatepicker'
 import { getOptionsSelect, mapAuthor, redirect } from './utils'
 
@@ -52,6 +54,8 @@ const AddNewBook = () => {
   const fromDate = useWatch({ control, name: 'availableStartDate', defaultValue: new Date() })
   const toDate = useWatch({ control, name: 'availableEndDate', defaultValue: new Date() })
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const isFormDirty: boolean = isDirty
 
   function onCancel(): void {
@@ -66,7 +70,7 @@ const AddNewBook = () => {
     spinnerStore.showLoading()
     try {
       const formattedData: IBook = {
-        ...omit(data, 'formSeries'),
+        ...omit(data, 'formSeries', 'formMedia', 'media'),
         availableStartDate: fromDate,
         availableEndDate: toDate,
         releaseDate: releaseDate,
@@ -76,9 +80,17 @@ const AddNewBook = () => {
         author: mapAuthor(String(data?.author)),
         price: Number(data?.price),
         bonusPointPrice: Number(data?.bonusPointPrice),
-        seriesId: String(data?.formSeries?.value ?? '')
+        seriesId: String(data?.formSeries?.value ?? ''),
+        updatedAt: new Date()
       }
-      await createNewBook(formattedData)
+      const newBook: IBook = await createNewBook(formattedData)
+      if (data?.formMedia && newBook?.id) {
+        await uploadMedia({
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          bookId: newBook?.id
+        })
+      }
       toast.success('Create book successfully!')
       redirect()
     } catch (error) {
@@ -304,6 +316,12 @@ const AddNewBook = () => {
               </FormInput>
               <FormInput name="isbn" label="ISBN" placeholder="Enter ISBN" isRequired={false} />
             </Grid>
+            <MediaImage
+              media={media}
+              formLabel="Book Image"
+              currentFile={currentMedia}
+              setCurrentFile={setCurrentMedia}
+            />
           </VStack>
         </VStack>
       </form>

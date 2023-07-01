@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Button, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
 import { updateCMSCategoryDetail } from 'API/cms/category'
+import { uploadMedia } from 'API/cms/media'
 import { handleError } from 'API/error'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
@@ -10,9 +11,10 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import MediaImage from '../../Book/BookDetail/components/MediaImage'
 import { redirect } from './utils'
 
 const CategoryDetail = () => {
@@ -31,6 +33,8 @@ const CategoryDetail = () => {
     reset
   } = methods
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const isFormDirty = isDirty
 
   function onCancel(): void {
@@ -45,9 +49,17 @@ const CategoryDetail = () => {
     spinnerStore.showLoading()
     try {
       const formattedData: ICategory = {
-        ...omit(data, 'id'),
+        ...omit(data, 'id', 'formMedia', 'media'),
         name: data?.name || '',
         description: data?.description || ''
+      }
+      if (data?.formMedia) {
+        await uploadMedia({
+          id: cmsCategory?.media?._id ?? '',
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          categoryId
+        })
       }
       await updateCMSCategoryDetail(categoryId, formattedData)
       toast.success('Update category successfully!')
@@ -80,7 +92,11 @@ const CategoryDetail = () => {
 
   useEffect(() => {
     if (cmsCategory?.id) {
-      reset(cmsCategory)
+      reset({
+        ...cmsCategory,
+        formMedia: cmsCategory?.media?.imageUrl ?? ''
+      })
+      setCurrentMedia(get(cmsCategory, 'media.imageUrl', ''))
     }
   }, [cmsCategory])
 
@@ -140,6 +156,12 @@ const CategoryDetail = () => {
                 </FormInput>
               </GridItem>
             </Grid>
+            <MediaImage
+              media={media}
+              formLabel="Category Image"
+              currentFile={currentMedia}
+              setCurrentFile={setCurrentMedia}
+            />
           </VStack>
         </VStack>
       </form>
