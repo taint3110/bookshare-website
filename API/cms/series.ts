@@ -57,11 +57,12 @@ export async function deleteSeriesById(id: string): Promise<void> {
   }
 }
 
-export async function createNewSeries(series: ISeries): Promise<void> {
+export async function createNewSeries(series: ISeries): Promise<ISeries> {
   try {
-    return api.post(`/staff/series`, series, {
+    const response = await api.post(`/staff/series`, series, {
       headers: auth(PLATFORM.CMS)
     })
+    return response.data
   } catch (error) {
     const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
     handleError(error as Error, 'API/cms/series', 'createNewSeries')

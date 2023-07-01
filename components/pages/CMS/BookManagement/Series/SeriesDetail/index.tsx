@@ -189,11 +189,10 @@ const SeriesDetail = () => {
             <Divider borderColor="gray.200" borderBottomWidth="2px" />
             <MediaImage
               media={media}
-              formLabel="Book Image"
+              formLabel="Series Image"
               currentFile={currentMedia}
               setCurrentFile={setCurrentMedia}
             />
-            
           </VStack>
         </VStack>
       </form>
