@@ -41,8 +41,8 @@ const CategoryList = () => {
   const { cmsCategoryList } = cmsCategoryStore
   const { results: categoryList, totalCount: tableLength } = cmsCategoryList
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
-  const [sort, setSort] = useState('title')
-  const [orderBy, setOrderBy] = useState(1)
+  const [sort, setSort] = useState('updatedAt')
+  const [orderBy, setOrderBy] = useState(-1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = (
@@ -59,7 +59,8 @@ const CategoryList = () => {
         },
         offset: isReset ? 0 : pageSize * (page - 1),
         order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
-        limit: pageSize
+        limit: pageSize,
+        include: ['media']
       }
       await cmsCategoryStore.fetchCMSCategoryList(filter)
     } catch (error) {
@@ -110,12 +111,12 @@ const CategoryList = () => {
 
     return {
       ...category,
-      image: 1 ? (
+      image: category?.media ? (
         <Image
           objectFit="cover"
           borderRadius="6px"
           marginLeft={1}
-          src={mockImage}
+          src={category?.media?.imageUrl ?? mockImage}
           alt="imageUrl"
           width={8}
           height={8}

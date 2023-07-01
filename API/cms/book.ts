@@ -31,11 +31,12 @@ export async function deleteBookById(id: string): Promise<void> {
   }
 }
 
-export async function createNewBook(book: IBook): Promise<void> {
+export async function createNewBook(book: IBook): Promise<IBook> {
   try {
-    return api.post(`/staff/books`, book, {
+    const response = await api.post(`/staff/books`, book, {
       headers: auth(PLATFORM.CMS)
     })
+    return response.data
   } catch (error) {
     const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
     handleError(error as Error, 'API/cms/book', 'createNewBook')

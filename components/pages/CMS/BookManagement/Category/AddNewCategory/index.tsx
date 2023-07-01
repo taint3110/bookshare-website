@@ -1,15 +1,17 @@
 /* eslint-disable max-lines */
 import { Button, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
 import { createNewCategory } from 'API/cms/category'
+import { uploadMedia } from 'API/cms/media'
 import { handleError } from 'API/error'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
 import { useStores } from 'hooks/useStores'
 import { ICategory } from 'interfaces/category'
 import { observer } from 'mobx-react'
-import { useEffect } from 'react'
-import { Controller, FormProvider, useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import MediaImage from '../../Book/BookDetail/components/MediaImage'
 import { redirect } from './utils'
 
 const AddNewCategory = () => {
@@ -25,6 +27,8 @@ const AddNewCategory = () => {
     reset
   } = methods
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const isFormDirty = isDirty
 
   function onCancel(): void {
@@ -42,7 +46,14 @@ const AddNewCategory = () => {
         name: data?.name || '',
         description: data?.description || ''
       }
-      await createNewCategory(formattedData)
+      const newCategory: ICategory = await createNewCategory(formattedData)
+      if (data?.formMedia && newCategory?.id) {
+        await uploadMedia({
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          categoryId: newCategory?.id
+        })
+      }
       toast.success('Create category successfully!')
       redirect()
     } catch (error) {
@@ -113,6 +124,12 @@ const AddNewCategory = () => {
                 </FormInput>
               </GridItem>
             </Grid>
+            <MediaImage
+              media={media}
+              formLabel="Category Image"
+              currentFile={currentMedia}
+              setCurrentFile={setCurrentMedia}
+            />
           </VStack>
         </VStack>
       </form>

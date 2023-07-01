@@ -25,7 +25,8 @@ export interface IBook {
   seriesId?: string
   formSeries?: IOption
   formCategories?: IOption[]
-  media?: IMedia[]
+  formMedia?: string
+  media?: IMedia
 }
 
 export interface IBookWithRelations extends IBook {

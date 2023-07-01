@@ -98,12 +98,12 @@ const SeriesList = () => {
 
     return {
       ...series,
-      image: 1 ? (
+      image: series?.media ? (
         <Image
           objectFit="cover"
           borderRadius="6px"
           marginLeft={1}
-          src={mockImage}
+          src={series?.media?.imageUrl ?? mockImage}
           alt="imageUrl"
           width={8}
           height={8}

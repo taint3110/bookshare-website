@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { Button, Divider, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
+import { uploadMedia } from 'API/cms/media'
 import { createNewSeries } from 'API/cms/series'
 import { handleError } from 'API/error'
 import ConfirmModal from 'components/ConfirmModal'
@@ -8,10 +9,11 @@ import { useStores } from 'hooks/useStores'
 import { ISeries } from 'interfaces/series'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
-import { createElement, forwardRef, useEffect } from 'react'
+import { createElement, forwardRef, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
+import MediaImage from '../../Book/BookDetail/components/MediaImage'
 import CustomDatePicker from './components/CustomDatepicker'
 import { mapAuthor, redirect } from './utils'
 
@@ -30,6 +32,8 @@ const AddNewSeries = () => {
   } = methods
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const isFormDirty = isDirty
 
   function onCancel(): void {
@@ -50,7 +54,14 @@ const AddNewSeries = () => {
         description: data?.description || '',
         releaseDate
       }
-      await createNewSeries(formattedData)
+      const newSeries: ISeries = await createNewSeries(formattedData)
+      if (data?.formMedia && newSeries?.id) {
+        await uploadMedia({
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          categoryId: newSeries?.id
+        })
+      }
       toast.success('Create series successfully!')
       redirect()
     } catch (error) {
@@ -143,6 +154,12 @@ const AddNewSeries = () => {
               </GridItem>
             </Grid>
             <Divider borderColor="gray.200" borderBottomWidth="2px" />
+            <MediaImage
+              media={media}
+              formLabel="Series Image"
+              currentFile={currentMedia}
+              setCurrentFile={setCurrentMedia}
+            />
           </VStack>
         </VStack>
       </form>

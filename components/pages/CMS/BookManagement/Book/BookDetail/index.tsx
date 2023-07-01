@@ -14,6 +14,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import { updateBookById } from 'API/cms/book'
+import { uploadMedia } from 'API/cms/media'
 import { handleError } from 'API/error'
 import ChakraInputDropdown from 'components/ChakraInputDropdown'
 import ConfirmModal from 'components/ConfirmModal'
@@ -34,6 +35,7 @@ import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { getValidArray } from 'utils/common'
 import CustomDatePicker from './components/CustomDatepicker'
+import MediaImage from './components/MediaImage'
 import SelectCategories from './components/SelectCategories'
 import { getBookFormValues, getCategoriesOptionsSelect, getOptionsSelect, mapAuthor, redirect } from './utils'
 
@@ -61,6 +63,8 @@ const BookDetail = () => {
   const toDate = useWatch({ control, name: 'availableEndDate', defaultValue: new Date() })
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
   const categories: IOption[] = useWatch({ control, name: 'categories', defaultValue: [] })
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const [checkedItems, setCheckedItems] = useState<string[]>([])
   const isFormDirty: boolean = isDirty
   function onCancel(): void {
@@ -75,14 +79,23 @@ const BookDetail = () => {
     spinnerStore.showLoading()
     try {
       const formattedData: IBookWithRelations = {
-        ...omit(data, 'formSeries', 'formCategories', 'series', 'categories'),
+        ...omit(data, 'formSeries', 'formCategories', 'series', 'categories', 'formMedia', 'media'),
         availableStartDate: fromDate,
         availableEndDate: toDate,
         releaseDate: releaseDate,
         author: mapAuthor(String(data?.author)),
         price: Number(data?.price),
         bonusPointPrice: Number(data?.bonusPointPrice),
-        seriesId: String(data?.formSeries?.value ?? '')
+        seriesId: String(data?.formSeries?.value ?? ''),
+        updatedAt: new Date()
+      }
+      if (data?.formMedia) {
+        await uploadMedia({
+          id: bookDetail?.media?._id ?? '',
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          bookId
+        })
       }
       await updateBookById(formattedData, checkedItems)
       toast.success('Update book successfully!')
@@ -120,6 +133,7 @@ const BookDetail = () => {
     if (bookDetail?.id) {
       const bookFormValues: IBookWithRelations = getBookFormValues(bookDetail)
       setCheckedItems(getValidArray(bookFormValues?.formCategories).map((item: IOption) => item?.value))
+      setCurrentMedia(get(bookDetail, 'media.imageUrl', ''))
       reset({ ...bookFormValues, categories: getCategoriesOptionsSelect(getValidArray(cmsCategoryList?.results)) })
     }
   }, [bookDetail])
@@ -330,6 +344,12 @@ const BookDetail = () => {
               </FormInput>
               <FormInput name="isbn" label="ISBN" placeholder="Enter ISBN" isRequired={false} />
             </Grid>
+            <MediaImage
+              media={media}
+              formLabel="Book Image"
+              currentFile={currentMedia}
+              setCurrentFile={setCurrentMedia}
+            />
           </VStack>
         </VStack>
       </form>

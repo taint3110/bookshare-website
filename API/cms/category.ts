@@ -18,9 +18,9 @@ export async function getCMSCategory(filter: IFilter<ICategory>): Promise<ICateg
   }
 }
 
-export async function getCMSCategoryDetail(id: string): Promise<ICategory> {
+export async function getCMSCategoryDetail(id: string, filter?: IFilter<ICategory>): Promise<ICategory> {
   try {
-    const response = await api.get(`/staff/categories/${id}`, {
+    const response = await api.get(`/staff/categories/${id}?filter=${JSON.stringify(filter)}`, {
       headers: auth(PLATFORM.CMS)
     })
     return response.data
@@ -57,11 +57,12 @@ export async function deleteCategoryById(id: string): Promise<void> {
   }
 }
 
-export async function createNewCategory(category: ICategory): Promise<void> {
+export async function createNewCategory(category: ICategory): Promise<ICategory> {
   try {
-    return api.post(`/staff/categories`, category, {
+    const response = await api.post(`/staff/categories`, category, {
       headers: auth(PLATFORM.CMS)
     })
+    return response.data
   } catch (error) {
     const errorMessage: string = get(error, 'response.data.error.message', '') || JSON.stringify(error)
     handleError(error as Error, 'API/cms/category', 'createNewCategory')

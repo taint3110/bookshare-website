@@ -32,7 +32,7 @@ const BookList = () => {
   const { results: bookList, totalCount: tableLength } = cmsBookList
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const [sort, setSort] = useState('updatedAt')
-  const [orderBy, setOrderBy] = useState(1)
+  const [orderBy, setOrderBy] = useState(-1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = (
@@ -87,12 +87,12 @@ const BookList = () => {
 
     return {
       ...book,
-      image: 1 ? (
+      image: book?.media ? (
         <Image
           objectFit="cover"
           borderRadius="6px"
           marginLeft={1}
-          src={mockImage}
+          src={book?.media?.imageUrl}
           alt="imageUrl"
           width={8}
           height={8}

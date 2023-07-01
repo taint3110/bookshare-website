@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Button, Divider, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
-import { createNewSeries, updateCMSSeriesDetail } from 'API/cms/series'
+import { uploadMedia } from 'API/cms/media'
+import { updateCMSSeriesDetail } from 'API/cms/series'
 import { handleError } from 'API/error'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
@@ -11,12 +12,13 @@ import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
-import { createElement, forwardRef, useEffect } from 'react'
+import { createElement, forwardRef, useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import CustomDatePicker from '../AddNewSeries/components/CustomDatepicker'
 import { mapAuthor, redirect } from './utils'
+import MediaImage from '../../Book/BookDetail/components/MediaImage'
 
 const SeriesDetail = () => {
   const methods = useForm({
@@ -36,6 +38,8 @@ const SeriesDetail = () => {
   } = methods
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const releaseDate = useWatch({ control, name: 'releaseDate', defaultValue: new Date() })
+  const media = useWatch({ control, name: 'formMedia', defaultValue: '' })
+  const [currentMedia, setCurrentMedia] = useState<string>('')
   const isFormDirty = isDirty
 
   function onCancel(): void {
@@ -50,11 +54,19 @@ const SeriesDetail = () => {
     spinnerStore.showLoading()
     try {
       const formattedData: ISeries = {
-        ...omit(data, 'series', 'id'),
+        ...omit(data, 'series', 'id', 'formMedia', 'media'),
         title: data?.title || '',
         author: mapAuthor(String(data?.author)),
         description: data?.description || '',
         releaseDate
+      }
+      if (data?.formMedia) {
+        await uploadMedia({
+          id: cmsSeriesDetail?.media?._id ?? '',
+          fileName: data?.formMedia,
+          imageUrl: data?.formMedia,
+          seriesId
+        })
       }
       await updateCMSSeriesDetail(seriesId, formattedData)
       toast.success('Update series successfully!')
@@ -70,7 +82,9 @@ const SeriesDetail = () => {
   async function fetchData(): Promise<void> {
     spinnerStore.showLoading()
     try {
-      await cmsSeriesStore.fetchCMSSeriesDetail(seriesId)
+      await cmsSeriesStore.fetchCMSSeriesDetail(seriesId, {
+        include: ['media']
+      })
     } catch (error) {
       handleError(error as Error, 'components/pages/CMS/BookManagement/Series/SeriesDetail', 'fetchData')
     } finally {
@@ -89,9 +103,11 @@ const SeriesDetail = () => {
     if (cmsSeriesDetail?.id) {
       const seriesFormValue: ISeries = {
         ...cmsSeriesDetail,
-        releaseDate: dayjs(cmsSeriesDetail?.releaseDate).toDate()
+        releaseDate: dayjs(cmsSeriesDetail?.releaseDate).toDate(),
+        formMedia: cmsSeriesDetail?.media?.imageUrl ?? ''
       }
       reset(seriesFormValue)
+      setCurrentMedia(cmsSeriesDetail?.media?.imageUrl ?? '')
     }
   }, [cmsSeriesDetail])
 
@@ -173,6 +189,12 @@ const SeriesDetail = () => {
               </GridItem>
             </Grid>
             <Divider borderColor="gray.200" borderBottomWidth="2px" />
+            <MediaImage
+              media={media}
+              formLabel="Series Image"
+              currentFile={currentMedia}
+              setCurrentFile={setCurrentMedia}
+            />
           </VStack>
         </VStack>
       </form>
