@@ -33,9 +33,9 @@ class CMSCategoryStore {
     }
   }
 
-  async fetchCMSCategory(id: string) {
+  async fetchCMSCategory(id: string, filter: IFilter<ICategory> = {}) {
     try {
-      const category: ICategory = await getCMSCategoryDetail(id)
+      const category: ICategory = await getCMSCategoryDetail(id, filter)
       this.cmsCategory = category
     } catch (error) {
       handleError(error as Error, 'stores/CMSCategory.ts', 'fetchCMSCategoryList')

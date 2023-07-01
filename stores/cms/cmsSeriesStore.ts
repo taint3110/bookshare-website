@@ -28,9 +28,9 @@ class CMSSeriesStore {
     }
   }
 
-  async fetchCMSSeriesDetail(id: string) {
+  async fetchCMSSeriesDetail(id: string, filter?: IFilter<ISeries>) {
     try {
-      const seriesDetail: ISeries = await getCMSSeriesDetail(id)
+      const seriesDetail: ISeries = await getCMSSeriesDetail(id, filter)
       this.cmsSeriesDetail = seriesDetail
     } catch (error) {
       handleError(error as Error, 'stores/CMSSeriesStore.ts', 'fetchCMSSeries')

@@ -18,9 +18,9 @@ export async function getCMSCategory(filter: IFilter<ICategory>): Promise<ICateg
   }
 }
 
-export async function getCMSCategoryDetail(id: string): Promise<ICategory> {
+export async function getCMSCategoryDetail(id: string, filter?: IFilter<ICategory>): Promise<ICategory> {
   try {
-    const response = await api.get(`/staff/categories/${id}`, {
+    const response = await api.get(`/staff/categories/${id}?filter=${JSON.stringify(filter)}`, {
       headers: auth(PLATFORM.CMS)
     })
     return response.data

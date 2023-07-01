@@ -82,7 +82,9 @@ const SeriesDetail = () => {
   async function fetchData(): Promise<void> {
     spinnerStore.showLoading()
     try {
-      await cmsSeriesStore.fetchCMSSeriesDetail(seriesId)
+      await cmsSeriesStore.fetchCMSSeriesDetail(seriesId, {
+        include: ['media']
+      })
     } catch (error) {
       handleError(error as Error, 'components/pages/CMS/BookManagement/Series/SeriesDetail', 'fetchData')
     } finally {

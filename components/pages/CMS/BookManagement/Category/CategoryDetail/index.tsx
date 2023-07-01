@@ -75,7 +75,9 @@ const CategoryDetail = () => {
   async function fetchData(): Promise<void> {
     spinnerStore.showLoading()
     try {
-      await cmsCategoryStore.fetchCMSCategory(categoryId)
+      await cmsCategoryStore.fetchCMSCategory(categoryId, {
+        include: ['media']
+      })
     } catch (error) {
       handleError(error as Error, 'components/pages/CMS/BookManagement/Category/CategoryDetail', 'fetchData')
     } finally {
@@ -106,7 +108,7 @@ const CategoryDetail = () => {
         <VStack padding={6} paddingInline={{ base: 6, lg: 8 }} paddingStart={{ base: '27px' }}>
           <HStack justifyContent="space-between" width="full">
             <Text fontSize="lg" fontWeight="600" color="gray.700" marginBottom={2}>
-              Create new category
+              Update category
             </Text>
             <HStack spacing={4}>
               <Button

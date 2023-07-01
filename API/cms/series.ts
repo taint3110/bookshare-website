@@ -19,9 +19,9 @@ export async function getCMSSeries(filter: IFilter<ISeries>): Promise<Pagination
   }
 }
 
-export async function getCMSSeriesDetail(id: string): Promise<ISeries> {
+export async function getCMSSeriesDetail(id: string, filter?: IFilter<ISeries>): Promise<ISeries> {
   try {
-    const response = await api.get(`/staff/series/${id}`, {
+    const response = await api.get(`/staff/series/${id}?filter=${JSON.stringify(filter)}`, {
       headers: auth(PLATFORM.CMS)
     })
     return response.data
