@@ -7,10 +7,18 @@ export interface IMockBook {
   publisher?: string
   language?: string
   bookStatus?: string
-  bookImages?: string
+  imageUrl?: string
   categories?: IMockCategory[]
   condition: EBookConditionEnum
   cover: EBookCoverEnum
+}
+
+export interface IMockOrder {
+  _id: string
+  status: EOrderStatusEnum
+  totalPrice: number
+  description: string
+  bookList: IMockBook[]
 }
 
 export enum EBookStatusEnum {
@@ -28,6 +36,17 @@ export enum EBookConditionEnum {
   NEW = 'new',
   OLD = 'old',
   DAMAGED = 'damaged'
+}
+
+enum EOrderStatusEnum {
+  NEW = 'new',
+  READY = 'ready',
+  DONE = 'done',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
+  RETURNED = 'returned',
+  REFUNDED = 'refunded',
+  OVERDUE = 'overdue'
 }
 
 export const MockBookConditions = Object.values(EBookConditionEnum)
@@ -48,7 +67,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
       {
         name: 'horror',
@@ -71,7 +90,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
+    imageUrl: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
       {
         name: 'textbook',
@@ -94,7 +113,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
+    imageUrl: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
         name: 'horror',
@@ -117,7 +136,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
+    imageUrl: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
       {
         name: 'textbook',
@@ -140,7 +159,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
       {
         name: 'horror',
@@ -163,7 +182,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
+    imageUrl: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
       {
         name: 'textbook',
@@ -186,7 +205,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
+    imageUrl: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
         name: 'textbook',
@@ -209,7 +228,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
+    imageUrl: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
       {
         name: 'textbook',
@@ -232,7 +251,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
       {
         name: 'horror',
@@ -255,7 +274,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
+    imageUrl: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
       {
         name: 'textbook',
@@ -278,7 +297,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
+    imageUrl: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
         name: 'textbook',
@@ -301,7 +320,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
+    imageUrl: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
       {
         name: 'textbook',
@@ -316,6 +335,14 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   }
 ]
+
+export const mockOrder: IMockOrder = {
+  _id: '1',
+  status: EOrderStatusEnum.NEW,
+  totalPrice: 0,
+  description: '',
+  bookList: [mockBooks[0], mockBooks[2], mockBooks[4]]
+}
 
 export const mockCategories: IMockCategory[] = [
   {

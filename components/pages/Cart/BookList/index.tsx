@@ -1,39 +1,23 @@
-import { Search2Icon } from '@chakra-ui/icons'
-import {
-  Box,
-  Button,
-  HStack,
-  Image,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Link,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react'
+import { useRouter } from 'next/router'
+import { getHeaderList } from './constant'
+import { getQueryValue, getValidArray } from 'utils/common'
+import { useDisclosure, Text, Image, HStack, Link } from '@chakra-ui/react'
 import { deleteBookById } from 'API/cms/book'
 import { handleError } from 'API/error'
-import ButtonWithIcon from 'components/ButtonWithIcon'
-import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
-import Icon from 'components/Icon'
-import Table from 'components/Table'
 import { useStores } from 'hooks/useStores'
 import { IBookWithRelations } from 'interfaces/book'
-import { ICategory } from 'interfaces/category'
-import debounce from 'lodash/debounce'
-import { observer } from 'mobx-react'
-import { useRouter } from 'next/router'
-import { ReactNode, useCallback, useEffect, useState } from 'react'
+import { useState, ReactNode } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { toast } from 'react-toastify'
 import routes from 'routes'
 import { maxTabletWidth } from 'theme/globalStyles'
-import { getQueryValue, getValidArray } from 'utils/common'
-import { getHeaderList } from './constant'
-import { goToBookAddNewPage } from './utils'
+import { ICategory } from 'interfaces/category'
+import Icon from 'components/Icon'
+import Table from 'components/Table'
+import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
 
-const BookList = () => {
+const CartBookList = () => {
   const router = useRouter()
   const pageIndex: number = getQueryValue(router, 'page', 1)
   const { cmsBookStore, spinnerStore } = useStores()
@@ -88,22 +72,19 @@ const BookList = () => {
     fetchData(false, page)
   }
   const pagination = { pageIndex, tableLength, gotoPage }
-  const dataInTable = getValidArray(bookList).map((book: IBookWithRelations) => {
-    const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
-
+  const dataInTable = getValidArray(mockBooks).map((book: IMockBook) => {
     function handleDelete(): void {
       onConfirm()
-      setTargetId(book?.id ?? '')
+      setTargetId(book?._id ?? '')
     }
-
     return {
       ...book,
-      image: book?.media ? (
+      image: book?.imageUrl ? (
         <Image
           objectFit="cover"
           borderRadius="6px"
           marginLeft={1}
-          src={book?.media?.imageUrl}
+          src={book?.imageUrl}
           alt="imageUrl"
           width={8}
           height={8}
@@ -124,59 +105,19 @@ const BookList = () => {
       categories: getValidArray(book?.categories)
         .map((category: ICategory) => category?.name)
         .join(', '),
-      series: book?.series?.title ?? '',
+      author: book?.author ?? 'Lol',
       price: book?.price ?? 100000,
-      status: 'Available',
       actions: (
         <HStack width="62px" cursor="pointer" marginLeft="auto">
-          <Link href={detailUrl} marginTop="5px">
-            <Icon iconName="edit.svg" size={32} />
-          </Link>
           <Icon iconName="trash.svg" size={32} onClick={handleDelete} />
         </HStack>
       )
     }
   })
-
-  const changeName = useCallback(
-    debounce((event: { target: { value: string } }) => {
-      setTitle(event?.target?.value ?? '')
-    }, 1000),
-    []
-  )
-
-  useEffect(() => {
-    router.replace(`${routes.cms.bookManagement.value}?index=0&page=1`)
-    fetchData(true)
-  }, [pageSize, title, sort, orderBy])
-
   return (
-    <Box paddingBottom={{ base: 4, lg: 2 }}>
-      <HStack spacing={4} marginBottom={6}>
-        <InputGroup borderRadius="6px" maxWidth={{ base: '300px', lg: '540px' }} background="white">
-          <InputLeftElement pointerEvents="none">
-            <Search2Icon color="gray.400" />
-          </InputLeftElement>
-          <Input type="search" placeholder="Search book by Title" onChange={changeName} />
-        </InputGroup>
-        <Box borderRadius="6px" bg="white">
-          <ButtonWithIcon label="Filter" iconName="filter.svg" size={16} border="1px solid #E2E8F0" color="gray.800" />
-        </Box>
-        <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button
-            padding="2"
-            paddingInline="4"
-            color="white"
-            colorScheme="teal"
-            lineHeight={6}
-            onClick={goToBookAddNewPage}
-          >
-            + Add Book
-          </Button>
-        </Box>
-      </HStack>
+    <>
       <Table
-        headerList={getHeaderList(isNotDesktop)}
+        headerList={getHeaderList()}
         tableData={dataInTable}
         pagination={pagination}
         pageSize={pageSize}
@@ -184,19 +125,10 @@ const BookList = () => {
         setPageSize={setPageSize}
         setSort={setSort}
         setOrderBy={setOrderBy}
-        subComponent={getSubComponent(getHeaderList(false), 3)}
+        subComponent={getSubComponent(getHeaderList(), 3)}
       />
-      <ConfirmModal
-        titleText="Delete Book"
-        bodyText={confirmModalContent}
-        cancelButtonText="No, keep this book"
-        confirmButtonText="Yes, Delete"
-        isOpen={isConfirming}
-        onClose={closeConfirm}
-        onClickAccept={deleteBook}
-      />
-    </Box>
+    </>
   )
 }
 
-export default observer(BookList)
+export default CartBookList
