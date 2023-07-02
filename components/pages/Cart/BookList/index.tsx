@@ -15,7 +15,7 @@ import { maxTabletWidth } from 'theme/globalStyles'
 import { ICategory } from 'interfaces/category'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
-import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
+import { IMockBook, mockBooks, mockOrder } from 'components/BookList/components/BookCard/mockData'
 
 const CartBookList = () => {
   const router = useRouter()
@@ -68,11 +68,12 @@ const CartBookList = () => {
   }
 
   function gotoPage(page: number): void {
+    // TODO: Change this to books in order
     router.push(`${routes.cms.bookManagement.value}?index=0&page=${page}&pageSize=${pageSize}`)
     fetchData(false, page)
   }
   const pagination = { pageIndex, tableLength, gotoPage }
-  const dataInTable = getValidArray(mockBooks).map((book: IMockBook) => {
+  const dataInTable = getValidArray(mockOrder.bookList).map((book: IMockBook) => {
     function handleDelete(): void {
       onConfirm()
       setTargetId(book?._id ?? '')

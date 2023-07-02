@@ -13,8 +13,18 @@ export interface IMockBook {
   cover: EBookCoverEnum
 }
 
+export interface IMockUser {
+  _id: string
+  email: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  bonusPoint: number
+}
+
 export interface IMockOrder {
   _id: string
+  userId: string
   status: EOrderStatusEnum
   totalPrice: number
   description: string
@@ -55,6 +65,15 @@ export const MockBookCovers = Object.values(EBookCoverEnum)
 export interface IMockCategory {
   name: string
   image: string
+}
+
+export const mockUser: IMockUser = {
+  _id: '1',
+  email: 'example@gm.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  phoneNumber: '0987654321',
+  bonusPoint: 100
 }
 
 export const mockBooks: IMockBook[] = [
@@ -341,7 +360,8 @@ export const mockOrder: IMockOrder = {
   status: EOrderStatusEnum.NEW,
   totalPrice: 0,
   description: '',
-  bookList: [mockBooks[0], mockBooks[2], mockBooks[4]]
+  bookList: [mockBooks[0], mockBooks[2], mockBooks[4]],
+  userId: '1'
 }
 
 export const mockCategories: IMockCategory[] = [
