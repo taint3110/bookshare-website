@@ -15,39 +15,23 @@ import { ICategory } from 'interfaces/category'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { IMockBook, mockBooks, mockOrder } from 'components/BookList/components/BookCard/mockData'
+import ConfirmModal from 'components/ConfirmModal'
 
 const CartBookList = () => {
   const router = useRouter()
   const pageIndex: number = getQueryValue(router, 'page', 1)
-  const { cmsBookStore, spinnerStore } = useStores()
+  const { spinnerStore } = useStores()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
-  const isNotDesktop: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
-  const { cmsBookList } = cmsBookStore
-  const { results: bookList, totalCount: tableLength } = cmsBookList
-  const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const [sort, setSort] = useState('updatedAt')
   const [orderBy, setOrderBy] = useState(-1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
-  const confirmModalContent: ReactNode = (
-    <Text>Are you sure to delete this Book?{<br />}This action can not be undo</Text>
-  )
+  const confirmModalContent: ReactNode = <Text>Are you sure to remove this Book?</Text>
   const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
 
   async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
     try {
-      spinnerStore.showLoading()
-      const filter = {
-        where: {
-          title
-        },
-        offset: isReset ? 0 : pageSize * (page - 1),
-        order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
-        limit: pageSize
-      }
-      await cmsBookStore.fetchCMSBookList(filter)
     } catch (error) {
-      handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
     } finally {
       spinnerStore.hideLoading()
     }
@@ -56,25 +40,20 @@ const CartBookList = () => {
   async function deleteBook(): Promise<void> {
     try {
       if (targetId) {
-        await deleteBookById(targetId)
+        // TODO: Handle remove book from cart
         closeConfirm()
         fetchData()
-        toast.success('Delete Book Successfully')
+        toast.success('Remove Book Successfully')
       }
     } catch (error) {
       toast.error('Something wrong happened')
     }
   }
 
-  function gotoPage(page: number): void {
-    // TODO: Change this to books in order
-    router.push(`${routes.cms.bookManagement.value}?index=0&page=${page}&pageSize=${pageSize}`)
-    fetchData(false, page)
-  }
-  const pagination = { pageIndex, tableLength, gotoPage }
   const dataInTable = getValidArray(mockOrder.bookList).map((book: IMockBook) => {
     function handleDelete(): void {
       onConfirm()
+      setTargetId(book?._id ?? '')
     }
     return {
       ...book,
@@ -118,13 +97,19 @@ const CartBookList = () => {
       <Table
         headerList={getHeaderList()}
         tableData={dataInTable}
-        pagination={pagination}
-        pageSize={pageSize}
         isManualSort
-        setPageSize={setPageSize}
         setSort={setSort}
         setOrderBy={setOrderBy}
         subComponent={getSubComponent(getHeaderList(), 3)}
+      />
+      <ConfirmModal
+        titleText="Remove Book"
+        bodyText={confirmModalContent}
+        cancelButtonText="No, keep this book"
+        confirmButtonText="Yes, please"
+        isOpen={isConfirming}
+        onClose={closeConfirm}
+        onClickAccept={deleteBook}
       />
     </Card>
   )
