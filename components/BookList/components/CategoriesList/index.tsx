@@ -10,7 +10,7 @@ export interface ICategoriesListProps {
 const CategoriesList = (props: ICategoriesListProps) => {
   const { categories } = props
   return (
-    <Grid templateColumns="repeat(8, 1fr)" gap={1}>
+    <Grid templateColumns={{ base: 'repeat(4, 1fr)', lg: 'repeat(6, 1fr)' }} gap={1}>
       {getValidArray(categories).map((category: ICategory, categoryIndex: number) => (
         <Link href="/" key={category?.id}>
           <Card maxW="sm" key={categoryIndex}>
@@ -18,7 +18,7 @@ const CategoriesList = (props: ICategoriesListProps) => {
               <Image
                 boxSize={'200'}
                 objectFit="contain"
-                src="https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg"
+                src={category?.media?.imageUrl ?? 'https://via.placeholder.com/150'}
                 alt={category?.name}
                 borderRadius="lg"
               />

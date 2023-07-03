@@ -16,7 +16,7 @@ const BookCard = (props: IBookWithRelations) => {
       <Card>
         <CardBody>
           <Image
-            src="https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg"
+            src={media?.imageUrl ?? 'https://via.placeholder.com/150'}
             boxSize="sm"
             objectFit="contain"
             alt={title}
