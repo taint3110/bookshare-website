@@ -28,6 +28,7 @@ export interface IMockOrder {
   status: EOrderStatusEnum
   totalPrice: number
   description: string
+  dueDate: Date
   bookList: IMockBook[]
 }
 
@@ -358,10 +359,11 @@ export const mockBooks: IMockBook[] = [
 export const mockOrder: IMockOrder = {
   _id: '1',
   status: EOrderStatusEnum.NEW,
-  totalPrice: 0,
+  totalPrice: 10000,
   description: '',
   bookList: [mockBooks[0], mockBooks[2], mockBooks[4]],
-  userId: '1'
+  userId: '1',
+  dueDate: new Date()
 }
 
 export const mockCategories: IMockCategory[] = [

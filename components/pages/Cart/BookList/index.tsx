@@ -1,12 +1,11 @@
 import { useRouter } from 'next/router'
 import { getHeaderList } from './constant'
 import { getQueryValue, getValidArray } from 'utils/common'
-import { useDisclosure, Text, Image, HStack, Link } from '@chakra-ui/react'
+import { useDisclosure, Text, Image, HStack, Link, Card } from '@chakra-ui/react'
 import { deleteBookById } from 'API/cms/book'
 import { handleError } from 'API/error'
 import getSubComponent from 'components/HOCs/getSubComponent'
 import { useStores } from 'hooks/useStores'
-import { IBookWithRelations } from 'interfaces/book'
 import { useState, ReactNode } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { toast } from 'react-toastify'
@@ -76,7 +75,6 @@ const CartBookList = () => {
   const dataInTable = getValidArray(mockOrder.bookList).map((book: IMockBook) => {
     function handleDelete(): void {
       onConfirm()
-      setTargetId(book?._id ?? '')
     }
     return {
       ...book,
@@ -116,7 +114,7 @@ const CartBookList = () => {
     }
   })
   return (
-    <>
+    <Card flexGrow={2}>
       <Table
         headerList={getHeaderList()}
         tableData={dataInTable}
@@ -128,7 +126,7 @@ const CartBookList = () => {
         setOrderBy={setOrderBy}
         subComponent={getSubComponent(getHeaderList(), 3)}
       />
-    </>
+    </Card>
   )
 }
 
