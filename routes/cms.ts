@@ -43,10 +43,7 @@ const cmsRoutes = {
     orderManagement: {
       value: '/cms/order-management',
       order: {
-        value: '/cms/order-management/order',
-        detail: {
-          value: (orderId: string) => `/cms/order-management/order/detail/${orderId}`
-        }
+        value: (orderId: string) => `/cms/order-management/order/${orderId}`
       }
     }
   }
