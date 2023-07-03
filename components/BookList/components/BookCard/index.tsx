@@ -1,24 +1,10 @@
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Image,
-  Stack,
-  Text,
-  Button,
-  ButtonGroup,
-  Divider,
-  Heading,
-  Flex
-} from '@chakra-ui/react'
-import { IMockBook } from './mockData'
+import { Button, Card, CardBody, CardFooter, Divider, Flex, Heading, Image, Stack, Text } from '@chakra-ui/react'
+import { IBookWithRelations } from 'interfaces/book'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { MouseEventHandler } from 'react'
 
-const BookCard = (props: IMockBook) => {
-  const { _id, title, author, price, bonusPointPrice, publisher, language, bookStatus, bookImages } = props
+const BookCard = (props: IBookWithRelations) => {
+  const { id, title, author, price, bonusPointPrice, publisher, language, bookStatus, media } = props
   const router = useRouter()
 
   const handleClick = (id: string) => {
@@ -26,10 +12,16 @@ const BookCard = (props: IMockBook) => {
   }
 
   return (
-    <Link href={'/books/' + _id}>
+    <Link href={'/books/' + id}>
       <Card>
         <CardBody>
-          <Image src={bookImages} boxSize="sm" objectFit="contain" alt={title} borderRadius="sm" />
+          <Image
+            src={media?.imageUrl ?? 'https://via.placeholder.com/150'}
+            boxSize="sm"
+            objectFit="contain"
+            alt={title}
+            borderRadius="sm"
+          />
           <Stack mt="4" spacing="1">
             <Heading size="sm">{title}</Heading>
             <Text>{author}</Text>

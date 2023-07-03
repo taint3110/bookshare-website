@@ -27,6 +27,7 @@ export interface IBook {
   formCategories?: IOption[]
   formMedia?: string
   media?: IMedia
+  language?: string
 }
 
 export interface IBookWithRelations extends IBook {
