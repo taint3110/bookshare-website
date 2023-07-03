@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
   Center,
   Checkbox,
   Container,
-  Divider,
   Flex,
   Grid,
   Menu,
@@ -17,17 +16,12 @@ import {
   Text
 } from '@chakra-ui/react'
 import Pagination from 'components/BookList/components/Pagination'
-import NextLink from 'components/NextLink'
-import { IBookWithRelations } from 'interfaces/book'
+import { IBookWithRelations, IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
-import Link from 'next/link'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { getValidArray } from 'utils/common'
 import BookCard from './components/BookCard'
 import { MockBookConditions, MockBookCovers } from './components/BookCard/mockData'
-import CategoriesList from './components/CategoriesList'
-import { ChevronDownIcon } from '@chakra-ui/icons'
-import Pagination from 'components/BookList/components/Pagination'
 
 export interface IBookWithRelationsListProps {
   bookList: IBookWithRelations[]
@@ -231,7 +225,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
       {filteredData?.length > 0 ? (
         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
           <React.Fragment>
-            {filteredData.map((book: IMockBook, indexBook: number) => (
+            {filteredData.map((book: IBookWithRelations, indexBook: number) => (
               <BookCard {...book} key={indexBook} />
             ))}
           </React.Fragment>
