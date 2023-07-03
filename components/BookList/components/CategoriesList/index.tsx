@@ -1,6 +1,7 @@
 import { Card, CardBody, Grid, Image, Text } from '@chakra-ui/react'
 import { ICategory } from 'interfaces/category'
 import Link from 'next/link'
+import { getValidArray } from 'utils/common'
 
 export interface ICategoriesListProps {
   categories: ICategory[]
@@ -10,7 +11,7 @@ const CategoriesList = (props: ICategoriesListProps) => {
   const { categories } = props
   return (
     <Grid templateColumns="repeat(8, 1fr)" gap={1}>
-      {categories.map((category: ICategory, categoryIndex: number) => (
+      {getValidArray(categories).map((category: ICategory, categoryIndex: number) => (
         <Link href="/" key={category?.id}>
           <Card maxW="sm" key={categoryIndex}>
             <CardBody>

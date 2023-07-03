@@ -16,7 +16,7 @@ import {
   Text
 } from '@chakra-ui/react'
 import Pagination from 'components/BookList/components/Pagination'
-import { IBookWithRelations, IBookWithRelations } from 'interfaces/book'
+import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
 import React, { useState } from 'react'
 import { getValidArray } from 'utils/common'
