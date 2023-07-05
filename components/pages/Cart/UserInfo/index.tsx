@@ -1,16 +1,41 @@
-import { Button, Card, CardBody, CardFooter, CardHeader, Divider, HStack, Heading, Stack, Text } from '@chakra-ui/react'
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Divider,
+  FormControl,
+  FormLabel,
+  HStack,
+  Heading,
+  Stack,
+  Text
+} from '@chakra-ui/react'
 import { IMockOrder, IMockUser, mockOrder, mockUser } from 'components/BookList/components/BookCard/mockData'
 import FormInput from 'components/FormInput'
-import CustomDatePicker from 'components/pages/CMS/BookManagement/Book/AddNewBook/components/CustomDatepicker'
-import { SyntheticEvent, createElement, forwardRef } from 'react'
+import { SyntheticEvent, createElement, forwardRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
-import { Controller } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
+import CustomDatePicker from './components/CustomeDatePicker'
 
 const CartUserInfo = () => {
+  const methods = useForm({
+    mode: 'onChange'
+  })
+  const {
+    handleSubmit,
+    formState: { isSubmitting, isDirty, isSubmitSuccessful },
+    control,
+    reset,
+    setValue
+  } = methods
   const user: IMockUser = mockUser
   const order: IMockOrder = mockOrder
+  const [selectedDate, setSelectedDate] = useState<Date>(order.dueDate)
   function handleDueDateChange(date: Date | null, event: SyntheticEvent<any, Event> | undefined): void {
-    throw new Error('Function not implemented.')
+    order.dueDate = date ?? order.dueDate
+    setSelectedDate(order.dueDate)
   }
 
   return (
@@ -21,23 +46,22 @@ const CartUserInfo = () => {
         </Heading>
         <Text>{user.email}</Text>
         <Text>{user.phoneNumber}</Text>
-        <Text as={'b'}>Return date</Text>
-        {/* <FormInput name="releaseDate" label="Release Date">
-          <Controller
-            name="releaseDate"
-            // control={control}
-            rules={{ required: false }}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                selected={order.dueDate}
-                onChange={handleDueDateChange}
-                // value={order.dueDate}
-                customInput={createElement(forwardRef(CustomDatePicker))}
-              />
-            )}
-          />
-        </FormInput> */}
+        <Text marginTop={8} as={'b'}>
+          Return date
+        </Text>
+        <Controller
+          name="releaseDate"
+          control={control}
+          rules={{ required: false }}
+          render={({ field }) => (
+            <DatePicker
+              {...field}
+              selected={selectedDate}
+              onChange={handleDueDateChange}
+              customInput={createElement(forwardRef(CustomDatePicker))}
+            />
+          )}
+        />
         <Divider flexGrow={1} marginTop={4} marginBottom={4} />
         <HStack justifyContent={'space-between'}>
           <Text as={'b'}>Total:</Text>
@@ -50,7 +74,9 @@ const CartUserInfo = () => {
         </HStack>
       </CardBody>
       <CardFooter>
-        <Button flexGrow={1}>Place Order</Button>
+        <Button colorScheme="teal" variant="solid" flexGrow={1}>
+          Place Order
+        </Button>
       </CardFooter>
     </Card>
   )

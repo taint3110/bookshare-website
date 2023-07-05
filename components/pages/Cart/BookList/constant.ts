@@ -4,11 +4,6 @@ import Cell from 'components/Table/components/ExpandableCell'
 export function getHeaderList(): ITableHeader[] {
   const headers: ITableHeader[] = [
     {
-      Header: '',
-      accessor: 'isExpand',
-      Cell
-    },
-    {
       Header: 'COVER',
       accessor: 'image',
       disableSortBy: true
@@ -16,16 +11,19 @@ export function getHeaderList(): ITableHeader[] {
     {
       Header: 'TITLE',
       accessor: 'title',
+      disableSortBy: true,
       Cell
     },
     {
       Header: 'AUTHOR',
       accessor: 'author',
+      disableSortBy: true,
       Cell
     },
     {
       Header: 'PRICE',
       accessor: 'price',
+      disableSortBy: true,
       Cell
     },
     {

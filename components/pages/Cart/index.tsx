@@ -5,7 +5,7 @@ import CartUserInfo from './UserInfo'
 const Cart = () => {
   return (
     <>
-      <HStack pl="280px" pr="280px" marginTop="12" mb="40" alignItems={'flex-start'} spacing={28}>
+      <HStack pl="280px" pr="280px" marginTop="12" mb="40" alignItems={'flex-start'}>
         <CartBookList />
         <CartUserInfo />
       </HStack>

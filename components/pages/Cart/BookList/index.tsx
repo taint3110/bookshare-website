@@ -24,7 +24,6 @@ const CartBookList = () => {
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const [sort, setSort] = useState('updatedAt')
   const [orderBy, setOrderBy] = useState(-1)
-  const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = <Text>Are you sure to remove this Book?</Text>
   const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
