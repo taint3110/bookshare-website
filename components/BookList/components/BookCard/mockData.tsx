@@ -356,6 +356,7 @@ export const mockBooks: IMockBook[] = [
   }
 ]
 
+// export const mockOrder = null
 export const mockOrder: IMockOrder = {
   _id: '1',
   status: EOrderStatusEnum.NEW,
