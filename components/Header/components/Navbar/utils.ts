@@ -29,7 +29,7 @@ export function getNavLinks(metroList?: IMetro[]): INavLink[] {
     // },
     {
       type: NavLink.BUTTON,
-      link: 'https://github.com/taint3110/bookshare ',
+      link: '/checkout/cart',
       text: 'Go to cart'
     },
     {

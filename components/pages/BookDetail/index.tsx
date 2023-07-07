@@ -30,7 +30,7 @@ const BookDetail = (props: IMockBook) => {
     bookStatus,
     publisher,
     language,
-    bookImages,
+    imageUrl,
     categories,
     condition,
     cover
@@ -47,7 +47,7 @@ const BookDetail = (props: IMockBook) => {
       <HStack spacing={32} alignItems={'flex-start'}>
         {/* Book Images */}
         <Box boxSize="540" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
-          <Image boxSize="540" objectFit={'contain'} src={bookImages} alt={title} />
+          <Image boxSize="540" objectFit={'contain'} src={imageUrl} alt={title} />
         </Box>
         {/* Book info */}
         <Stack justifySelf={'flex-start'} spacing={'16'}>

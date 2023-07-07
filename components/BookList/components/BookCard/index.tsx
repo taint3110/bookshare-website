@@ -32,15 +32,14 @@ const BookCard = (props: IBookWithRelations) => {
         </CardBody>
         <Divider />
         <CardFooter>
-          <Flex justify={'space-between'} w={'100%'}>
-            <Button
-              variant={bookStatus == 'available' ? 'solid' : 'flushed'}
-              isDisabled={bookStatus == 'available' ? false : true}
-            >
-              {bookStatus == 'available' ? 'Add to cart' : 'Unavailable'}
-            </Button>
-            <Button variant="ghost">Save</Button>
-          </Flex>
+          <Button
+            flex={1}
+            colorScheme="teal"
+            variant={bookStatus == 'available' ? 'solid' : 'flushed'}
+            isDisabled={bookStatus == 'available' ? false : true}
+          >
+            {bookStatus == 'available' ? 'Add to cart' : 'Unavailable'}
+          </Button>
         </CardFooter>
       </Card>
 

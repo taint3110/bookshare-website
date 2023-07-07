@@ -7,10 +7,29 @@ export interface IMockBook {
   publisher?: string
   language?: string
   bookStatus?: string
-  bookImages?: string
+  imageUrl?: string
   categories?: IMockCategory[]
   condition: EBookConditionEnum
   cover: EBookCoverEnum
+}
+
+export interface IMockUser {
+  _id: string
+  email: string
+  firstName: string
+  lastName: string
+  phoneNumber: string
+  bonusPoint: number
+}
+
+export interface IMockOrder {
+  _id: string
+  userId: string
+  status: EOrderStatusEnum
+  totalPrice: number
+  description: string
+  dueDate: Date
+  bookList: IMockBook[]
 }
 
 export enum EBookStatusEnum {
@@ -30,12 +49,32 @@ export enum EBookConditionEnum {
   DAMAGED = 'damaged'
 }
 
+enum EOrderStatusEnum {
+  NEW = 'new',
+  READY = 'ready',
+  DONE = 'done',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled',
+  RETURNED = 'returned',
+  REFUNDED = 'refunded',
+  OVERDUE = 'overdue'
+}
+
 export const MockBookConditions = Object.values(EBookConditionEnum)
 export const MockBookCovers = Object.values(EBookCoverEnum)
 
 export interface IMockCategory {
   name: string
   image: string
+}
+
+export const mockUser: IMockUser = {
+  _id: '1',
+  email: 'example@gm.com',
+  firstName: 'John',
+  lastName: 'Doe',
+  phoneNumber: '0987654321',
+  bonusPoint: 100
 }
 
 export const mockBooks: IMockBook[] = [
@@ -48,7 +87,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
       {
         name: 'horror',
@@ -71,7 +110,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
+    imageUrl: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
       {
         name: 'textbook',
@@ -94,7 +133,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
+    imageUrl: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
         name: 'horror',
@@ -117,7 +156,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
+    imageUrl: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
       {
         name: 'textbook',
@@ -140,7 +179,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
       {
         name: 'horror',
@@ -163,7 +202,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
+    imageUrl: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
       {
         name: 'textbook',
@@ -186,7 +225,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
+    imageUrl: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
         name: 'textbook',
@@ -209,7 +248,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
+    imageUrl: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
       {
         name: 'textbook',
@@ -232,7 +271,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81TkpoPjOyL._AC_UF1000,1000_QL80_.jpg',
     categories: [
       {
         name: 'horror',
@@ -255,7 +294,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
+    imageUrl: 'https://edit.org/images/cat/book-covers-big-2019101610.jpg',
     categories: [
       {
         name: 'textbook',
@@ -278,7 +317,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'unavailable',
-    bookImages: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
+    imageUrl: 'https://i.pinimg.com/originals/a2/0f/ed/a20fedf3c81c1aff08b9eaf779442bd0.jpg',
     categories: [
       {
         name: 'textbook',
@@ -301,7 +340,7 @@ export const mockBooks: IMockBook[] = [
     publisher: 'NXB Kim Đồng',
     language: 'Tiếng Việt',
     bookStatus: 'available',
-    bookImages: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
+    imageUrl: 'https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/W2ESGDHDBQI6VAMBMBXGAO5RYQ.jpg',
     categories: [
       {
         name: 'textbook',
@@ -316,6 +355,17 @@ export const mockBooks: IMockBook[] = [
     cover: EBookCoverEnum.SOFT
   }
 ]
+
+// export const mockOrder = null
+export const mockOrder: IMockOrder = {
+  _id: '1',
+  status: EOrderStatusEnum.NEW,
+  totalPrice: 10000,
+  description: '',
+  bookList: [mockBooks[0], mockBooks[2], mockBooks[4]],
+  userId: '1',
+  dueDate: new Date()
+}
 
 export const mockCategories: IMockCategory[] = [
   {
