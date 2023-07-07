@@ -1,12 +1,13 @@
 import CMSLayout from 'components/Layout/CMSLayout'
-import BookDetail from 'components/pages/CMS/BookManagement/Book/BookDetail'
+import dynamic from 'next/dynamic'
+const OrderDetail = dynamic(() => import('components/pages/CMS/OrderManagement/Order/OrderDetail'), { ssr: false })
 
-const BookDetailPage = () => {
+const OrderDetailPage = () => {
   return (
-    <CMSLayout title={`Book Management | Internal Portal`} topBarTitle="Book Management">
-      <BookDetail />
+    <CMSLayout title={`Order Management | Internal Portal`} topBarTitle="Order Management">
+      <OrderDetail />
     </CMSLayout>
   )
 }
 
-export default BookDetailPage
+export default OrderDetailPage

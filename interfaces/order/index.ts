@@ -1,5 +1,6 @@
 import { EOrderStatusEnum } from 'enums/order'
 import { IBookWithRelations } from 'interfaces/book'
+import { IOption } from 'interfaces/common'
 import { IMedia } from 'interfaces/media'
 
 //*INFO: Unit is room in house
@@ -15,6 +16,9 @@ export interface IOrder {
   bookList?: IBookWithRelations[]
   userId?: string
   rentLength?: number
+  formStatus?: IOption
+  formUserName?: string
+  formRentLength?: IOption
 }
 
 export interface IOrderWithRelations extends IOrder {}

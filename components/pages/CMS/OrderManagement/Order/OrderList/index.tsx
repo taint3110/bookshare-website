@@ -73,7 +73,7 @@ const OrderList = () => {
   }
   const pagination = { pageIndex, tableLength, gotoPage }
   const dataInTable = getValidArray(orderList).map((order: IOrder) => {
-    const detailUrl: string = `${routes.cms.orderManagement.order.value}/${order?.id}`
+    const detailUrl: string = `${routes.cms.orderManagement.order.value(order?.id ?? '')}`
 
     function handleDelete(): void {
       onConfirm()

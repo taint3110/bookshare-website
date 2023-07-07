@@ -3,9 +3,11 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import routes from 'routes'
 import { getQueryValue } from 'utils/common'
-import OrderList from './Order/OrderList'
 
-const BookManagement = () => {
+import dynamic from 'next/dynamic'
+const OrderList = dynamic(() => import('./Order/OrderList'), { ssr: false })
+
+const OrderManagement = () => {
   const router = useRouter()
   const tabNumber: number = getQueryValue(router, 'index', 0)
   const [tabIndex, setTabIndex] = useState<number>(tabNumber)
@@ -32,4 +34,4 @@ const BookManagement = () => {
   return <Tabs data={tabsData} tabIndex={tabIndex} onChange={changeIndex} />
 }
 
-export default BookManagement
+export default OrderManagement

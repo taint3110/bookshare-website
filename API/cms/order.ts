@@ -44,9 +44,9 @@ export async function createNewOrder(order: IOrder): Promise<IOrder> {
   }
 }
 
-export async function updateOrderById(order: IOrder, categoryIds?: string[]): Promise<void> {
+export async function updateOrderById(id: string, order: IOrder): Promise<void> {
   try {
-    return api.patch(`/staff/orders/${order?.id}?categoryIds=${categoryIds}`, order, {
+    return api.patch(`/staff/orders/${id}`, order, {
       headers: auth(PLATFORM.CMS)
     })
   } catch (error) {

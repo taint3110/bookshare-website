@@ -1,34 +1,35 @@
 /* eslint-disable max-lines */
 import { Button, Divider, Grid, GridItem, HStack, Text, Textarea, VStack, useDisclosure } from '@chakra-ui/react'
-import { uploadMedia } from 'API/cms/media'
-import { updateCMSSeriesDetail } from 'API/cms/series'
+import { updateOrderById } from 'API/cms/order'
 import { handleError } from 'API/error'
+import ChakraInputDropdown from 'components/ChakraInputDropdown'
 import ConfirmModal from 'components/ConfirmModal'
 import FormInput from 'components/FormInput'
-import dayjs from 'dayjs'
+import { EOrderStatusEnum } from 'enums/order'
+import { EZIndexLayer } from 'enums/theme'
 import { useStores } from 'hooks/useStores'
-import { ISeries } from 'interfaces/series'
+import { IOrder } from 'interfaces/order'
+import capitalize from 'lodash/capitalize'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
-import { createElement, forwardRef, useEffect, useState } from 'react'
-import DatePicker from 'react-datepicker'
+import { useEffect, useState } from 'react'
 import { Controller, FormProvider, useForm, useWatch } from 'react-hook-form'
 import { toast } from 'react-toastify'
-import CustomDatePicker from '../AddNewSeries/components/CustomDatepicker'
-import { mapAuthor, redirect } from './utils'
-import MediaImage from '../../Book/BookDetail/components/MediaImage'
+import { getValidArray } from 'utils/common'
+import BookListTable from './BookListTable'
+import { getOptionsSelect, getRentLengthOptionsSelect, redirect } from './utils'
 
-const SeriesDetail = () => {
+const OrderDetail = () => {
   const methods = useForm({
     mode: 'onChange'
   })
-  const { spinnerStore, cmsSeriesStore } = useStores()
+  const { spinnerStore, cmsOrderStore } = useStores()
   const { isLoading } = spinnerStore
   const router = useRouter()
-  const { cmsSeriesDetail } = cmsSeriesStore
-  const seriesId: string = String(get(router, 'query.seriesId', ''))
+  const { orderDetail } = cmsOrderStore
+  const orderId: string = String(get(router, 'query.orderId', ''))
   const {
     handleSubmit,
     formState: { isSubmitting, isDirty, isSubmitSuccessful },
@@ -50,30 +51,21 @@ const SeriesDetail = () => {
     }
   }
 
-  async function onSubmit(data: ISeries): Promise<void> {
+  async function onSubmit(data: IOrder): Promise<void> {
     spinnerStore.showLoading()
     try {
-      const formattedData: ISeries = {
-        ...omit(data, 'series', 'id', 'formMedia', 'media'),
-        title: data?.title || '',
-        author: mapAuthor(String(data?.author)),
-        description: data?.description || '',
-        releaseDate
+      const formattedData: IOrder = {
+        ...omit(data, 'bookList', 'formUserName', 'formStatus', 'formRentLength', 'totalPrice'),
+        rentLength: Number(data?.formRentLength?.value),
+        description: data?.description ?? '',
+        orderStatus: data?.formStatus?.value as EOrderStatusEnum
       }
-      if (data?.formMedia) {
-        await uploadMedia({
-          id: cmsSeriesDetail?.media?._id ?? '',
-          fileName: data?.formMedia,
-          imageUrl: data?.formMedia,
-          seriesId
-        })
-      }
-      await updateCMSSeriesDetail(seriesId, formattedData)
-      toast.success('Update series successfully!')
+      await updateOrderById(orderId, formattedData)
+      toast.success('Update order successfully!')
       redirect()
     } catch (error) {
-      toast.error('Update series failed!')
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Series/SeriesDetail', 'onSubmit')
+      toast.error('Update order failed!')
+      handleError(error as Error, 'components/pages/CMS/OrderManagement/Order/OrderDetail', 'onSubmit')
     } finally {
       spinnerStore.hideLoading()
     }
@@ -82,34 +74,40 @@ const SeriesDetail = () => {
   async function fetchData(): Promise<void> {
     spinnerStore.showLoading()
     try {
-      await cmsSeriesStore.fetchCMSSeriesDetail(seriesId, {
-        include: ['media']
+      await cmsOrderStore.fetchCMSOrderDetail(orderId, {
+        include: ['book']
       })
     } catch (error) {
-      handleError(error as Error, 'components/pages/CMS/BookManagement/Series/SeriesDetail', 'fetchData')
+      handleError(error as Error, 'components/pages/CMS/OrderManagement/Order/OrderDetail', 'fetchData')
     } finally {
       spinnerStore.hideLoading()
     }
   }
 
   useEffect(() => {
-    if (seriesId) {
+    if (orderId) {
       reset({})
       fetchData()
     }
-  }, [seriesId])
+  }, [orderId])
 
   useEffect(() => {
-    if (cmsSeriesDetail?.id) {
-      const seriesFormValue: ISeries = {
-        ...cmsSeriesDetail,
-        releaseDate: dayjs(cmsSeriesDetail?.releaseDate).toDate(),
-        formMedia: cmsSeriesDetail?.media?.imageUrl ?? ''
+    if (orderDetail?.id) {
+      const orderFormValue: IOrder = {
+        ...orderDetail,
+        formUserName: 'Admin',
+        formStatus: {
+          label: capitalize(orderDetail?.orderStatus),
+          value: orderDetail?.orderStatus ?? ''
+        },
+        formRentLength: {
+          label: `${orderDetail?.rentLength} ${orderDetail?.rentLength ?? 1 > 1 ? 'months' : 'month'}`,
+          value: String(orderDetail?.rentLength) ?? ''
+        }
       }
-      reset(seriesFormValue)
-      setCurrentMedia(cmsSeriesDetail?.media?.imageUrl ?? '')
+      reset(orderFormValue)
     }
-  }, [cmsSeriesDetail])
+  }, [orderDetail])
 
   return (
     <FormProvider {...methods}>
@@ -117,7 +115,7 @@ const SeriesDetail = () => {
         <VStack padding={6} paddingInline={{ base: 6, lg: 8 }} paddingStart={{ base: '27px' }}>
           <HStack justifyContent="space-between" width="full">
             <Text fontSize="lg" fontWeight="600" color="gray.700" marginBottom={2}>
-              Update series
+              Update order
             </Text>
             <HStack spacing={4}>
               <Button
@@ -154,8 +152,8 @@ const SeriesDetail = () => {
               templateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)' }}
               width="full"
             >
-              <FormInput name="title" label="Title" placeholder="Enter Title" />
-              <FormInput name="author" label="Authors" placeholder="Enter Authors" />
+              <FormInput name="formUserName" label="User" disabled />
+              <FormInput name="totalPrice" label="Total Price" disabled />
               <GridItem colSpan={{ base: 3, lg: 2 }}>
                 <FormInput name="description" label="Description">
                   <Controller
@@ -167,34 +165,21 @@ const SeriesDetail = () => {
                   />
                 </FormInput>
               </GridItem>
-              <GridItem colSpan={{ md: 2, lg: 1 }} width="full">
-                <FormInput name="releaseDate" label="Release Date">
-                  <Controller
-                    name="releaseDate"
-                    control={control}
-                    rules={{ required: false }}
-                    render={({ field }) => (
-                      <DatePicker
-                        {...field}
-                        selected={releaseDate}
-                        onChange={(date: Date | null) => {
-                          setValue('releaseDate', date, { shouldDirty: true })
-                        }}
-                        value={releaseDate}
-                        customInput={createElement(forwardRef(CustomDatePicker))}
-                      />
-                    )}
-                  />
-                </FormInput>
-              </GridItem>
+              <ChakraInputDropdown
+                zIndex={EZIndexLayer.FILTER_BAR}
+                name="formStatus"
+                label="Status"
+                optionsData={getOptionsSelect()}
+              />
+              <ChakraInputDropdown
+                zIndex={EZIndexLayer.FILTER_BAR}
+                name="formRentLength"
+                label="Rent Length"
+                optionsData={getRentLengthOptionsSelect()}
+              />
             </Grid>
             <Divider borderColor="gray.200" borderBottomWidth="2px" />
-            <MediaImage
-              media={media}
-              formLabel="Series Image"
-              currentFile={currentMedia}
-              setCurrentFile={setCurrentMedia}
-            />
+            <BookListTable books={getValidArray(orderDetail?.bookList)} />
           </VStack>
         </VStack>
       </form>
@@ -210,4 +195,4 @@ const SeriesDetail = () => {
   )
 }
 
-export default observer(SeriesDetail)
+export default observer(OrderDetail)
