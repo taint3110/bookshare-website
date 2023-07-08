@@ -40,13 +40,13 @@ const BookList = (props: IBookWithRelationsListProps) => {
   const [selectedCategories, setSelectedCategories] = useState<string | string[]>(
     categoryList.map((item) => item.name!)
   )
-  const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>()
+  const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>(true)
   // Filter for condition
   const [selectedConditions, setSelectedConditions] = useState<string | string[]>(bookConditions.map((item) => item))
-  const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>()
+  const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>(true)
   // Filter for covers
   const [selectedCovers, setSelectedCovers] = useState<string | string[]>(bookCovers.map((item) => item))
-  const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>()
+  const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>(true)
 
   const handleCategoryChange = (selectedValues: string | string[]) => {
     setSelectedCategories(selectedValues)
@@ -131,17 +131,17 @@ const BookList = (props: IBookWithRelationsListProps) => {
       : bookList.filter(
           (book: IBookWithRelations) =>
             // Satisfied catgories
-            (selectedCategories.length === 0 || !book?.categories
+            (selectedCategories.length === 0 || isCategoryCheckedAll || !book?.categories
               ? true
               : book?.categories?.some((category) =>
                   category.name ? selectedCategories.indexOf(category.name!) >= 0 : true
                 )) &&
             // Satisfied conditions
-            (selectedConditions.length === 0 || !book?.bookCondition
+            (selectedConditions.length === 0 || isConditionCheckedAll || !book?.bookCondition
               ? true
               : selectedConditions.indexOf(book.bookCondition!.toString()) >= 0) &&
             // Satisfied cover types
-            (selectedCovers.length === 0 || !book?.bookCover
+            (selectedCovers.length === 0 || isCoverCheckedAll || !book?.bookCover
               ? true
               : selectedCovers.indexOf(book.bookCover!.toString()) >= 0)
         )
