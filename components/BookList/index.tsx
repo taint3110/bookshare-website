@@ -32,18 +32,21 @@ export interface IBookWithRelationsListProps {
 const BookList = (props: IBookWithRelationsListProps) => {
   const { bookList, countBookList, categoryList } = props
   // Filter for categoryList
-  const [selectedCategories, setSelectedCategories] = useState<string | string[]>([])
-  const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>()
-  // Filter for condition
-  const [selectedConditions, setSelectedConditions] = useState<string | string[]>([])
-  const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>()
-  // Filter for covers
-  const [selectedCovers, setSelectedCovers] = useState<string | string[]>([])
-  const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>()
 
   const [selectedSort, setSelectedSort] = useState<string | string[]>()
   const bookConditions = getValidArray(MockBookConditions)
   const bookCovers = getValidArray(MockBookCovers)
+
+  const [selectedCategories, setSelectedCategories] = useState<string | string[]>(
+    categoryList.map((item) => item.name!)
+  )
+  const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>()
+  // Filter for condition
+  const [selectedConditions, setSelectedConditions] = useState<string | string[]>(bookConditions.map((item) => item))
+  const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>()
+  // Filter for covers
+  const [selectedCovers, setSelectedCovers] = useState<string | string[]>(bookCovers.map((item) => item))
+  const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>()
 
   const handleCategoryChange = (selectedValues: string | string[]) => {
     setSelectedCategories(selectedValues)
@@ -120,21 +123,28 @@ const BookList = (props: IBookWithRelationsListProps) => {
     }
   }
 
-  // const filteredData =
-  //   (selectedCategories.length === 0 || isCategoryCheckedAll) &&
-  //   (selectedConditions.length === 0 || isConditionCheckedAll) &&
-  //   (selectedCovers.length === 0 || isCoverCheckedAll)
-  //     ? bookList
-  //     : bookList.filter(
-  //         (book: IBookWithRelations) =>
-  //           (selectedCategories.length === 0
-  //             ? true
-  //             : book?.categories?.some((category) => selectedCategories.indexOf(category?.name) >= 0)) &&
-  //           (selectedConditions.length === 0 ? true : selectedConditions.indexOf(book?.bookCondition.toString()) >= 0) &&
-  //           (selectedCovers.length === 0 ? true : selectedCovers.indexOf(book?.bookCover.toString()) >= 0)
-  //       )
-
-  const filteredData = bookList
+  const filteredData =
+    (selectedCategories.length === 0 || isCategoryCheckedAll) &&
+    (selectedConditions.length === 0 || isConditionCheckedAll) &&
+    (selectedCovers.length === 0 || isCoverCheckedAll)
+      ? bookList
+      : bookList.filter(
+          (book: IBookWithRelations) =>
+            // Satisfied catgories
+            (selectedCategories.length === 0 || !book?.categories
+              ? true
+              : book?.categories?.some((category) =>
+                  category.name ? selectedCategories.indexOf(category.name!) >= 0 : true
+                )) &&
+            // Satisfied conditions
+            (selectedConditions.length === 0 || !book?.bookCondition
+              ? true
+              : selectedConditions.indexOf(book.bookCondition!.toString()) >= 0) &&
+            // Satisfied cover types
+            (selectedCovers.length === 0 || !book?.bookCover
+              ? true
+              : selectedCovers.indexOf(book.bookCover!.toString()) >= 0)
+        )
 
   return (
     <Stack>
