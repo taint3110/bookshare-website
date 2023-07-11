@@ -19,16 +19,17 @@ function BookPage() {
   const router = useRouter()
   const { id } = router.query
   if (id) {
-    const bookData = getBookById(id.toString())
-    if (bookData) {
-      return (
-        <MainLayout title="BookShare | Book detail">
-          <BookDetail {...bookData} />
-        </MainLayout>
-      )
-    } else {
-      return <ErrorNotFoundPage></ErrorNotFoundPage>
-    }
+    return (
+      <MainLayout title="BookShare | Book detail">
+        <BookDetail />
+      </MainLayout>
+    )
+    // const bookData = getBookById(id.toString())
+    // if (bookData) {
+    //   )
+    // } else {
+    //   return <ErrorNotFoundPage></ErrorNotFoundPage>
+    // }
   } else {
     return <ErrorNotFoundPage></ErrorNotFoundPage>
   }

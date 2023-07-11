@@ -1,11 +1,9 @@
 import {
   Box,
-  Flex,
   Stack,
   HStack,
   Image,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
@@ -20,8 +18,18 @@ import BookListNoFilter from 'components/BookListNoFilter'
 import { textGrey500 } from 'theme/globalStyles'
 import { formatText, getValidArray } from 'utils/common'
 import Paragraph from './FadedParagraph'
+import { useStores } from 'hooks/useStores'
+import { handleError } from 'API/error'
+import router from 'next/router'
+import { get } from 'lodash'
+import { useEffect } from 'react'
 
-const BookDetail = (props: IMockBook) => {
+const BookDetail = () => {
+  const { websiteBookStore, spinnerStore } = useStores()
+  const { isLoading } = spinnerStore
+  const { bookDetail } = websiteBookStore
+  const bookId: string = String(get(router, 'query.id', ''))
+
   const {
     title,
     author,
@@ -30,16 +38,30 @@ const BookDetail = (props: IMockBook) => {
     bookStatus,
     publisher,
     language,
-    bookImages,
+    media,
+    description,
     categories,
-    condition,
-    cover
-  } = props
+    bookCondition,
+    bookCover
+  } = bookDetail
 
-  // Cái này đúng ra cũng lấy từ props luôn
-  const bookDescription =
-    'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis Lorem, ipsum dolor sit amet consectetur adipisicing elit. Eum, aperiam minima labore veniam, neque similique pariatur perferendis adipisci libero veritatis dolorum eos voluptatibus quos, doloribus molestiae ad quasi odit et.'
   const relatedBooks: IMockBook[] = getValidArray(mockBooks)
+
+  async function fetchData(): Promise<void> {
+    spinnerStore.showLoading()
+    try {
+      await Promise.all([websiteBookStore.fetchWebsiteBookDetail(bookId)])
+    } catch (error) {
+      handleError(error as Error, 'components/pages/BookDetail', 'fetchData')
+    } finally {
+      spinnerStore.hideLoading()
+    }
+  }
+  useEffect(() => {
+    if (bookId) {
+      fetchData()
+    }
+  }, [bookId])
 
   return (
     <Stack pl={200} pr={200} pt={8} pb={8}>
@@ -47,7 +69,7 @@ const BookDetail = (props: IMockBook) => {
       <HStack spacing={32} alignItems={'flex-start'}>
         {/* Book Images */}
         <Box boxSize="540" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
-          <Image boxSize="540" objectFit={'contain'} src={bookImages} alt={title} />
+          <Image boxSize="540" objectFit={'contain'} src={media?.imageUrl} alt={title} />
         </Box>
         {/* Book info */}
         <Stack justifySelf={'flex-start'} spacing={'16'}>
@@ -69,7 +91,7 @@ const BookDetail = (props: IMockBook) => {
                 </Tr>
                 <Tr>
                   <Td minWidth={120}>Cover</Td>
-                  <Td minWidth={280}>{formatText(cover)}</Td>
+                  <Td minWidth={280}>{formatText(bookCover)}</Td>
                 </Tr>
                 <Tr>
                   <Td minWidth={120}>Publisher</Td>
@@ -81,7 +103,7 @@ const BookDetail = (props: IMockBook) => {
                 </Tr>
                 <Tr>
                   <Td minWidth={120}>Condition</Td>
-                  <Td minWidth={280}>{formatText(condition)}</Td>
+                  <Td minWidth={280}>{formatText(bookCondition)}</Td>
                 </Tr>
               </Tbody>
             </Table>
@@ -96,10 +118,14 @@ const BookDetail = (props: IMockBook) => {
           </Button>
         </Stack>
       </HStack>
-      <Stack mt={4}>
-        <Text fontSize={'xl'}>Description</Text>
-        <Paragraph text={bookDescription} />
-      </Stack>
+      {description ? (
+        <Stack mt={4}>
+          <Text fontSize={'xl'}>Description</Text>
+          <Paragraph text={description!} />
+        </Stack>
+      ) : (
+        <></>
+      )}
       <Divider mt={4} />
       {/* Related Books */}
       <Center>

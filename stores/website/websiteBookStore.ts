@@ -4,7 +4,7 @@ import { IBookWithRelations } from 'interfaces/book'
 import { makeAutoObservable } from 'mobx'
 import { RootStore } from 'stores'
 
-class WebsiteBookStore {
+export class WebsiteBookStore {
   rootStore: RootStore
   constructor(rootStore: RootStore) {
     this.rootStore = rootStore
@@ -13,7 +13,7 @@ class WebsiteBookStore {
 
   bookDetail: IBookWithRelations = {} as IBookWithRelations
 
-  async fetchWebsitreBookDetail(id: string) {
+  async fetchWebsiteBookDetail(id: string) {
     try {
       const bookDetail: IBookWithRelations = await getWebsiteBookDetail(id)
       this.bookDetail = bookDetail
