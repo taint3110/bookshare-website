@@ -16,22 +16,28 @@ import {
 import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
 import BookListNoFilter from 'components/BookListNoFilter'
 import { textGrey500 } from 'theme/globalStyles'
-import { formatText, getValidArray } from 'utils/common'
+import { formatText, getQueryValue, getValidArray } from 'utils/common'
 import Paragraph from './FadedParagraph'
 import { useStores } from 'hooks/useStores'
 import { handleError } from 'API/error'
 import router from 'next/router'
-import { get } from 'lodash'
+import { get, includes } from 'lodash'
 import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import ErrorNotFoundPage from 'pages/404'
+import { IFilter, PredicateComparison } from 'types/query'
+import { IBookWithRelations } from 'interfaces/book'
+import { ICategory } from 'interfaces/category'
 
 const BookDetail = () => {
   const { websiteBookStore, spinnerStore } = useStores()
   const { isLoading } = spinnerStore
-  const { bookDetail } = websiteBookStore
+  const { bookDetail, websiteBookList } = websiteBookStore
   const bookId: string = String(get(router, 'query.id', ''))
-  const [id, setId] = useState<string>('')
+  const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
+  const pageIndex: number = getQueryValue(router, 'page', 1)
+  const [sort, setSort] = useState('updatedAt')
+  const [orderBy, setOrderBy] = useState(-1)
 
   const {
     title,
@@ -39,6 +45,7 @@ const BookDetail = () => {
     price,
     bonusPointPrice,
     bookStatus,
+    series,
     publisher,
     language,
     media,
@@ -50,10 +57,38 @@ const BookDetail = () => {
 
   const relatedBooks: IMockBook[] = getValidArray(mockBooks)
 
-  async function fetchData(): Promise<void> {
+  async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
     spinnerStore.showLoading()
     try {
-      await Promise.all([websiteBookStore.fetchWebsiteBookDetail(bookId)])
+      await websiteBookStore.fetchWebsiteBookDetail(bookId)
+      if (bookDetail) {
+        const filter: IFilter<IBookWithRelations> = {
+          where: {
+            or: [
+              {
+                categories: {
+                  inq: categories
+                } as PredicateComparison<ICategory[]>
+              },
+              {
+                series: {
+                  inq: [series]
+                }
+              },
+              {
+                author: {
+                  eq: author
+                }
+              }
+            ]
+          },
+          offset: isReset ? 0 : pageSize * (page - 1),
+          order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
+          limit: pageSize,
+          include: ['media']
+        }
+        await websiteBookStore.fetchWebsiteBookList(filter)
+      }
     } catch (error) {
       handleError(error as Error, 'components/pages/BookDetail', 'fetchData')
     } finally {
@@ -137,7 +172,7 @@ const BookDetail = () => {
             RELATED BOOKS
           </Text>
         </Center>
-        <BookListNoFilter books={[...relatedBooks]} pageSize={12} listLength={relatedBooks.length} />
+        <BookListNoFilter books={[...websiteBookList.results]} pageSize={12} listLength={websiteBookList.totalCount} />
       </Stack>
     )
   } else {

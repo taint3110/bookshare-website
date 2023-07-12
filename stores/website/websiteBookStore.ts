@@ -1,8 +1,10 @@
 import { handleError } from 'API/error'
-import { getWebsiteBookDetail } from 'API/website/book'
-import { IBookWithRelations } from 'interfaces/book'
+import { getWebsiteBookDetail, getWebsiteBooks } from 'API/website/book'
+import { IBook, IBookWithRelations } from 'interfaces/book'
 import { makeAutoObservable } from 'mobx'
 import { RootStore } from 'stores'
+import { PaginationList } from 'types'
+import { IFilter } from 'types/query'
 
 export class WebsiteBookStore {
   rootStore: RootStore
@@ -11,6 +13,10 @@ export class WebsiteBookStore {
     makeAutoObservable(this)
   }
 
+  websiteBookList: PaginationList<IBook> = {
+    results: [],
+    totalCount: 0
+  }
   bookDetail: IBookWithRelations = {} as IBookWithRelations
 
   async fetchWebsiteBookDetail(id: string) {
@@ -19,6 +25,14 @@ export class WebsiteBookStore {
       this.bookDetail = bookDetail
     } catch (error) {
       handleError(error as Error, 'stores/WebsiteBookStore.ts', 'fetchWebsiteBookList')
+    }
+  }
+  async fetchWebsiteBookList(filter: IFilter<IBookWithRelations> = {}) {
+    try {
+      const bookList: PaginationList<IBookWithRelations> = await getWebsiteBooks(filter)
+      this.websiteBookList = bookList
+    } catch (error) {
+      handleError(error as Error, 'stores/CMSBookStore.ts', 'fetchWebsiteBookList')
     }
   }
 }
