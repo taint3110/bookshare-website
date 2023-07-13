@@ -96,17 +96,14 @@ const SideBar = (props: ISidebarProps) => {
       <Divider borderColor="whiteAlpha.400" />
       <VStack className="hideScrollBar" display="flex" height="full" overflowY="scroll" paddingBottom={6} paddingX={3}>
         <Stack spacing={5} marginX={3} marginY={6} width="full">
-          <NavLink
-            label={PageName.BOOK}
-            icon="cms-property.svg"
-            {...getLinkProps(routes.cms.bookManagement.value)}
-          />
+          <NavLink label={PageName.BOOK} icon="cms-property.svg" {...getLinkProps(routes.cms.bookManagement.value)} />
+          <NavLink label={PageName.ORDER} icon="cms-account.svg" {...getLinkProps(routes.cms.orderManagement.value)} />
           <NavLink
             label={PageName.ACCOUNT}
             icon="cms-account.svg"
             {...getLinkProps(routes.cms.accountManagement.value)}
           />
-         </Stack>
+        </Stack>
       </VStack>
       <Box position="absolute" bottom={0} height={12} width="full" background="teal.900">
         <Center background="blackAlpha.200" height={12} paddingY={3.5}>

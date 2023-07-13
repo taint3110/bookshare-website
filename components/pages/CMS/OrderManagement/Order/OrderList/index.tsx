@@ -1,17 +1,6 @@
 import { Search2Icon } from '@chakra-ui/icons'
-import {
-  Box,
-  Button,
-  HStack,
-  Image,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Link,
-  Text,
-  useDisclosure
-} from '@chakra-ui/react'
-import { deleteBookById } from 'API/cms/book'
+import { Box, HStack, Input, InputGroup, InputLeftElement, Link, Text, useDisclosure } from '@chakra-ui/react'
+import { deleteOrderById } from 'API/cms/order'
 import { handleError } from 'API/error'
 import ButtonWithIcon from 'components/ButtonWithIcon'
 import ConfirmModal from 'components/ConfirmModal'
@@ -19,8 +8,8 @@ import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { useStores } from 'hooks/useStores'
-import { IBookWithRelations } from 'interfaces/book'
-import { ICategory } from 'interfaces/category'
+import { IOrder } from 'interfaces/order'
+import capitalize from 'lodash/capitalize'
 import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
@@ -31,23 +20,22 @@ import routes from 'routes'
 import { maxTabletWidth } from 'theme/globalStyles'
 import { getQueryValue, getValidArray } from 'utils/common'
 import { getHeaderList } from './constant'
-import { goToBookAddNewPage } from './utils'
 
-const BookList = () => {
+const OrderList = () => {
   const router = useRouter()
   const pageIndex: number = getQueryValue(router, 'page', 1)
-  const { cmsBookStore, spinnerStore } = useStores()
+  const { cmsOrderStore, spinnerStore } = useStores()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
   const isNotDesktop: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
-  const { cmsBookList } = cmsBookStore
-  const { results: bookList, totalCount: tableLength } = cmsBookList
+  const { cmsOrderList } = cmsOrderStore
+  const { results: orderList, totalCount: tableLength } = cmsOrderList
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const [sort, setSort] = useState('updatedAt')
   const [orderBy, setOrderBy] = useState(-1)
   const [title, setTitle] = useState<string>('')
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = (
-    <Text>Are you sure to delete this Book?{<br />}This action can not be undo</Text>
+    <Text>Are you sure to delete this Order?{<br />}This action can not be undo</Text>
   )
   const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
 
@@ -55,16 +43,13 @@ const BookList = () => {
     try {
       spinnerStore.showLoading()
       const filter = {
-        where: {
-          title
-        },
         offset: isReset ? 0 : pageSize * (page - 1),
         order: [`${sort} ${orderBy === 1 ? 'ASC' : 'DESC'}`],
         limit: pageSize
       }
-      await cmsBookStore.fetchCMSBookList(filter)
+      await cmsOrderStore.fetchCMSOrderList(filter)
     } catch (error) {
-      handleError(error as Error, 'components/pages/CMS/BookManagement/BookList', 'fetchData')
+      handleError(error as Error, 'components/pages/CMS/OrderManagement/OrderList', 'fetchData')
     } finally {
       spinnerStore.hideLoading()
     }
@@ -73,7 +58,7 @@ const BookList = () => {
   async function deleteBook(): Promise<void> {
     try {
       if (targetId) {
-        await deleteBookById(targetId)
+        await deleteOrderById(targetId)
         closeConfirm()
         fetchData()
         toast.success('Delete Book Successfully')
@@ -84,49 +69,26 @@ const BookList = () => {
   }
 
   function gotoPage(page: number): void {
-    router.push(`${routes.cms.bookManagement.value}?index=0&page=${page}&pageSize=${pageSize}`)
+    router.push(`${routes.cms.orderManagement.value}?index=0&page=${page}&pageSize=${pageSize}`)
     fetchData(false, page)
   }
   const pagination = { pageIndex, tableLength, gotoPage }
-  const dataInTable = getValidArray(bookList).map((book: IBookWithRelations) => {
-    const detailUrl: string = `${routes.cms.bookManagement.book.value(book?.id ?? '')}`
+  const dataInTable = getValidArray(orderList).map((order: IOrder) => {
+    const detailUrl: string = `${routes.cms.orderManagement.order.value(order?.id ?? '')}`
 
     function handleDelete(): void {
       onConfirm()
-      setTargetId(book?.id ?? '')
+      setTargetId(order?.id ?? '')
     }
 
     return {
-      ...book,
-      image: book?.media ? (
-        <Image
-          objectFit="cover"
-          borderRadius="6px"
-          marginLeft={1}
-          src={book?.media?.imageUrl}
-          alt="imageUrl"
-          width={8}
-          height={8}
-        />
-      ) : (
-        <Image
-          objectFit="cover"
-          marginLeft={1}
-          alignSelf="center"
-          borderRadius="6px"
-          src={mockImage}
-          alt="imageUrl"
-          width={8}
-          height={8}
-        />
-      ),
-      title: book?.title ?? 'Kaguya',
-      categories: getValidArray(book?.categories)
-        .map((category: ICategory) => category?.name)
-        .join(', '),
-      series: book?.series?.title ?? '',
-      price: book?.price ?? 100000,
-      status: 'Available',
+      ...order,
+      fullName: 'Admin',
+      orderStatus: capitalize(order?.orderStatus),
+      totalPrice: order?.totalPrice,
+      rentLength: order?.rentLength,
+      createdAt: order?.createdAt,
+      updatedAt: order?.updatedAt,
       actions: (
         <HStack width="62px" cursor="pointer" marginLeft="auto">
           <Link href={detailUrl} marginTop="5px">
@@ -146,7 +108,7 @@ const BookList = () => {
   )
 
   useEffect(() => {
-    router.replace(`${routes.cms.bookManagement.value}?index=0&page=1`)
+    router.replace(`${routes.cms.orderManagement.value}?index=0&page=1`)
     fetchData(true)
   }, [pageSize, title, sort, orderBy])
 
@@ -157,22 +119,10 @@ const BookList = () => {
           <InputLeftElement pointerEvents="none">
             <Search2Icon color="gray.400" />
           </InputLeftElement>
-          <Input type="search" placeholder="Search book by Title" onChange={changeName} />
+          <Input type="search" placeholder="Search order by Title" onChange={changeName} />
         </InputGroup>
         <Box borderRadius="6px" bg="white">
           <ButtonWithIcon label="Filter" iconName="filter.svg" size={16} border="1px solid #E2E8F0" color="gray.800" />
-        </Box>
-        <Box display="flex" justifyContent="flex-end" width="100%">
-          <Button
-            padding="2"
-            paddingInline="4"
-            color="white"
-            colorScheme="teal"
-            lineHeight={6}
-            onClick={goToBookAddNewPage}
-          >
-            + Add Book
-          </Button>
         </Box>
       </HStack>
       <Table
@@ -189,7 +139,7 @@ const BookList = () => {
       <ConfirmModal
         titleText="Delete Book"
         bodyText={confirmModalContent}
-        cancelButtonText="No, keep this book"
+        cancelButtonText="No, keep this order"
         confirmButtonText="Yes, Delete"
         isOpen={isConfirming}
         onClose={closeConfirm}
@@ -199,4 +149,4 @@ const BookList = () => {
   )
 }
 
-export default observer(BookList)
+export default observer(OrderList)
