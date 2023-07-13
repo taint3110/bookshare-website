@@ -1,11 +1,14 @@
 import { Box, HStack, Image, Link, Text, VStack, useDisclosure } from '@chakra-ui/react'
+import { updateOrderById } from 'API/cms/order'
 import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
+import get from 'lodash/get'
 import { observer } from 'mobx-react-lite'
+import router from 'next/router'
 import { ReactNode, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { toast } from 'react-toastify'
@@ -23,14 +26,17 @@ const BookListTable = (props: IBookListTable) => {
   const [targetId, setTargetId] = useState<string>()
   const isNotDesktop: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
+  const orderId: string = String(get(router, 'query.orderId', ''))
 
   async function removeBookFromOrder(): Promise<void> {
     try {
       if (targetId) {
-        // await deleteBookById(targetId)
-        closeConfirm()
-        // fetchData()
+        const formattedData = {
+          bookList: books?.filter((book) => book?.id !== targetId)
+        }
+        await updateOrderById(orderId, formattedData)
         toast.success('Update order Successfully')
+        router.push(routes.cms.orderManagement.order.value(orderId))
       }
     } catch (error) {
       toast.error('Something wrong happened')

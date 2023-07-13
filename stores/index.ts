@@ -3,6 +3,7 @@ import CMSCategoryStore from './cms/cmsCategoryStore'
 import CMSOrderStore from './cms/cmsOrderStore'
 import CMSSeriesStore from './cms/cmsSeriesStore'
 import SpinnerStore from './spinnerStore'
+import { WebsiteBookStore } from './website/websiteBookStore'
 ;``
 export class RootStore {
   spinnerStore: SpinnerStore
@@ -10,6 +11,7 @@ export class RootStore {
   cmsSeriesStore: CMSSeriesStore
   cmsCategoryStore: CMSCategoryStore
   cmsOrderStore: CMSOrderStore
+  websiteBookStore: WebsiteBookStore
 
   constructor() {
     this.spinnerStore = new SpinnerStore(this)
@@ -17,6 +19,7 @@ export class RootStore {
     this.cmsSeriesStore = new CMSSeriesStore(this)
     this.cmsCategoryStore = new CMSCategoryStore(this)
     this.cmsOrderStore = new CMSOrderStore(this)
+    this.websiteBookStore = new WebsiteBookStore(this)
   }
 }
 

@@ -9,6 +9,7 @@ import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { useStores } from 'hooks/useStores'
 import { IOrder } from 'interfaces/order'
+import capitalize from 'lodash/capitalize'
 import debounce from 'lodash/debounce'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
@@ -83,7 +84,7 @@ const OrderList = () => {
     return {
       ...order,
       fullName: 'Admin',
-      orderStatus: order?.orderStatus,
+      orderStatus: capitalize(order?.orderStatus),
       totalPrice: order?.totalPrice,
       rentLength: order?.rentLength,
       createdAt: order?.createdAt,

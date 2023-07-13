@@ -13,22 +13,23 @@ const Paragraph: React.FC<ParagraphProps> = ({ text }) => {
     setIsExpanded(!isExpanded)
   }
 
-  return (
-    <div>
-      {isExpanded ? (
-        <Link href="#" onClick={toggleExpand} color="">
-          <Text textAlign={'justify'}>{text}</Text>
-        </Link>
-      ) : (
-        <Text textAlign={'justify'}>
-          {text.slice(0, 600)}...{' '}
-          <Link href="#" onClick={toggleExpand}>
-            Read more
+  if (text)
+    return (
+      <div>
+        {isExpanded ? (
+          <Link href="#" onClick={toggleExpand} color="">
+            <Text textAlign={'justify'}>{text}</Text>
           </Link>
-        </Text>
-      )}
-    </div>
-  )
+        ) : (
+          <Text textAlign={'justify'}>
+            {text.slice(0, 600)}...{' '}
+            <Link href="#" onClick={toggleExpand}>
+              Read more
+            </Link>
+          </Text>
+        )}
+      </div>
+    )
 }
 
 export default Paragraph
