@@ -99,6 +99,7 @@ const BookDetail = () => {
       }
       await updateBookById(formattedData, checkedItems)
       toast.success('Update book successfully!')
+      redirect()
     } catch (error) {
       toast.error('Update book failed!')
       handleError(error as Error, 'components/pages/CMS/BookManagement/Book/BookDetail', 'onSubmit')

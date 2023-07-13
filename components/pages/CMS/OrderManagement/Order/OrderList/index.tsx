@@ -7,6 +7,7 @@ import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
+import dayjs from 'dayjs'
 import { useStores } from 'hooks/useStores'
 import { IOrder } from 'interfaces/order'
 import capitalize from 'lodash/capitalize'
@@ -85,10 +86,10 @@ const OrderList = () => {
       ...order,
       fullName: 'Admin',
       orderStatus: capitalize(order?.orderStatus),
-      totalPrice: order?.totalPrice,
-      rentLength: order?.rentLength,
-      createdAt: order?.createdAt,
-      updatedAt: order?.updatedAt,
+      totalPrice: order?.totalPrice ?? 0,
+      rentLength: order?.rentLength ?? 0,
+      createdAt: dayjs(order?.createdAt).format('DD/MM/YYYY'),
+      updatedAt: dayjs(order?.updatedAt).format('DD/MM/YYYY'),
       actions: (
         <HStack width="62px" cursor="pointer" marginLeft="auto">
           <Link href={detailUrl} marginTop="5px">

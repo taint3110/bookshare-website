@@ -38,14 +38,16 @@ const BookList = (props: IBookWithRelationsListProps) => {
   const bookCovers = getValidArray(MockBookCovers)
 
   const [selectedCategories, setSelectedCategories] = useState<string | string[]>(
-    categoryList.map((item) => item.name!)
+    getValidArray(categoryList).map((item) => item.name!)
   )
   const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>(true)
   // Filter for condition
-  const [selectedConditions, setSelectedConditions] = useState<string | string[]>(bookConditions.map((item) => item))
+  const [selectedConditions, setSelectedConditions] = useState<string | string[]>(
+    getValidArray(bookConditions).map((item) => item)
+  )
   const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>(true)
   // Filter for covers
-  const [selectedCovers, setSelectedCovers] = useState<string | string[]>(bookCovers.map((item) => item))
+  const [selectedCovers, setSelectedCovers] = useState<string | string[]>(getValidArray(bookCovers).map((item) => item))
   const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>(true)
 
   const handleCategoryChange = (selectedValues: string | string[]) => {
@@ -81,7 +83,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
     const { checked } = event.target
     setisConditionCheckedAll(checked)
     if (checked) {
-      const allOptions = bookConditions.map((item) => item)
+      const allOptions = getValidArray(bookConditions).map((item) => item)
       setSelectedConditions(allOptions)
     } else {
       setSelectedConditions([])
@@ -101,7 +103,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
     const { checked } = event.target
     setisCoverCheckedAll(checked)
     if (checked) {
-      const allOptions = bookCovers.map((item) => item)
+      const allOptions = getValidArray(bookCovers).map((item) => item)
       setSelectedCovers(allOptions)
     } else {
       setSelectedCovers([])
