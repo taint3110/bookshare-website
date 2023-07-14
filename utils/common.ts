@@ -31,3 +31,11 @@ export function formatText(text: string | undefined): string {
   if (text) return text.charAt(0).toUpperCase() + text.slice(1)
   return ''
 }
+
+export function removeItem<T>(arr: Array<T>, value: T): Array<T> {
+  const index = arr.indexOf(value)
+  if (index > -1) {
+    arr.splice(index, 1)
+  }
+  return arr
+}

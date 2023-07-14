@@ -16,23 +16,24 @@ import {
 import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
 import BookListNoFilter from 'components/BookListNoFilter'
 import { textGrey500 } from 'theme/globalStyles'
-import { formatText, getQueryValue, getValidArray } from 'utils/common'
+import { formatText, getQueryValue, getValidArray, removeItem } from 'utils/common'
 import Paragraph from './FadedParagraph'
 import { useStores } from 'hooks/useStores'
 import { handleError } from 'API/error'
-import router from 'next/router'
 import { get, includes } from 'lodash'
 import { useEffect, useState } from 'react'
 import { observer } from 'mobx-react'
 import ErrorNotFoundPage from 'pages/404'
 import { IFilter, PredicateComparison } from 'types/query'
-import { IBookWithRelations } from 'interfaces/book'
+import { IBook, IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
+import { useRouter } from 'next/router'
 
 const BookDetail = () => {
   const { websiteBookStore, spinnerStore } = useStores()
   const { isLoading } = spinnerStore
   const { bookDetail, websiteBookList } = websiteBookStore
+  const router = useRouter()
   const bookId: string = String(get(router, 'query.id', ''))
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const pageIndex: number = getQueryValue(router, 'page', 1)
@@ -55,7 +56,7 @@ const BookDetail = () => {
     bookCover
   } = bookDetail
 
-  const relatedBooks: IMockBook[] = getValidArray(mockBooks)
+  var relatedBooks: IBook[] = websiteBookList.results.filter((book) => book.id !== bookId)
 
   async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
     spinnerStore.showLoading()
@@ -172,7 +173,7 @@ const BookDetail = () => {
             RELATED BOOKS
           </Text>
         </Center>
-        <BookListNoFilter books={[...websiteBookList.results]} pageSize={12} listLength={websiteBookList.totalCount} />
+        <BookListNoFilter books={[...relatedBooks]} pageSize={12} listLength={relatedBooks.length} />
       </Stack>
     )
   } else {

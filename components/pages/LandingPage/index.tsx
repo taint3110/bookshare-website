@@ -7,7 +7,7 @@ import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
 
 export interface IBookListProps {
-  books: IMockBook[]
+  books: IBookWithRelations[]
   pageSize: number
   listLength: number
   showGoToPage?: boolean
