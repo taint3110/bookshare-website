@@ -1,4 +1,5 @@
 import { ETokenKey, PLATFORM } from 'API/constants'
+import { EAccountType } from 'enums/user'
 import get from 'lodash/get'
 import { NextRouter } from 'next/router'
 
@@ -16,6 +17,15 @@ export function getAuthenticateStorageKey(platform: PLATFORM): ETokenKey {
       return ETokenKey.CMS_ACCESS_TOKEN
     default:
       return ETokenKey.WEBSITE_ACCESS_TOKEN
+  }
+}
+
+export function getAccountType(platform: PLATFORM): EAccountType {
+  switch (platform) {
+    case PLATFORM.CMS:
+      return EAccountType.STAFF
+    default:
+      return EAccountType.CUSTOMER
   }
 }
 

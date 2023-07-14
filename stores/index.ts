@@ -1,3 +1,4 @@
+import AuthStore from './authStore'
 import CMSBookStore from './cms/cmsBookStore'
 import CMSCategoryStore from './cms/cmsCategoryStore'
 import CMSOrderStore from './cms/cmsOrderStore'
@@ -7,6 +8,7 @@ import { WebsiteBookStore } from './website/websiteBookStore'
 ;``
 export class RootStore {
   spinnerStore: SpinnerStore
+  authStore: AuthStore
   cmsBookStore: CMSBookStore
   cmsSeriesStore: CMSSeriesStore
   cmsCategoryStore: CMSCategoryStore
@@ -15,6 +17,7 @@ export class RootStore {
 
   constructor() {
     this.spinnerStore = new SpinnerStore(this)
+    this.authStore = new AuthStore(this)
     this.cmsBookStore = new CMSBookStore(this)
     this.cmsSeriesStore = new CMSSeriesStore(this)
     this.cmsCategoryStore = new CMSCategoryStore(this)
