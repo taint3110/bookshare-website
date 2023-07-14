@@ -1,10 +1,10 @@
-import { ChevronDownIcon } from '@chakra-ui/icons'
 import { Stack, Text, Grid, Center } from '@chakra-ui/react'
-import { IBookListProps } from 'components/BookList'
 import BookCard from 'components/BookList/components/BookCard'
 import { IMockCategory, IMockBook } from 'components/BookList/components/BookCard/mockData'
 import Pagination from 'components/BookList/components/Pagination'
-import { Box } from 'framer-motion'
+import { IBookListProps } from 'components/pages/LandingPage'
+import { IBookWithRelations } from 'interfaces/book'
+import React from 'react'
 
 const BookListNoFilter = (props: IBookListProps) => {
   const { books, pageSize = 12, listLength, showGoToPage = false } = props
@@ -13,11 +13,11 @@ const BookListNoFilter = (props: IBookListProps) => {
       {/* BookList Section */}
       {books.length > 0 ? (
         <Grid templateColumns="repeat(4, 1fr)" gap={2}>
-          {books.map((book: IMockBook, indexBook: number) => (
-            <a href="/">
+          <React.Fragment>
+            {books.map((book: IBookWithRelations, indexBook: number) => (
               <BookCard {...book} key={indexBook} />
-            </a>
-          ))}
+            ))}
+          </React.Fragment>
         </Grid>
       ) : (
         <Center>
