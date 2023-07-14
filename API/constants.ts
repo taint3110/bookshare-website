@@ -14,7 +14,6 @@ export enum ETokenKey {
 
 export enum PLATFORM {
   CMS = 'cms',
-  OWNER = 'owner',
   WEBSITE = 'website'
 }
 
