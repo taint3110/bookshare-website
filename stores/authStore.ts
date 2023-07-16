@@ -1,9 +1,10 @@
 /* eslint-disable max-lines */
-import { getUserDetail, login as loginAPI, updateProfile } from 'API/authenticate'
+import { getUserDetail, login as loginAPI, signup as signUpAPI, updateProfile } from 'API/authenticate'
 import { ETokenKey, PLATFORM } from 'API/constants'
 import { getUserById } from 'API/customer/user'
 import { handleError } from 'API/error'
 import { LoginFormData } from 'components/pages/CMS/AuthenticatePage/components/LoginForm'
+import { SignUpFormData } from 'components/pages/CMS/AuthenticatePage/components/SignUpForm'
 import { IUser } from 'interfaces/user'
 import get from 'lodash/get'
 import omit from 'lodash/omit'
@@ -84,7 +85,29 @@ export default class AuthStore {
         }
         this.getMyUser(platform)
 
-        router.push(routes.cms.bookManagement.value)
+        platform === PLATFORM.CMS && router.push(routes.cms.bookManagement.value)
+        platform === PLATFORM.WEBSITE && router.push(routes.home.value)
+      }
+      this.rootStore.spinnerStore.hideLoading()
+      //*INFO: Catch clause variable type annotation must be 'any' or 'unknown' if specified
+    } catch (error) {
+      this.rootStore.spinnerStore.hideLoading()
+      const errorMessage: string = get(error, 'message', '')
+      throw new Error(errorMessage)
+    }
+  }
+
+  async signUp(data: SignUpFormData, platform: PLATFORM): Promise<void> {
+    this.rootStore.spinnerStore.showLoading()
+    try {
+      const user: IUser = await signUpAPI(omit(data, 'confirmPassword'))
+      if (user) {
+        toast.success('Sign up successfully !')
+        if (platform === PLATFORM.WEBSITE) {
+          router.push(routes.login.value)
+        } else {
+          router.push(routes.cms.login.value)
+        }
       }
       this.rootStore.spinnerStore.hideLoading()
       //*INFO: Catch clause variable type annotation must be 'any' or 'unknown' if specified

@@ -39,7 +39,7 @@ const NavbarDesktop = (props: INavbarDesktopProps) => {
           <Search2Icon color="gray.300" />
         </InputLeftElement>
         <Input
-          placeholder="ie: ShakeSpear, horror, doraemon,..."
+          placeholder="ie: ShakeSpear, doraemon,..."
           _placeholder={{ opacity: 1, color: 'gray.500' }}
           bgColor={'white'}
           onChange={changeName}

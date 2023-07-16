@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { FormLabel, FormControl, Input, Button, FormErrorMessage, Stack, Text } from '@chakra-ui/react'
-import get from 'lodash/get'
-import { FormProvider, useForm, UseFormReturn } from 'react-hook-form'
+import { Button, FormControl, FormErrorMessage, FormLabel, Input, Stack, Text } from '@chakra-ui/react'
 import { forgotPassword } from 'API/authenticate'
 import { PLATFORM } from 'API/constants'
+import get from 'lodash/get'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { FormProvider, UseFormReturn, useForm } from 'react-hook-form'
 
 export interface IForgotPasswordFormData {
   email: string
@@ -11,9 +12,12 @@ export interface IForgotPasswordFormData {
 }
 
 const ForgotPassword = () => {
+  const router = useRouter()
+  const { route } = router
+  const platform: PLATFORM = route.includes('cms') ? PLATFORM.CMS : PLATFORM.WEBSITE
   const [isSubmitted, setIsSubmitted] = useState(false)
   const method: UseFormReturn<IForgotPasswordFormData> = useForm<IForgotPasswordFormData>({
-    defaultValues: { platform: PLATFORM.CMS }
+    defaultValues: { platform }
   })
   const {
     handleSubmit,

@@ -1,31 +1,34 @@
-import { Box, Button, Checkbox, Flex, FormControl, FormErrorMessage, FormLabel, Input, Stack } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Stack } from '@chakra-ui/react'
 import { PLATFORM, ServerErrorMessage } from 'API/constants'
+import FormInput from 'components/FormInput'
 import PasswordField from 'components/PasswordField'
+import { EAccountType } from 'enums/user'
 import { useStores } from 'hooks/useStores'
 import get from 'lodash/get'
 import { observer } from 'mobx-react-lite'
-import { useState } from 'react'
+import { useRouter } from 'next/router'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { AuthenticatePageType } from '../../constant'
 import UnderlineLink from '../UnderlineLink'
-import { useRouter } from 'next/router'
 
-export interface LoginFormData {
+export interface SignUpFormData {
   email: string
   password: string
-  isRemember: boolean
+  confirmPassword: string
+  name: string
+  accountType?: EAccountType
 }
 
-interface ILoginFormProp {
+interface ISignUpFormProp {
   setPageType: (type: AuthenticatePageType) => void
 }
 
-const LoginForm = (props: ILoginFormProp) => {
+const SignUpForm = (props: ISignUpFormProp) => {
   const { setPageType } = props
   const { authStore, spinnerStore } = useStores()
   const { isLoading } = spinnerStore
-  const method = useForm<LoginFormData>()
+  const method = useForm<SignUpFormData>()
   const {
     handleSubmit,
     register,
@@ -35,10 +38,12 @@ const LoginForm = (props: ILoginFormProp) => {
   const router = useRouter()
   const { route } = router
   const platform: PLATFORM = route.includes('cms') ? PLATFORM.CMS : PLATFORM.WEBSITE
-  const [isRemember, setRemember] = useState(true)
-  async function onSubmit(data: LoginFormData) {
+  async function onSubmit(data: SignUpFormData) {
     try {
-      await authStore.login({ ...data, isRemember }, platform)
+      await authStore.signUp(
+        { ...data, accountType: platform === PLATFORM.CMS ? EAccountType.STAFF : EAccountType.CUSTOMER },
+        platform
+      )
     } catch (error) {
       const errorMessage: string = String(get(error, 'message', ''))
       if (errorMessage === ServerErrorMessage.PASSWORD_INVALID || errorMessage === ServerErrorMessage.USER_NOT_FOUND) {
@@ -51,9 +56,6 @@ const LoginForm = (props: ILoginFormProp) => {
   }
   function onClickForgot(): void {
     setPageType(AuthenticatePageType.FORGOT_PASSWORD)
-  }
-  function toggleCheckBox() {
-    setRemember(!isRemember)
   }
   return (
     <FormProvider {...method}>
@@ -73,32 +75,16 @@ const LoginForm = (props: ILoginFormProp) => {
             />
             <FormErrorMessage>{errors?.email && errors.email?.message}</FormErrorMessage>
           </FormControl>
+          <FormInput name="name" label="Name" placeholder="Enter name" isRequired />
           <PasswordField />
+          <PasswordField name="confirmPassword" label="Confirm Password" />
           <Flex align="center" justifyContent="space-between">
-            <Box onClick={toggleCheckBox} cursor="pointer">
-              <Checkbox
-                size="md"
-                isChecked={isRemember}
-                colorScheme="teal"
-                pointerEvents="none"
-                sx={{
-                  '.chakra-checkbox__control': {
-                    '&:not([data-checked])': { bg: 'white' },
-                    rounded: 'base',
-                    borderWidth: '1px'
-                  },
-                  '.chakra-checkbox__label': { fontSize: 'sm', color: 'gray.700' }
-                }}
-              >
-                Remember me
-              </Checkbox>
-            </Box>
             <UnderlineLink fontSize="sm" color="blue.500" whiteSpace="nowrap" onClick={onClickForgot}>
               Forgot Password?
             </UnderlineLink>
           </Flex>
           <Button type="submit" colorScheme="teal" size="md" fontSize="md" isLoading={isLoading || isSubmitting}>
-            Login
+            Sign up
           </Button>
         </Stack>
       </form>
@@ -106,4 +92,4 @@ const LoginForm = (props: ILoginFormProp) => {
   )
 }
 
-export default observer(LoginForm)
+export default observer(SignUpForm)

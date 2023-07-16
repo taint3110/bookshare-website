@@ -4,6 +4,18 @@ const routes = {
   home: {
     value: '/'
   },
+  login: {
+    value: '/login'
+  },
+  signUp: {
+    value: '/sign-up'
+  },
+  forgotPassword: {
+    value: '/forgot-password'
+  },
+  resetPassword: {
+    value: (resetPasswordToken: string) => `/reset-password/${resetPasswordToken}`
+  },
   about: {
     value: '/about'
   },
