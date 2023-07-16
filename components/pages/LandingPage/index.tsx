@@ -1,6 +1,5 @@
-import { Divider, Stack, Text } from '@chakra-ui/react'
+import { Card, CardBody, Divider, Grid, Link, Stack, Text, Image, Button } from '@chakra-ui/react'
 import BookList from 'components/BookList'
-import { IMockBook } from 'components/BookList/components/BookCard/mockData'
 import CategoriesList from 'components/BookList/components/CategoriesList'
 import NextLink from 'components/NextLink'
 import { IBookWithRelations } from 'interfaces/book'
@@ -8,6 +7,7 @@ import { ICategory } from 'interfaces/category'
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { maxMobileWidth, maxTabletWidth } from 'theme/globalStyles'
+import { getValidArray } from 'utils/common'
 
 export interface IBookListProps {
   books: IBookWithRelations[]
@@ -40,11 +40,6 @@ const LandingPage = (props: ILandingPageProps) => {
           <Text color={'teal.600'}>BookShare, Prairie Village, KS 66208, United States</Text>
         </NextLink>
         <Divider m="4" />
-
-        {/* Categories Section */}
-        <CategoriesList categories={categoryList} />
-        <Divider m="4" />
-
         {/* Book List Section */}
         <BookList bookList={bookList} categoryList={categoryList} countBookList={countBookList} gridColumns={2} />
       </Stack>
@@ -57,11 +52,6 @@ const LandingPage = (props: ILandingPageProps) => {
         <Text color={'teal.600'}>BookShare, Prairie Village, KS 66208, United States</Text>
       </NextLink>
       <Divider m="4" />
-
-      {/* Categories Section */}
-      <CategoriesList categories={categoryList} />
-      <Divider m="4" />
-
       {/* Book List Section */}
       <BookList bookList={bookList} categoryList={categoryList} countBookList={countBookList} gridColumns={4} />
     </Stack>
