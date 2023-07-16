@@ -39,7 +39,7 @@ const CartUserInfo = () => {
   }
 
   return (
-    <Card flexGrow={1}>
+    <Card flex={1}>
       <CardBody>
         <Heading size="md">
           {user.firstName} {user.lastName}

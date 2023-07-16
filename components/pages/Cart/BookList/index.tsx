@@ -92,7 +92,7 @@ const CartBookList = () => {
     }
   })
   return (
-    <Card flexGrow={2}>
+    <Card flex={2}>
       <Table
         headerList={getHeaderList()}
         tableData={dataInTable}

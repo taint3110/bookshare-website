@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
 import BookListNoFilter from 'components/BookListNoFilter'
-import { maxTabletWidth, textGrey500 } from 'theme/globalStyles'
+import { maxMobileWidth, maxTabletWidth, textGrey500 } from 'theme/globalStyles'
 import { formatText, getQueryValue, getValidArray, removeItem } from 'utils/common'
 import Paragraph from './FadedParagraph'
 import { useStores } from 'hooks/useStores'
@@ -40,7 +40,13 @@ const BookDetail = () => {
   const pageIndex: number = getQueryValue(router, 'page', 1)
   const [sort, setSort] = useState('updatedAt')
   const [orderBy, setOrderBy] = useState(-1)
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+  const isMobile: boolean = useMediaQuery({ maxWidth: maxMobileWidth })
   const isTabletMobile: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
+
+  useEffect(() => {
+    setIsCollapsed(isMobile || isTabletMobile)
+  }, [isMobile, isTabletMobile])
 
   const {
     title,
@@ -105,7 +111,7 @@ const BookDetail = () => {
   }, [bookId])
 
   if (bookDetail) {
-    if (isTabletMobile) {
+    if (isCollapsed) {
       return (
         <Stack paddingLeft={20} paddingRight={20} pt={8} pb={8}>
           {/* Book Info */}

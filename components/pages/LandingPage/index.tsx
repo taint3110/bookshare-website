@@ -5,8 +5,9 @@ import CategoriesList from 'components/BookList/components/CategoriesList'
 import NextLink from 'components/NextLink'
 import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
+import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { maxTabletWidth } from 'theme/globalStyles'
+import { maxMobileWidth, maxTabletWidth } from 'theme/globalStyles'
 
 export interface IBookListProps {
   books: IBookWithRelations[]
@@ -22,10 +23,16 @@ export interface ILandingPageProps {
 }
 
 const LandingPage = (props: ILandingPageProps) => {
-  const isTabletMobile: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
   const { bookList, countBookList, categoryList } = props
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
+  const isMobile: boolean = useMediaQuery({ maxWidth: maxMobileWidth })
+  const isTabletMobile: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
 
-  if (isTabletMobile) {
+  useEffect(() => {
+    setIsCollapsed(isMobile || isTabletMobile)
+  }, [isMobile, isTabletMobile])
+
+  if (isCollapsed) {
     return (
       <Stack paddingLeft="20px" paddingRight="20px" marginTop="4" marginBottom="40">
         <Text fontSize="sm">Choose your favorite books, and pick them up at our store at:</Text>
