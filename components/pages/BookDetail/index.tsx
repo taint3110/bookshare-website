@@ -1,44 +1,51 @@
 import {
   Box,
-  Stack,
+  Button,
+  Center,
+  Divider,
   HStack,
   Image,
+  Stack,
   Table,
   TableContainer,
   Tbody,
   Td,
   Text,
-  Tr,
-  Button,
-  Divider,
-  Center
+  Tr
 } from '@chakra-ui/react'
-import { IMockBook, mockBooks } from 'components/BookList/components/BookCard/mockData'
+import { handleError } from 'API/error'
 import BookListNoFilter from 'components/BookListNoFilter'
 import { maxMobileWidth, maxTabletWidth, textGrey500 } from 'theme/globalStyles'
 import { formatText, getQueryValue, getValidArray, removeItem } from 'utils/common'
 import Paragraph from './FadedParagraph'
 import { useStores } from 'hooks/useStores'
-import { handleError } from 'API/error'
-import { get, includes } from 'lodash'
-import { useEffect, useState } from 'react'
+import { IBook } from 'interfaces/book'
+import { ICategory } from 'interfaces/category'
+import { get } from 'lodash'
 import { observer } from 'mobx-react'
+import { useRouter } from 'next/router'
 import ErrorNotFoundPage from 'pages/404'
 import { IFilter, PredicateComparison } from 'types/query'
 import { IBook, IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
 import { useMediaQuery } from 'react-responsive'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { textGrey500 } from 'theme/globalStyles'
+import { PredicateComparison } from 'types/query'
+import { formatText, getQueryValue, getValidArray } from 'utils/common'
+import Paragraph from './FadedParagraph'
 
 const BookDetail = () => {
   const { websiteBookStore, spinnerStore } = useStores()
   const { isLoading } = spinnerStore
-  const { bookDetail, websiteBookList } = websiteBookStore
+  const { bookDetail, websiteBookList, titleFilter } = websiteBookStore
   const router = useRouter()
   const bookId: string = String(get(router, 'query.id', ''))
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const pageIndex: number = getQueryValue(router, 'page', 1)
   const [sort, setSort] = useState('updatedAt')
+  const { query } = router
   const [orderBy, setOrderBy] = useState(-1)
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
   const isMobile: boolean = useMediaQuery({ maxWidth: maxMobileWidth })
@@ -64,15 +71,22 @@ const BookDetail = () => {
     bookCover
   } = bookDetail
 
-  var relatedBooks: IBook[] = websiteBookList.results.filter((book) => book.id !== bookId)
+  function filterRelatedBooks(books: IBook[]): IBook[] {
+    const relatedBooks: IBook[] = getValidArray(books).filter((book) => book.id !== bookId)
+    if (Array.isArray(relatedBooks) && relatedBooks.length > 0) {
+      return relatedBooks
+    }
+    return []
+  }
 
   async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
     spinnerStore.showLoading()
     try {
       await websiteBookStore.fetchWebsiteBookDetail(bookId)
       if (bookDetail) {
-        const filter: IFilter<IBookWithRelations> = {
+        const filter = {
           where: {
+            title: titleFilter,
             or: [
               {
                 categories: {
@@ -105,10 +119,11 @@ const BookDetail = () => {
     }
   }
   useEffect(() => {
+    console.log(titleFilter)
     if (bookId) {
       fetchData()
     }
-  }, [bookId])
+  }, [bookId, titleFilter])
 
   if (bookDetail) {
     if (isCollapsed) {
@@ -261,8 +276,9 @@ const BookDetail = () => {
           </Text>
         </Center>
         <BookListNoFilter
-          bookList={[...websiteBookList.results]}
-          countBookList={websiteBookList.totalCount}
+          books={[...filterRelatedBooks(websiteBookList?.results)]}
+          pageSize={12}
+          listLength={filterRelatedBooks(websiteBookList?.results)?.length}
           gridColumns={4}
         />
       </Stack>

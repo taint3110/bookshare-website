@@ -1,18 +1,37 @@
-import * as React from 'react'
-import { ChevronDownIcon, ChevronUpIcon, PhoneIcon, Search2Icon } from '@chakra-ui/icons'
+import { ChevronDownIcon, ChevronUpIcon, Search2Icon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
 import { NavLink } from 'enums/theme'
+import { useStores } from 'hooks/useStores'
 import { INavLink, INavLinkItem } from 'interfaces/navigation'
+import debounce from 'lodash/debounce'
+import { useRouter } from 'next/router'
+import { useCallback, useEffect, useState } from 'react'
 import { getValidArray } from 'utils/common'
 import { backgroundItemHeaderHover } from '../../constants'
-import { Container, Link, Text, Button, DropdownButton } from './navbarDesktop.styles'
+import { Button, Container, DropdownButton, Link, Text } from './navbarDesktop.styles'
+import { observer } from 'mobx-react'
 
 interface INavbarDesktopProps {
   navLinks: INavLink[]
 }
 
 const NavbarDesktop = (props: INavbarDesktopProps) => {
+  const [name, setName] = useState<string>('')
+  const { websiteBookStore } = useStores()
   const { navLinks } = props
+  const router = useRouter()
+
+  const changeName = useCallback(
+    debounce((event: { target: { value: string } }) => {
+      setName(event?.target?.value ?? '')
+    }, 1000),
+    []
+  )
+
+  useEffect(() => {
+    websiteBookStore.setTitleFilter(name)
+  }, [name])
+
   return (
     <Container>
       <InputGroup ml={40} mr={40}>
@@ -23,6 +42,7 @@ const NavbarDesktop = (props: INavbarDesktopProps) => {
           placeholder="ie: ShakeSpear, horror, doraemon,..."
           _placeholder={{ opacity: 1, color: 'gray.500' }}
           bgColor={'white'}
+          onChange={changeName}
         />
       </InputGroup>
       {getValidArray(navLinks).map((navLink: INavLink, index: number) => {
@@ -102,4 +122,4 @@ const NavbarDesktop = (props: INavbarDesktopProps) => {
   )
 }
 
-export default NavbarDesktop
+export default observer(NavbarDesktop)
