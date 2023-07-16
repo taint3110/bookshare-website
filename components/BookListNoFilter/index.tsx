@@ -16,7 +16,7 @@ const BookListNoFilter = (props: IBookWithRelationsListProps) => {
     <Stack>
       {/* BookList Section */}
       {bookList.length > 0 ? (
-        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+        <Grid templateColumns={'repeat(' + gridColumns + ', 1fr)'} gap={2}>
           {bookList.map((book: IBookWithRelations, indexBook: number) => (
             <BookCard {...book} key={indexBook} />
           ))}

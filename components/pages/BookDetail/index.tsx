@@ -179,7 +179,7 @@ const BookDetail = () => {
           <BookListNoFilter
             bookList={[...websiteBookList.results]}
             countBookList={websiteBookList.totalCount}
-            gridColumns={4}
+            gridColumns={2}
           />
         </Stack>
       )
