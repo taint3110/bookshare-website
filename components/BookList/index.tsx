@@ -27,10 +27,11 @@ export interface IBookWithRelationsListProps {
   bookList: IBookWithRelations[]
   countBookList: number
   categoryList: ICategory[]
+  gridColumns: number
 }
 
 const BookList = (props: IBookWithRelationsListProps) => {
-  const { bookList, countBookList, categoryList } = props
+  const { bookList, countBookList, categoryList, gridColumns } = props
   // Filter for categoryList
 
   const [selectedSort, setSelectedSort] = useState<string | string[]>()
@@ -235,7 +236,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
       </Container>
       {/* BookList Section */}
       {filteredData?.length > 0 ? (
-        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+        <Grid templateColumns={'repeat(' + gridColumns + ',1fr)'} gap={2}>
           <React.Fragment>
             {filteredData.map((book: IBookWithRelations, indexBook: number) => (
               <BookCard {...book} key={indexBook} />
