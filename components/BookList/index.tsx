@@ -248,13 +248,6 @@ const BookList = (props: IBookWithRelationsListProps) => {
           <Text>No book available!</Text>
         </Center>
       )}
-      <Center mt={8}>
-        <Pagination
-          pagination={{ pageIndex: 1, tableLength: countBookList, gotoPage: () => {} }}
-          showPageSize={false}
-          pageSize={12}
-        />
-      </Center>
     </Stack>
   )
 }
