@@ -1,50 +1,57 @@
 import { Button, Card, CardBody, CardFooter, Divider, Flex, Heading, Image, Stack, Text } from '@chakra-ui/react'
+import NextLink from 'components/NextLink'
 import { IBookWithRelations } from 'interfaces/book'
+import { redirect } from 'next/dist/server/api-utils'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { MouseEventHandler } from 'react'
 
 const BookCard = (props: IBookWithRelations) => {
   const { id, title, author, price, bonusPointPrice, publisher, language, bookStatus, media } = props
   const router = useRouter()
 
-  const handleClick = (id: string) => {
-    router.push('/books/' + id) // Replace with the desired path
+  const handleClick: MouseEventHandler<HTMLDivElement> = (event) => {
+    if (id) router.push('/books/' + id)
   }
 
   return (
-    <Link href={'/books/' + id}>
-      <Card>
-        <CardBody>
-          <Image
-            src={media?.imageUrl ?? 'https://via.placeholder.com/150'}
-            boxSize="sm"
-            objectFit="contain"
-            alt={title}
-            borderRadius="sm"
-          />
-          <Stack mt="4" spacing="1">
-            <Heading size="sm">{title}</Heading>
-            <Text>{author}</Text>
-            <Text color="teal.600" fontSize="xl">
-              {price}
-            </Text>
-          </Stack>
-        </CardBody>
-        <Divider />
-        <CardFooter>
-          <Button
-            flex={1}
-            colorScheme="teal"
-            variant={bookStatus == 'available' ? 'solid' : 'flushed'}
-            isDisabled={bookStatus == 'available' ? false : true}
-          >
-            {bookStatus == 'available' ? 'Add to cart' : 'Unavailable'}
-          </Button>
-        </CardFooter>
-      </Card>
+    // <Link href={'/books/' + id}>
+    <Card onClick={handleClick}>
+      <CardBody>
+        <Image
+          src={media?.imageUrl ?? 'https://via.placeholder.com/150'}
+          boxSize="sm"
+          objectFit="contain"
+          alt={title}
+          borderRadius="sm"
+        />
+        <Stack mt="4" spacing="1">
+          <Heading size="sm">{title}</Heading>
+          <Text>{author}</Text>
+          <Text color="teal.600" fontSize="xl">
+            {price}
+          </Text>
+        </Stack>
+      </CardBody>
+      <Divider />
+      <CardFooter>
+        <Button
+          flex={1}
+          colorScheme="teal"
+          variant={bookStatus == 'available' ? 'solid' : 'flushed'}
+          isDisabled={bookStatus == 'available' ? false : true}
+        >
+          {bookStatus == 'available' ? 'Add to cart' : 'Unavailable'}
+        </Button>
+      </CardFooter>
+    </Card>
+  )
 
-      {/* MODAL THONG BAO THEM VAO CART THANH CONG  */}
-      {/* <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+  {
+    /* MODAL THONG BAO THEM VAO CART THANH CONG  */
+  }
+  {
+    /* <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalCloseButton />
@@ -63,9 +70,9 @@ const BookCard = (props: IBookWithRelations) => {
             </Button>
           </ModalFooter>
         </ModalContent>
-      </Modal> */}
-    </Link>
-  )
+      </Modal> */
+  }
+  // </Link>
 }
 
 function formatText(text: string) {}
