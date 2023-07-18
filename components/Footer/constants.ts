@@ -3,13 +3,7 @@ import { IFooterNavLink } from 'interfaces/navigation'
 export const usefullLinks: IFooterNavLink = {
   title: 'Useful Links',
   links: [
-    // { link: 'https://github.com/taint3110/bookshare', text: 'Podcasts & News' },
-    { link: 'https://github.com/taint3110/bookshare', text: 'Team' },
     { link: 'https://github.com/taint3110/bookshare', text: 'Contact Us' },
-    { link: 'https://github.com/taint3110/bookshare', text: 'Blog' },
-    // { link: 'https://github.com/taint3110/bookshare', text: 'Careers at HomeRoom' },
-    // { link: 'https://github.com/taint3110/bookshare', text: 'For Investment Advisors' },
-    // { link: 'https://github.com/taint3110/bookshare', text: 'Affiliate Program' },
     { link: 'https://github.com/taint3110/bookshare', text: 'Privacy Policy' },
     { link: 'https://github.com/taint3110/bookshare', text: 'Terms of Service' }
   ]
@@ -39,7 +33,7 @@ export const renters: IFooterNavLink = {
   ]
 }
 
-export const tabletFooterLinks: IFooterNavLink[] = [{ ...usefullLinks }, { ...renters }]
+export const tabletFooterLinks: IFooterNavLink[] = [{ ...usefullLinks }]
 
 export interface ISocialLink {
   label: string
