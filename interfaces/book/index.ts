@@ -28,6 +28,7 @@ export interface IBook {
   formMedia?: string
   media?: IMedia
   language?: string
+  orderId?: string
 }
 
 export interface IBookWithRelations extends IBook {
