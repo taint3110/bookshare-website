@@ -105,6 +105,7 @@ const BookDetail = () => {
         }
         await websiteBookStore.fetchWebsiteBookList(filter)
       }
+      relatedBooks = websiteBookList.results.filter((book) => book.id !== bookId)
     } catch (error) {
       handleError(error as Error, 'components/pages/BookDetail', 'fetchData')
     } finally {

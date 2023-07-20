@@ -24,7 +24,7 @@ import { ICategory } from 'interfaces/category'
 import { observer } from 'mobx-react'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { getValidArray } from 'utils/common'
+import { getValidArray, removeItemOnce } from 'utils/common'
 import BookCard from './components/BookCard'
 import { MockBookConditions, MockBookCovers } from './components/BookCard/mockData'
 
@@ -44,12 +44,12 @@ const BookList = (props: IBookWithRelationsListProps) => {
   const bookConditions = getValidArray(MockBookConditions)
   const bookCovers = getValidArray(MockBookCovers)
 
-  const [selectedCategories, setSelectedCategories] = useState<string | string[]>(
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
     getValidArray(categoryList).map((item) => item.name!)
   )
   const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>(true)
   // Filter for condition
-  const [selectedConditions, setSelectedConditions] = useState<string | string[]>(
+  const [selectedConditions, setSelectedConditions] = useState<string[]>(
     getValidArray(bookConditions).map((item) => item)
   )
   const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>(true)
@@ -58,7 +58,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
   const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>(true)
 
   const handleCategoryChange = (selectedValues: string | string[]) => {
-    setSelectedCategories(selectedValues)
+    setSelectedCategories(Array.from(selectedValues))
     if (selectedValues.length < categoryList.length) {
       setisCategoryCheckedAll(false)
     } else if (selectedValues.length === categoryList.length) {
@@ -78,7 +78,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
   }
 
   const handleConditionChange = (selectedValues: string | string[]) => {
-    setSelectedConditions(selectedValues)
+    setSelectedConditions(Array.from(selectedValues))
     if (selectedValues.length < bookConditions.length) {
       setisConditionCheckedAll(false)
     } else if (selectedValues.length === bookConditions.length) {
@@ -159,6 +159,8 @@ const BookList = (props: IBookWithRelationsListProps) => {
     const handleClick = () => {
       if (isCategoryCheckedAll) {
         handleCategoryChange([category.name!])
+      } else if (selectedCategories.includes(category.name!)) {
+        handleCategoryChange(removeItemOnce(selectedCategories, category.name!))
       } else {
         handleCategoryChange(selectedCategories.concat(category.name!))
       }
@@ -186,7 +188,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
   return (
     <Stack>
       {/* Categories Section */}
-      <Grid templateColumns={{ base: 'repeat(4, 1fr)', lg: 'repeat(6, 1fr)' }} gap={1}>
+      <Grid templateColumns={{ base: 'repeat(4, 1fr)', lg: 'repeat(8, 1fr)' }} gap={1}>
         {getValidArray(categoryList).map((category: ICategory, categoryIndex: number) => (
           <CategoryCard category={category} key={category.id!}></CategoryCard>
         ))}
