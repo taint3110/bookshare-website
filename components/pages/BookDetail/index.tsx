@@ -98,6 +98,7 @@ const BookDetail = () => {
         }
         await websiteBookStore.fetchWebsiteBookList(filter)
       }
+      relatedBooks = websiteBookList.results.filter((book) => book.id !== bookId)
     } catch (error) {
       handleError(error as Error, 'components/pages/BookDetail', 'fetchData')
     } finally {
@@ -260,11 +261,7 @@ const BookDetail = () => {
             RELATED BOOKS
           </Text>
         </Center>
-        <BookListNoFilter
-          bookList={[...websiteBookList.results]}
-          countBookList={websiteBookList.totalCount}
-          gridColumns={4}
-        />
+        <BookListNoFilter bookList={[...relatedBooks]} countBookList={relatedBooks.length} gridColumns={4} />
       </Stack>
     )
   } else {

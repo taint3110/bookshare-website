@@ -39,3 +39,11 @@ export function removeItem<T>(arr: Array<T>, value: T): Array<T> {
   }
   return arr
 }
+
+export function removeItemOnce<T>(arr: Array<T>, value: T) {
+  var index = arr.indexOf(value)
+  if (index > -1) {
+    arr.splice(index, 1)
+  }
+  return arr
+}
