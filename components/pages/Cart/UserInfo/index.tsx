@@ -51,7 +51,6 @@ const CartUserInfo = (props: ICartUserInfoProps) => {
   }
 
   useEffect(() => {
-    console.log(order)
     reset(order)
   }, [order])
 

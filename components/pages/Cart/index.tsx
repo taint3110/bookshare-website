@@ -19,7 +19,7 @@ const Cart = () => {
   const isTabletMobile: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
   const { authStore, websiteOrderStore } = useStores()
   const { user } = authStore
-  const { websiteOrderList, currentOrder } = websiteOrderStore
+  const { websiteOrderList } = websiteOrderStore
 
   useEffect(() => {
     setIsCollapsed(isMobile || isTabletMobile)

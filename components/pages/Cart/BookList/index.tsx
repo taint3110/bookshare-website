@@ -4,6 +4,7 @@ import getSubComponent from 'components/HOCs/getSubComponent'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
 import { EBookStatusEnum } from 'enums/book'
+import { EOrderStatusEnum } from 'enums/order'
 import { useStores } from 'hooks/useStores'
 import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
@@ -25,6 +26,7 @@ const CartBookList = (props: ICartBookListProps) => {
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = <Text>Are you sure to remove this Book?</Text>
   const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
+  const [orderStatus, setOrderStatus] = useState<EOrderStatusEnum>(order?.orderStatus ?? EOrderStatusEnum.NEW)
 
   async function deleteBook(): Promise<void> {
     try {
@@ -92,10 +94,10 @@ const CartBookList = (props: ICartBookListProps) => {
   return (
     <Card>
       <Table
-        headerList={getHeaderList()}
+        headerList={getHeaderList(orderStatus !== EOrderStatusEnum.NEW ? false : true)}
         tableData={dataInTable}
         isManualSort
-        subComponent={getSubComponent(getHeaderList(), 3)}
+        subComponent={getSubComponent(getHeaderList(orderStatus !== EOrderStatusEnum.NEW ? false : true), 3)}
       />
       <ConfirmModal
         titleText="Remove Book"
