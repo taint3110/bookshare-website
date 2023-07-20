@@ -2,9 +2,12 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
+  Card,
+  CardBody,
   Center,
   Checkbox,
   Container,
+  Divider,
   Flex,
   Grid,
   Menu,
@@ -13,6 +16,7 @@ import {
   MenuList,
   MenuOptionGroup,
   Stack,
+  Image,
   Text
 } from '@chakra-ui/react'
 import Pagination from 'components/BookList/components/Pagination'
@@ -22,16 +26,19 @@ import React, { useState } from 'react'
 import { getValidArray } from 'utils/common'
 import BookCard from './components/BookCard'
 import { MockBookConditions, MockBookCovers } from './components/BookCard/mockData'
+import Link from 'next/link'
 
 export interface IBookWithRelationsListProps {
   bookList: IBookWithRelations[]
   countBookList: number
   categoryList: ICategory[]
+  gridColumns: number
 }
 
 const BookList = (props: IBookWithRelationsListProps) => {
-  const { bookList, countBookList, categoryList } = props
+  const { bookList, countBookList, categoryList, gridColumns } = props
   // Filter for categoryList
+  function categoryFilter(): void {}
 
   const [selectedSort, setSelectedSort] = useState<string | string[]>()
   const bookConditions = getValidArray(MockBookConditions)
@@ -148,8 +155,44 @@ const BookList = (props: IBookWithRelationsListProps) => {
               : selectedCovers.indexOf(book.bookCover!.toString()) >= 0)
         )
 
+  function CategoryCard({ category }: CategoryCardProps) {
+    const handleClick = () => {
+      if (isCategoryCheckedAll) {
+        handleCategoryChange([category.name!])
+      } else {
+        handleCategoryChange(selectedCategories.concat(category.name!))
+      }
+    }
+    return (
+      <Link href={'#'} key={category?.name} onClick={handleClick}>
+        <Card maxW="sm" key={category?.name}>
+          <CardBody>
+            <Image
+              boxSize={'200'}
+              objectFit="cover"
+              src={category?.media?.imageUrl ?? 'https://via.placeholder.com/150'}
+              alt={category?.name}
+              borderRadius="lg"
+            />
+            <Text align={'center'} size="md" mt={4}>
+              {category?.name && category?.name.toUpperCase()}
+            </Text>
+          </CardBody>
+        </Card>
+      </Link>
+    )
+  }
+
   return (
     <Stack>
+      {/* Categories Section */}
+      <Grid templateColumns={{ base: 'repeat(4, 1fr)', lg: 'repeat(6, 1fr)' }} gap={1}>
+        {getValidArray(categoryList).map((category: ICategory, categoryIndex: number) => (
+          <CategoryCard category={category} key={category.id!}></CategoryCard>
+        ))}
+      </Grid>
+      <Divider m="4" />
+
       {/* Filter Section */}
       <Container maxW="container.2xl" p="4" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
         <Flex justify="space-between">
@@ -235,7 +278,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
       </Container>
       {/* BookList Section */}
       {filteredData?.length > 0 ? (
-        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+        <Grid templateColumns={'repeat(' + gridColumns + ',1fr)'} gap={2}>
           <React.Fragment>
             {filteredData.map((book: IBookWithRelations, indexBook: number) => (
               <BookCard {...book} key={indexBook} />
@@ -247,15 +290,12 @@ const BookList = (props: IBookWithRelationsListProps) => {
           <Text>No book available!</Text>
         </Center>
       )}
-      <Center mt={8}>
-        <Pagination
-          pagination={{ pageIndex: 1, tableLength: countBookList, gotoPage: () => {} }}
-          showPageSize={false}
-          pageSize={12}
-        />
-      </Center>
     </Stack>
   )
+}
+
+interface CategoryCardProps {
+  category: ICategory
 }
 
 export default BookList

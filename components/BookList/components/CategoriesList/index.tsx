@@ -17,7 +17,7 @@ const CategoriesList = (props: ICategoriesListProps) => {
             <CardBody>
               <Image
                 boxSize={'200'}
-                objectFit="contain"
+                objectFit="cover"
                 src={category?.media?.imageUrl ?? 'https://via.placeholder.com/150'}
                 alt={category?.name}
                 borderRadius="lg"

@@ -17,16 +17,6 @@ export function getMetroItems(metroList?: IMetro[]): INavLinkItem[] {
 
 export function getNavLinks(metroList?: IMetro[]): INavLink[] {
   const navLinks: INavLink[] = [
-    // {
-    //   type: NavLink.DROPDOWN,
-    //   text: 'Lease A Room',
-    //   items: getMetroItems(metroList)
-    // },
-    // {
-    //   type: NavLink.EMPTY_DROPDOWN,
-    //   text: 'List Your Home',
-    //   link: `${process.env.FE_BASE_URL}?placeType=entire-house`
-    // },
     {
       type: NavLink.BUTTON,
       link: '/checkout/cart',
@@ -34,7 +24,7 @@ export function getNavLinks(metroList?: IMetro[]): INavLink[] {
     },
     {
       type: NavLink.BUTTON,
-      text: 'User Name',
+      text: 'Log out',
       link: '/'
     }
   ]
