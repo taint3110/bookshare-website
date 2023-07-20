@@ -13,7 +13,7 @@ export class WebsiteBookStore {
     makeAutoObservable(this)
   }
 
-  websiteBookList: PaginationList<IBook> = {
+  websiteBookList: PaginationList<IBookWithRelations> = {
     results: [],
     totalCount: 0
   }

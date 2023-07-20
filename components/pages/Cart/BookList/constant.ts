@@ -15,14 +15,14 @@ export function getHeaderList(): ITableHeader[] {
       Cell
     },
     {
-      Header: 'AUTHOR',
-      accessor: 'author',
+      Header: 'PRICE',
+      accessor: 'price',
       disableSortBy: true,
       Cell
     },
     {
-      Header: 'PRICE',
-      accessor: 'price',
+      Header: 'POINT PRICE',
+      accessor: 'bonusPointPrice',
       disableSortBy: true,
       Cell
     },

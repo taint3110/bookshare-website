@@ -1,47 +1,45 @@
-import { useRouter } from 'next/router'
-import { getHeaderList } from './constant'
-import { getQueryValue, getValidArray } from 'utils/common'
-import { useDisclosure, Text, Image, HStack, Link, Card } from '@chakra-ui/react'
-import { deleteBookById } from 'API/cms/book'
-import { handleError } from 'API/error'
+import { Card, HStack, Image, Text, useDisclosure } from '@chakra-ui/react'
+import ConfirmModal from 'components/ConfirmModal'
 import getSubComponent from 'components/HOCs/getSubComponent'
-import { useStores } from 'hooks/useStores'
-import { useState, ReactNode } from 'react'
-import { useMediaQuery } from 'react-responsive'
-import { toast } from 'react-toastify'
-import routes from 'routes'
-import { maxTabletWidth } from 'theme/globalStyles'
-import { ICategory } from 'interfaces/category'
 import Icon from 'components/Icon'
 import Table from 'components/Table'
-import { IMockBook, mockBooks, mockOrder } from 'components/BookList/components/BookCard/mockData'
-import ConfirmModal from 'components/ConfirmModal'
+import { EBookStatusEnum } from 'enums/book'
+import { useStores } from 'hooks/useStores'
+import { IBookWithRelations } from 'interfaces/book'
+import { ICategory } from 'interfaces/category'
+import { IOrder } from 'interfaces/order'
+import { observer } from 'mobx-react'
+import { ReactNode, useState } from 'react'
+import { toast } from 'react-toastify'
+import { getValidArray } from 'utils/common'
+import { getHeaderList } from './constant'
 
-const CartBookList = () => {
-  const router = useRouter()
-  const pageIndex: number = getQueryValue(router, 'page', 1)
-  const { spinnerStore } = useStores()
+export interface ICartBookListProps {
+  order: IOrder
+}
+
+const CartBookList = (props: ICartBookListProps) => {
+  const { order } = props
+  const { websiteOrderStore } = useStores()
   const { isOpen: isConfirming, onOpen: onConfirm, onClose: closeConfirm } = useDisclosure()
-  const [sort, setSort] = useState('updatedAt')
-  const [orderBy, setOrderBy] = useState(-1)
   const [targetId, setTargetId] = useState<string>()
   const confirmModalContent: ReactNode = <Text>Are you sure to remove this Book?</Text>
   const mockImage = 'https://www.animenewsnetwork.com/images/encyc/A21401-991568125.1544081652.jpg'
-
-  async function fetchData(isReset: boolean = false, page: number = pageIndex): Promise<void> {
-    try {
-    } catch (error) {
-    } finally {
-      spinnerStore.hideLoading()
-    }
-  }
 
   async function deleteBook(): Promise<void> {
     try {
       if (targetId) {
         // TODO: Handle remove book from cart
         closeConfirm()
-        fetchData()
+        await websiteOrderStore.updateOrder({
+          ...order,
+          bookList: getValidArray(order?.bookList).map((book: IBookWithRelations) => {
+            if (book?.id === targetId) {
+              return { ...book, bookStatus: EBookStatusEnum.AVAILABLE, orderId: '' }
+            }
+            return book
+          })
+        })
         toast.success('Remove Book Successfully')
       }
     } catch (error) {
@@ -49,19 +47,19 @@ const CartBookList = () => {
     }
   }
 
-  const dataInTable = getValidArray(mockOrder.bookList).map((book: IMockBook) => {
+  const dataInTable = getValidArray(order.bookList).map((book: IBookWithRelations) => {
     function handleDelete(): void {
       onConfirm()
-      setTargetId(book?._id ?? '')
+      setTargetId(book?.id ?? '')
     }
     return {
       ...book,
-      image: book?.imageUrl ? (
+      image: book?.media ? (
         <Image
           objectFit="cover"
           borderRadius="6px"
           marginLeft={1}
-          src={book?.imageUrl}
+          src={book?.media?.imageUrl}
           alt="imageUrl"
           width={8}
           height={8}
@@ -92,13 +90,11 @@ const CartBookList = () => {
     }
   })
   return (
-    <Card flex={2}>
+    <Card>
       <Table
         headerList={getHeaderList()}
         tableData={dataInTable}
         isManualSort
-        setSort={setSort}
-        setOrderBy={setOrderBy}
         subComponent={getSubComponent(getHeaderList(), 3)}
       />
       <ConfirmModal
@@ -114,4 +110,4 @@ const CartBookList = () => {
   )
 }
 
-export default CartBookList
+export default observer(CartBookList)

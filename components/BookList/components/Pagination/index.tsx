@@ -6,6 +6,7 @@ import useBreakPoint from 'hooks/useBreakPoint'
 import DropdownButton from '../../../Dropdown/DropdownButton'
 import DropdownSelection from '../../../Dropdown/DropdownSelection'
 import { truncatePagination } from './utils'
+import { observer } from 'mobx-react'
 
 export interface IPaginationProps {
   pagination: IPagination
@@ -138,4 +139,4 @@ const Pagination = (props: IPaginationProps) => {
   )
 }
 
-export default Pagination
+export default observer(Pagination)

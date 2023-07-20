@@ -15,23 +15,16 @@ import {
 } from '@chakra-ui/react'
 import { handleError } from 'API/error'
 import BookListNoFilter from 'components/BookListNoFilter'
-import { maxMobileWidth, maxTabletWidth, textGrey500 } from 'theme/globalStyles'
-import { formatText, getQueryValue, getValidArray, removeItem } from 'utils/common'
-import Paragraph from './FadedParagraph'
 import { useStores } from 'hooks/useStores'
-import { IBook } from 'interfaces/book'
+import { IBook, IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
 import { get } from 'lodash'
 import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
 import ErrorNotFoundPage from 'pages/404'
-import { IFilter, PredicateComparison } from 'types/query'
-import { IBook, IBookWithRelations } from 'interfaces/book'
-import { ICategory } from 'interfaces/category'
-import { useMediaQuery } from 'react-responsive'
-import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { textGrey500 } from 'theme/globalStyles'
+import { useMediaQuery } from 'react-responsive'
+import { maxMobileWidth, maxTabletWidth, textGrey500 } from 'theme/globalStyles'
 import { PredicateComparison } from 'types/query'
 import { formatText, getQueryValue, getValidArray } from 'utils/common'
 import Paragraph from './FadedParagraph'
@@ -44,9 +37,9 @@ const BookDetail = () => {
   const bookId: string = String(get(router, 'query.id', ''))
   const [pageSize, setPageSize] = useState<number>(Number(router.query.pageSize) || 10)
   const pageIndex: number = getQueryValue(router, 'page', 1)
-  const [sort, setSort] = useState('updatedAt')
+  const [sort, setSort] = useState('bookStatus')
   const { query } = router
-  const [orderBy, setOrderBy] = useState(-1)
+  const [orderBy, setOrderBy] = useState(1)
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
   const isMobile: boolean = useMediaQuery({ maxWidth: maxMobileWidth })
   const isTabletMobile: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
@@ -71,7 +64,7 @@ const BookDetail = () => {
     bookCover
   } = bookDetail
 
-  function filterRelatedBooks(books: IBook[]): IBook[] {
+  function filterRelatedBooks(books: IBookWithRelations[]): IBookWithRelations[] {
     const relatedBooks: IBook[] = getValidArray(books).filter((book) => book.id !== bookId)
     if (Array.isArray(relatedBooks) && relatedBooks.length > 0) {
       return relatedBooks
@@ -276,9 +269,8 @@ const BookDetail = () => {
           </Text>
         </Center>
         <BookListNoFilter
-          books={[...filterRelatedBooks(websiteBookList?.results)]}
-          pageSize={12}
-          listLength={filterRelatedBooks(websiteBookList?.results)?.length}
+          bookList={[...filterRelatedBooks(websiteBookList?.results)]}
+          countBookList={filterRelatedBooks(websiteBookList?.results)?.length}
           gridColumns={4}
         />
       </Stack>

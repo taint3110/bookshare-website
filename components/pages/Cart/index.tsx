@@ -1,24 +1,61 @@
-import { Center, HStack, Text, Image, Stack, Container } from '@chakra-ui/react'
-import CartBookList from './BookList'
-import CartUserInfo from './UserInfo'
-import { mockOrder } from 'components/BookList/components/BookCard/mockData'
+import { Container, HStack, Image, Stack, Text } from '@chakra-ui/react'
+import { PLATFORM } from 'API/constants'
+import { handleError } from 'API/error'
+import { EBookStatusEnum } from 'enums/book'
+import { useStores } from 'hooks/useStores'
+import { IBookWithRelations } from 'interfaces/book'
+import { IOrder } from 'interfaces/order'
+import { observer } from 'mobx-react'
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { maxMobileWidth, maxTabletWidth } from 'theme/globalStyles'
+import { getValidArray } from 'utils/common'
+import CartBookList from './BookList'
+import CartUserInfo from './UserInfo'
 
 const Cart = () => {
-  const pendingOrder = mockOrder
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false)
   const isMobile: boolean = useMediaQuery({ maxWidth: maxMobileWidth })
   const isTabletMobile: boolean = useMediaQuery({ maxWidth: maxTabletWidth })
+  const { authStore, websiteOrderStore } = useStores()
+  const { user } = authStore
+  const { websiteOrderList, currentOrder } = websiteOrderStore
 
   useEffect(() => {
     setIsCollapsed(isMobile || isTabletMobile)
   }, [isMobile, isTabletMobile])
-  if (pendingOrder == null) {
+
+  async function fetchData(): Promise<void> {
+    try {
+      await authStore.getMyUser(PLATFORM.WEBSITE)
+    } catch (error) {
+      handleError(error as Error, 'components/pages/Cart/index.tsx', 'fetchData')
+    }
+  }
+
+  useEffect(() => {
+    fetchData()
+  }, [])
+
+  useEffect(() => {
+    if (user?.id) {
+      websiteOrderStore.fetchWebsiteOrderList({
+        where: {
+          userId: user?.id
+        }
+      })
+    }
+  }, [user])
+
+  if (
+    getValidArray(getValidArray(websiteOrderList?.results)[0]?.bookList).filter(
+      (book: IBookWithRelations) => book.bookStatus === EBookStatusEnum.ORDERED
+    ).length === 0
+  ) {
     return (
       <Stack pl="280px" pr="280px" marginTop="12" mb="40" align={'center'}>
         <Image
+          alt="empty cart"
           width={600}
           src="https://assets.materialup.com/uploads/16e7d0ed-140b-4f86-9b7e-d9d1c04edb2b/preview.png"
         ></Image>
@@ -27,30 +64,44 @@ const Cart = () => {
     )
   }
   if (isCollapsed) {
-    return (
-      <Stack
-        paddingLeft="20px"
-        paddingRight="20px"
-        marginTop="12"
-        marginBottom="40"
-        spacing={4}
-        alignItems={'flex-start'}
-      >
-        <Container width={'100%'}>
-          <CartBookList />
-        </Container>
-        <Container width={'100%'}>
-          <CartUserInfo />
-        </Container>
-      </Stack>
-    )
+    return getValidArray(websiteOrderList?.results)
+      .filter(
+        (order: IOrder) =>
+          getValidArray(order.bookList).filter(
+            (book: IBookWithRelations) => book.bookStatus === EBookStatusEnum.ORDERED
+          ).length > 0
+      )
+      .map((order: IOrder) => (
+        <Stack
+          key={order.id}
+          paddingLeft="20px"
+          paddingRight="20px"
+          marginTop="12"
+          marginBottom="40"
+          spacing={4}
+          alignItems={'flex-start'}
+        >
+          <Container width={'100%'}>
+            <CartBookList order={order} />
+          </Container>
+          <Container width={'100%'}>
+            <CartUserInfo order={order} />
+          </Container>
+        </Stack>
+      ))
   }
-  return (
-    <HStack paddingLeft="280px" paddingRight="280px" marginTop="12" marginBottom="40" alignItems={'flex-start'}>
-      <CartBookList />
-      <CartUserInfo />
-    </HStack>
-  )
+  return getValidArray(websiteOrderList?.results)
+    .filter(
+      (order: IOrder) =>
+        getValidArray(order.bookList).filter((book: IBookWithRelations) => book.bookStatus === EBookStatusEnum.ORDERED)
+          .length > 0
+    )
+    .map((order: IOrder) => (
+      <HStack key={order?.id} marginTop="12" marginBottom="40" alignItems="flex-start" justify="center">
+        <CartBookList order={order} />
+        <CartUserInfo order={order} />
+      </HStack>
+    ))
 }
 
-export default Cart
+export default observer(Cart)

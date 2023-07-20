@@ -14,4 +14,5 @@ export enum EBookStatusEnum {
   AVAILABLE = 'available',
   UNAVAILABLE = 'unavailable',
   RENTED = 'rented',
+  ORDERED = 'ordered'
 }
