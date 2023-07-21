@@ -1,5 +1,6 @@
 import { Card, CardBody, Grid, Image, Text } from '@chakra-ui/react'
 import { ICategory } from 'interfaces/category'
+import { observer } from 'mobx-react'
 import Link from 'next/link'
 import { getValidArray } from 'utils/common'
 
@@ -17,7 +18,7 @@ const CategoriesList = (props: ICategoriesListProps) => {
             <CardBody>
               <Image
                 boxSize={'200'}
-                objectFit="contain"
+                objectFit="cover"
                 src={category?.media?.imageUrl ?? 'https://via.placeholder.com/150'}
                 alt={category?.name}
                 borderRadius="lg"
@@ -33,4 +34,4 @@ const CategoriesList = (props: ICategoriesListProps) => {
   )
 }
 
-export default CategoriesList
+export default observer(CategoriesList)

@@ -1,4 +1,4 @@
-import { EBookConditionEnum, EBookCoverEnum, EBookStatusEnum } from "enums/book"
+import { EBookConditionEnum, EBookCoverEnum, EBookStatusEnum } from 'enums/book'
 import { ICategory } from 'interfaces/category'
 import { IOption } from 'interfaces/common'
 import { IMedia } from 'interfaces/media'
@@ -28,6 +28,7 @@ export interface IBook {
   formMedia?: string
   media?: IMedia
   language?: string
+  orderId?: string
 }
 
 export interface IBookWithRelations extends IBook {

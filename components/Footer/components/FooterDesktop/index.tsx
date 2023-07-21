@@ -99,13 +99,6 @@ const FooterDesktop = () => {
                 </NextLink>
               </HStack>
             </VStack>
-            {/* <HStack spacing={4} marginTop={8} alignSelf="flex-start">
-              {socialLinks.map((social: ISocialLink) => (
-                <SocialButton key={social.label} href={social.href} target="_blank">
-                  <Icon size={32} iconName={social.icon} />
-                </SocialButton>
-              ))}
-            </HStack> */}
           </VStack>
         </NavigationSection>
         <CommonDivider />

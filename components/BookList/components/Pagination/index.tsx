@@ -1,13 +1,12 @@
-import React from 'react'
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons'
-import { Button, Flex, Text, Box, Icon, Menu, MenuList } from '@chakra-ui/react'
+import { Box, Button, Flex, Icon, Menu, MenuList, Text } from '@chakra-ui/react'
+import { IPagination } from 'components/Table'
 import { EBreakPoint } from 'enums/theme'
 import useBreakPoint from 'hooks/useBreakPoint'
-import isNaN from 'lodash/isNaN'
-import { IPagination } from 'components/Table'
 import DropdownButton from '../../../Dropdown/DropdownButton'
 import DropdownSelection from '../../../Dropdown/DropdownSelection'
 import { truncatePagination } from './utils'
+import { observer } from 'mobx-react'
 
 export interface IPaginationProps {
   pagination: IPagination
@@ -89,8 +88,9 @@ const Pagination = (props: IPaginationProps) => {
         </Button>
         {!isMobile &&
           Array.isArray(truncatedPagination) &&
+          truncatedPagination.length > 0 &&
           truncatedPagination.map((item: string, index: number) => {
-            if (isNaN(item)) {
+            if (!item) {
               return <Text key={index}>{item}</Text>
             }
             const isActive = pageIndex === Number(item)
@@ -139,4 +139,4 @@ const Pagination = (props: IPaginationProps) => {
   )
 }
 
-export default Pagination
+export default observer(Pagination)

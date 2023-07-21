@@ -34,9 +34,9 @@ export function getTabletFooterLinks(metroList?: IMetro[]): IFooterNavLink[] {
 
 export function getDesktopFooterLinks(): IFooterNavLink[] {
   return [
-    {
-      ...renters
-    },
+    // {
+    //   ...renters
+    // },
     // {
     //   ...realEstateInvestors
     // }

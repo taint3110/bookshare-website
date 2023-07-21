@@ -4,6 +4,9 @@ const cmsRoutes = {
     login: {
       value: '/cms/login'
     },
+    signUp: {
+      value: '/cms/sign-up'
+    },
     forgotPassword: {
       value: '/cms/forgot-password'
     },

@@ -2,11 +2,15 @@ import { ChevronDownIcon } from '@chakra-ui/icons'
 import {
   Box,
   Button,
+  Card,
+  CardBody,
   Center,
   Checkbox,
   Container,
+  Divider,
   Flex,
   Grid,
+  Image,
   Menu,
   MenuButton,
   MenuItemOption,
@@ -15,11 +19,12 @@ import {
   Stack,
   Text
 } from '@chakra-ui/react'
-import Pagination from 'components/BookList/components/Pagination'
 import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
+import { observer } from 'mobx-react'
+import Link from 'next/link'
 import React, { useState } from 'react'
-import { getValidArray } from 'utils/common'
+import { getValidArray, removeItemOnce } from 'utils/common'
 import BookCard from './components/BookCard'
 import { MockBookConditions, MockBookCovers } from './components/BookCard/mockData'
 
@@ -27,29 +32,33 @@ export interface IBookWithRelationsListProps {
   bookList: IBookWithRelations[]
   countBookList: number
   categoryList: ICategory[]
+  gridColumns: number
 }
 
 const BookList = (props: IBookWithRelationsListProps) => {
-  const { bookList, countBookList, categoryList } = props
+  const { bookList, countBookList, categoryList, gridColumns } = props
   // Filter for categoryList
+  function categoryFilter(): void {}
 
   const [selectedSort, setSelectedSort] = useState<string | string[]>()
   const bookConditions = getValidArray(MockBookConditions)
   const bookCovers = getValidArray(MockBookCovers)
 
-  const [selectedCategories, setSelectedCategories] = useState<string | string[]>(
-    categoryList.map((item) => item.name!)
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    getValidArray(categoryList).map((item) => item.name!)
   )
   const [isCategoryCheckedAll, setisCategoryCheckedAll] = useState<boolean>(true)
   // Filter for condition
-  const [selectedConditions, setSelectedConditions] = useState<string | string[]>(bookConditions.map((item) => item))
+  const [selectedConditions, setSelectedConditions] = useState<string[]>(
+    getValidArray(bookConditions).map((item) => item)
+  )
   const [isConditionCheckedAll, setisConditionCheckedAll] = useState<boolean>(true)
   // Filter for covers
-  const [selectedCovers, setSelectedCovers] = useState<string | string[]>(bookCovers.map((item) => item))
+  const [selectedCovers, setSelectedCovers] = useState<string | string[]>(getValidArray(bookCovers).map((item) => item))
   const [isCoverCheckedAll, setisCoverCheckedAll] = useState<boolean>(true)
 
   const handleCategoryChange = (selectedValues: string | string[]) => {
-    setSelectedCategories(selectedValues)
+    setSelectedCategories(Array.from(selectedValues))
     if (selectedValues.length < categoryList.length) {
       setisCategoryCheckedAll(false)
     } else if (selectedValues.length === categoryList.length) {
@@ -69,7 +78,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
   }
 
   const handleConditionChange = (selectedValues: string | string[]) => {
-    setSelectedConditions(selectedValues)
+    setSelectedConditions(Array.from(selectedValues))
     if (selectedValues.length < bookConditions.length) {
       setisConditionCheckedAll(false)
     } else if (selectedValues.length === bookConditions.length) {
@@ -81,7 +90,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
     const { checked } = event.target
     setisConditionCheckedAll(checked)
     if (checked) {
-      const allOptions = bookConditions.map((item) => item)
+      const allOptions = getValidArray(bookConditions).map((item) => item)
       setSelectedConditions(allOptions)
     } else {
       setSelectedConditions([])
@@ -101,7 +110,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
     const { checked } = event.target
     setisCoverCheckedAll(checked)
     if (checked) {
-      const allOptions = bookCovers.map((item) => item)
+      const allOptions = getValidArray(bookCovers).map((item) => item)
       setSelectedCovers(allOptions)
     } else {
       setSelectedCovers([])
@@ -146,8 +155,46 @@ const BookList = (props: IBookWithRelationsListProps) => {
               : selectedCovers.indexOf(book.bookCover!.toString()) >= 0)
         )
 
+  function CategoryCard({ category }: CategoryCardProps) {
+    const handleClick = () => {
+      if (isCategoryCheckedAll) {
+        handleCategoryChange([category.name!])
+      } else if (selectedCategories.includes(category.name!)) {
+        handleCategoryChange(removeItemOnce(selectedCategories, category.name!))
+      } else {
+        handleCategoryChange(selectedCategories.concat(category.name!))
+      }
+    }
+    return (
+      <Link href={'#'} key={category?.name} onClick={handleClick}>
+        <Card maxW="sm" key={category?.name}>
+          <CardBody>
+            <Image
+              boxSize={'200'}
+              objectFit="cover"
+              src={category?.media?.imageUrl ?? 'https://via.placeholder.com/150'}
+              alt={category?.name}
+              borderRadius="lg"
+            />
+            <Text align={'center'} size="md" mt={4}>
+              {category?.name && category?.name.toUpperCase()}
+            </Text>
+          </CardBody>
+        </Card>
+      </Link>
+    )
+  }
+
   return (
     <Stack>
+      {/* Categories Section */}
+      <Grid templateColumns={{ base: 'repeat(4, 1fr)', lg: 'repeat(8, 1fr)' }} gap={1}>
+        {getValidArray(categoryList).map((category: ICategory, categoryIndex: number) => (
+          <CategoryCard category={category} key={category.id!}></CategoryCard>
+        ))}
+      </Grid>
+      <Divider m="4" />
+
       {/* Filter Section */}
       <Container maxW="container.2xl" p="4" shadow="sm" border="1px" borderColor="gray.200" borderRadius="4px">
         <Flex justify="space-between">
@@ -233,7 +280,7 @@ const BookList = (props: IBookWithRelationsListProps) => {
       </Container>
       {/* BookList Section */}
       {filteredData?.length > 0 ? (
-        <Grid templateColumns="repeat(4, 1fr)" gap={2}>
+        <Grid templateColumns={'repeat(' + gridColumns + ',1fr)'} gap={2}>
           <React.Fragment>
             {filteredData.map((book: IBookWithRelations, indexBook: number) => (
               <BookCard {...book} key={indexBook} />
@@ -245,15 +292,12 @@ const BookList = (props: IBookWithRelationsListProps) => {
           <Text>No book available!</Text>
         </Center>
       )}
-      <Center mt={8}>
-        <Pagination
-          pagination={{ pageIndex: 1, tableLength: countBookList, gotoPage: () => {} }}
-          showPageSize={false}
-          pageSize={12}
-        />
-      </Center>
     </Stack>
   )
 }
 
-export default BookList
+interface CategoryCardProps {
+  category: ICategory
+}
+
+export default observer(BookList)

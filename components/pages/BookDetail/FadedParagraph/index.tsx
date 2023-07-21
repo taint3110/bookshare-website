@@ -14,22 +14,31 @@ const Paragraph: React.FC<ParagraphProps> = ({ text }) => {
   }
 
   if (text)
-    return (
-      <div>
-        {isExpanded ? (
-          <Link href="#" onClick={toggleExpand} color="">
-            <Text textAlign={'justify'}>{text}</Text>
-          </Link>
-        ) : (
-          <Text textAlign={'justify'}>
-            {text.slice(0, 600)}...{' '}
-            <Link href="#" onClick={toggleExpand}>
+    if (text.length <= 600) {
+      return (
+        <>
+          <Text textAlign={'justify'}>{text}</Text>
+        </>
+      )
+    }
+  return (
+    <div>
+      {isExpanded ? (
+        <Link href="#" onClick={toggleExpand}>
+          <Text textAlign={'justify'}>{text}</Text>
+        </Link>
+      ) : (
+        <Text textAlign={'justify'}>
+          {text.slice(0, 540).trim()}...{' '}
+          <Link href="#" onClick={toggleExpand}>
+            <Text display={'inline-flex'} color={'teal.500'}>
               Read more
-            </Link>
-          </Text>
-        )}
-      </div>
-    )
+            </Text>
+          </Link>
+        </Text>
+      )}
+    </div>
+  )
 }
 
 export default Paragraph

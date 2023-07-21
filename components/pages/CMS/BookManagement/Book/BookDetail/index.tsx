@@ -99,6 +99,7 @@ const BookDetail = () => {
       }
       await updateBookById(formattedData, checkedItems)
       toast.success('Update book successfully!')
+      redirect()
     } catch (error) {
       toast.error('Update book failed!')
       handleError(error as Error, 'components/pages/CMS/BookManagement/Book/BookDetail', 'onSubmit')
@@ -258,6 +259,9 @@ const BookDetail = () => {
                         </Radio>
                         <Radio value={EBookStatusEnum.UNAVAILABLE} colorScheme="teal">
                           {capitalize(EBookStatusEnum.UNAVAILABLE)}
+                        </Radio>
+                        <Radio value={EBookStatusEnum.ORDERED} colorScheme="teal">
+                          {capitalize(EBookStatusEnum.ORDERED)}
                         </Radio>
                         <Radio value={EBookStatusEnum.RENTED} colorScheme="teal">
                           {capitalize(EBookStatusEnum.RENTED)}

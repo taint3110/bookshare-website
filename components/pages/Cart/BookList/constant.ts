@@ -1,7 +1,8 @@
 import { ITableHeader } from 'components/Table'
 import Cell from 'components/Table/components/ExpandableCell'
+import { EAlignEnum } from 'enums/common'
 
-export function getHeaderList(): ITableHeader[] {
+export function getHeaderList(hasDeleteButton: boolean = true): ITableHeader[] {
   const headers: ITableHeader[] = [
     {
       Header: 'COVER',
@@ -15,21 +16,37 @@ export function getHeaderList(): ITableHeader[] {
       Cell
     },
     {
-      Header: 'AUTHOR',
-      accessor: 'author',
-      disableSortBy: true,
-      Cell
-    },
-    {
       Header: 'PRICE',
       accessor: 'price',
       disableSortBy: true,
       Cell
     },
     {
-      Header: '',
-      accessor: 'actions'
+      Header: 'POINT PRICE',
+      accessor: 'bonusPointPrice',
+      disableSortBy: true,
+      align: EAlignEnum.RIGHT,
+      Cell
     }
   ]
+  if (hasDeleteButton) {
+    console.log([
+      ...headers,
+
+      {
+        Header: '',
+        accessor: 'action'
+      }
+    ])
+    return [
+      ...headers,
+
+      {
+        Header: '',
+        accessor: 'actions'
+      }
+    ]
+  }
+  console.log(headers)
   return headers
 }

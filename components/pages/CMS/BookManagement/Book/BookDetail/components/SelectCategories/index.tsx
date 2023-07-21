@@ -60,7 +60,7 @@ const SelectCategories = (props: ISelectCategoriesProps) => {
               </Checkbox>
             </HStack>
           </MenuItem>
-          {categoryList.map((item: string, index: number) => (
+          {getValidArray(categoryList).map((item: string, index: number) => (
             <MenuItem onClick={() => toggleChecked(item)} key={index}>
               <HStack width="stretch" cursor="pointer">
                 <Checkbox

@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import { getValidArray } from 'utils/common'
 import { IMockCategory, mockCategories } from '../BookCard/mockData'
+import { observer } from 'mobx-react'
 
 const BookFilter = () => {
   return (
@@ -50,4 +51,4 @@ const BookFilter = () => {
   )
 }
 
-export default BookFilter
+export default observer(BookFilter)
