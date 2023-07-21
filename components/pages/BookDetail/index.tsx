@@ -29,6 +29,7 @@ import { PredicateComparison } from 'types/query'
 import { formatDate, formatText, getQueryValue, getValidArray } from 'utils/common'
 import Paragraph from './FadedParagraph'
 import { EBookConditionEnum, EBookStatusEnum } from 'enums/book'
+import dayjs from 'dayjs'
 
 const BookDetail = () => {
   const { websiteBookStore, spinnerStore } = useStores()
@@ -216,10 +217,9 @@ const BookDetail = () => {
                 {price} VND / {bonusPointPrice} Points
               </Text>
               <Text fontSize={'xl'} color={'teal.800'}>
-                Rental status: {bookStatus}
-                {/* {bookStatus === EBookStatusEnum.AVAILABLE || !availableStartDate
+                {bookStatus === EBookStatusEnum.AVAILABLE || !availableStartDate
                   ? `Rental status:  ${bookStatus}`
-                  : `Rental status: ${bookStatus}, until ${availableStartDate}`} */}
+                  : `Rental status: ${bookStatus}, until ${dayjs(availableStartDate).format('MM/DD/YYYY')}`}
               </Text>
             </Stack>
             <TableContainer>

@@ -1,4 +1,4 @@
-import { Container, HStack, Image, Stack, Text } from '@chakra-ui/react'
+import { Container, Divider, HStack, Image, Stack, Text } from '@chakra-ui/react'
 import { PLATFORM } from 'API/constants'
 import { handleError } from 'API/error'
 import { EBookStatusEnum } from 'enums/book'
@@ -76,8 +76,8 @@ const Cart = () => {
           key={order.id}
           paddingLeft="20px"
           paddingRight="20px"
-          marginTop="12"
-          marginBottom="40"
+          marginTop="8"
+          marginBottom="12"
           spacing={4}
           alignItems={'flex-start'}
         >
@@ -87,6 +87,7 @@ const Cart = () => {
           <Container width={'100%'}>
             <CartUserInfo order={order} />
           </Container>
+          <Divider />
         </Stack>
       ))
   }
@@ -97,10 +98,17 @@ const Cart = () => {
           .length > 0
     )
     .map((order: IOrder) => (
-      <HStack key={order?.id} marginTop="12" marginBottom="40" alignItems="flex-start" justify="center">
-        <CartBookList order={order} />
-        <CartUserInfo order={order} />
-      </HStack>
+      <>
+        <HStack key={order?.id} marginTop="8" marginBottom="12" alignItems="flex-start" justify="center">
+          <Container marginRight={0}>
+            <CartBookList order={order} />
+          </Container>
+          <Container marginLeft={0}>
+            <CartUserInfo order={order} />
+          </Container>
+        </HStack>
+        <Divider />
+      </>
     ))
 }
 
