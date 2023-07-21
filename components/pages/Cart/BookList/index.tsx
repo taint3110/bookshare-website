@@ -94,10 +94,10 @@ const CartBookList = (props: ICartBookListProps) => {
   return (
     <Card>
       <Table
-        headerList={getHeaderList(orderStatus !== EOrderStatusEnum.NEW ? false : true)}
+        headerList={getHeaderList()}
         tableData={dataInTable}
         isManualSort
-        subComponent={getSubComponent(getHeaderList(orderStatus !== EOrderStatusEnum.NEW ? false : true), 3)}
+        subComponent={getSubComponent(getHeaderList(), 3)}
       />
       <ConfirmModal
         titleText="Remove Book"

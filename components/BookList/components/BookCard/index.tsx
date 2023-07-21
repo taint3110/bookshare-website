@@ -10,6 +10,7 @@ import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
 import { MouseEventHandler, useState } from 'react'
 import { toast } from 'react-toastify'
+import routes from 'routes'
 import { getValidArray } from 'utils/common'
 
 const BookCard = (props: IBookWithRelations) => {
@@ -32,12 +33,14 @@ const BookCard = (props: IBookWithRelations) => {
         await authStore.getMyUser(PLATFORM.WEBSITE)
       }
       if (user?.id) {
-        console.log(2)
         await websiteOrderStore.fetchWebsiteOrderList({
           where: {
             userId: user?.id
           }
         })
+      } else {
+        router.push(routes.login.value)
+        return
       }
       if (user?.id) {
         const orderedBook: IBookWithRelations = {

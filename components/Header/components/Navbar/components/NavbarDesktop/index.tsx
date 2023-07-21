@@ -1,15 +1,17 @@
 import { ChevronDownIcon, ChevronUpIcon, Search2Icon } from '@chakra-ui/icons'
 import { Input, InputGroup, InputLeftElement, Menu, MenuButton, MenuItem, MenuList } from '@chakra-ui/react'
+import { PLATFORM } from 'API/constants'
 import { NavLink } from 'enums/theme'
 import { useStores } from 'hooks/useStores'
 import { INavLink, INavLinkItem } from 'interfaces/navigation'
 import debounce from 'lodash/debounce'
+import { observer } from 'mobx-react'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 import { getValidArray } from 'utils/common'
 import { backgroundItemHeaderHover } from '../../constants'
 import { Button, Container, DropdownButton, Link, Text } from './navbarDesktop.styles'
-import { observer } from 'mobx-react'
 
 interface INavbarDesktopProps {
   navLinks: INavLink[]
@@ -17,7 +19,7 @@ interface INavbarDesktopProps {
 
 const NavbarDesktop = (props: INavbarDesktopProps) => {
   const [name, setName] = useState<string>('')
-  const { websiteBookStore } = useStores()
+  const { websiteBookStore, authStore } = useStores()
   const { navLinks } = props
   const router = useRouter()
 
@@ -105,7 +107,17 @@ const NavbarDesktop = (props: INavbarDesktopProps) => {
           )
         }
         return (
-          <Link href={navLink?.link ?? ''} key={`navbar-item${index}`} isExternal>
+          <Link
+            href={navLink?.link !== '/' ? navLink?.link : undefined}
+            onClick={() => {
+              if (navLink?.link === '/') {
+                authStore.clearAccessToken(PLATFORM.WEBSITE)
+                toast.success('Logged out successfully.')
+              }
+            }}
+            key={`navbar-item${index}`}
+            isExternal
+          >
             {navLink.type === NavLink.LINK ? (
               <Text>{navLink.text}</Text>
             ) : (
