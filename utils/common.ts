@@ -49,3 +49,29 @@ export function removeItem<T>(arr: Array<T>, value: T): Array<T> {
   }
   return arr
 }
+
+export function removeItemOnce<T>(arr: Array<T>, value: T) {
+  var index = arr.indexOf(value)
+  if (index > -1) {
+    arr.splice(index, 1)
+  }
+  return arr
+}
+
+export function formatDate(date = new Date()) {
+  var day, month, year
+
+  year = date.getFullYear()
+  month = date.getMonth() + 1
+  day = date.getDate()
+
+  if (month < 10) {
+    month = '0' + month
+  }
+
+  if (day < 10) {
+    day = '0' + day
+  }
+
+  return day + '/' + month + '/' + year
+}

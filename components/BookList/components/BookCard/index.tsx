@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, CardFooter, Divider, Heading, Image, Stack, Text } from '@chakra-ui/react'
+import { Button, Card, CardBody, CardFooter, Divider, HStack, Heading, Image, Stack, Text } from '@chakra-ui/react'
 import { PLATFORM } from 'API/constants'
 import { handleError } from 'API/error'
 import { EBookStatusEnum } from 'enums/book'
@@ -73,12 +73,14 @@ const BookCard = (props: IBookWithRelations) => {
         <Stack mt="4" spacing="1">
           <Heading size="sm">{title}</Heading>
           <Text>{author}</Text>
-          <Text color="teal.600" fontSize="xl">
-            {price}
-          </Text>
-          <Text color="teal.600" fontSize="xl">
-            {bonusPointPrice}
-          </Text>
+          <HStack justifyContent={'space-between'}>
+            <Text color="teal.600" fontSize="xl">
+              {price} USD
+            </Text>
+            <Text color="teal.600" fontSize="xl">
+              {bonusPointPrice} Points
+            </Text>
+          </HStack>
         </Stack>
       </CardBody>
       <Divider />
@@ -95,33 +97,6 @@ const BookCard = (props: IBookWithRelations) => {
       </CardFooter>
     </Card>
   )
-
-  {
-    /* MODAL THONG BAO THEM VAO CART THANH CONG  */
-  }
-  {
-    /* <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text align={'center'} mb="1rem">
-              Add book to Cart successfully!
-            </Text>
-          </ModalBody>
-
-          <ModalFooter>
-            <Button colorScheme="grey" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button colorScheme="teal" mr={3} onClick={onClose}>
-              Go to Cart
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal> */
-  }
-  // </Link>
 }
 
 function formatText(text: string) {}

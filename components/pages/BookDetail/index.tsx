@@ -26,8 +26,9 @@ import { useEffect, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { maxMobileWidth, maxTabletWidth, textGrey500 } from 'theme/globalStyles'
 import { PredicateComparison } from 'types/query'
-import { formatText, getQueryValue, getValidArray } from 'utils/common'
+import { formatDate, formatText, getQueryValue, getValidArray } from 'utils/common'
 import Paragraph from './FadedParagraph'
+import { EBookConditionEnum, EBookStatusEnum } from 'enums/book'
 
 const BookDetail = () => {
   const { websiteBookStore, spinnerStore } = useStores()
@@ -60,6 +61,7 @@ const BookDetail = () => {
     media,
     description,
     categories,
+    availableStartDate,
     bookCondition,
     bookCover
   } = bookDetail
@@ -214,7 +216,10 @@ const BookDetail = () => {
                 {price} VND / {bonusPointPrice} Points
               </Text>
               <Text fontSize={'xl'} color={'teal.800'}>
-                Rental status: {bookStatus}, until
+                Rental status: {bookStatus}
+                {/* {bookStatus === EBookStatusEnum.AVAILABLE || !availableStartDate
+                  ? `Rental status:  ${bookStatus}`
+                  : `Rental status: ${bookStatus}, until ${availableStartDate}`} */}
               </Text>
             </Stack>
             <TableContainer>
