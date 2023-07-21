@@ -1,7 +1,11 @@
-import React, { isValidElement, ReactElement } from 'react'
 import { Flex, HStack, Spacer } from '@chakra-ui/react'
+import React, { isValidElement, ReactElement } from 'react'
 
-export const Template: React.FC = (props) => {
+type Props = {
+  children: React.ReactNode
+}
+
+export const Template: React.FC<Props> = (props) => {
   const children = React.Children.toArray(props.children).filter<ReactElement>(isValidElement)
   return (
     <Flex
@@ -25,9 +29,9 @@ export const Template: React.FC = (props) => {
   )
 }
 
-const Hamburger: React.FC = () => null
-const Title: React.FC = () => null
-const UserProfile: React.FC = () => null
+const Hamburger: React.FC<Props> = () => null
+const Title: React.FC<Props> = () => null
+const UserProfile: React.FC<Props> = () => null
 
 const Navbar = Object.assign(Template, { Hamburger, Title, UserProfile })
 

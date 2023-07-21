@@ -1,7 +1,6 @@
-import * as React from 'react'
 import { HamburgerIcon } from '@chakra-ui/icons'
-import { Box, Center, IconButton } from '@chakra-ui/react'
-import { Text } from '@chakra-ui/react'
+import { Box, Center, IconButton, Text } from '@chakra-ui/react'
+import * as React from 'react'
 import Navbar from './components/Navbar'
 import UserProfile from './components/UserProfile'
 
