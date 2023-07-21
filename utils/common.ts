@@ -1,4 +1,5 @@
 import { ETokenKey, PLATFORM } from 'API/constants'
+import { EAccountType } from 'enums/user'
 import get from 'lodash/get'
 import { NextRouter } from 'next/router'
 
@@ -16,6 +17,15 @@ export function getAuthenticateStorageKey(platform: PLATFORM): ETokenKey {
       return ETokenKey.CMS_ACCESS_TOKEN
     default:
       return ETokenKey.WEBSITE_ACCESS_TOKEN
+  }
+}
+
+export function getAccountType(platform: PLATFORM): EAccountType {
+  switch (platform) {
+    case PLATFORM.CMS:
+      return EAccountType.STAFF
+    default:
+      return EAccountType.CUSTOMER
   }
 }
 
@@ -46,4 +56,22 @@ export function removeItemOnce<T>(arr: Array<T>, value: T) {
     arr.splice(index, 1)
   }
   return arr
+}
+
+export function formatDate(date = new Date()) {
+  var day, month, year
+
+  year = date.getFullYear()
+  month = date.getMonth() + 1
+  day = date.getDate()
+
+  if (month < 10) {
+    month = '0' + month
+  }
+
+  if (day < 10) {
+    day = '0' + day
+  }
+
+  return day + '/' + month + '/' + year
 }

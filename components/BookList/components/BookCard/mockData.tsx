@@ -35,7 +35,8 @@ export interface IMockOrder {
 export enum EBookStatusEnum {
   AVAILABLE = 'available',
   UNAVAILABLE = 'unavailable',
-  RENTED = 'rented'
+  RENTED = 'rented',
+  ORDERED = 'ordered'
 }
 
 export enum EBookCoverEnum {
@@ -51,6 +52,7 @@ export enum EBookConditionEnum {
 
 enum EOrderStatusEnum {
   NEW = 'new',
+  ORDERED = 'ordered',
   READY = 'ready',
   DONE = 'done',
   FAILED = 'failed',

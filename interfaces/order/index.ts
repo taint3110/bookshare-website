@@ -9,7 +9,7 @@ export interface IOrder {
   id?: string
   orderStatus?: EOrderStatusEnum
   description?: string
-  totalPrice?: IMedia
+  totalPrice?: number
   isDeleted?: boolean
   createdAt?: Date
   updatedAt?: Date
@@ -19,6 +19,8 @@ export interface IOrder {
   formStatus?: IOption
   formUserName?: string
   formRentLength?: IOption
+  dueDate?: Date
+  totalBonusPointPrice?: number
 }
 
 export interface IOrderWithRelations extends IOrder {}

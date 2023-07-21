@@ -10,23 +10,23 @@ import {
   Divider,
   Flex,
   Grid,
+  Image,
   Menu,
   MenuButton,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
   Stack,
-  Image,
   Text
 } from '@chakra-ui/react'
-import Pagination from 'components/BookList/components/Pagination'
 import { IBookWithRelations } from 'interfaces/book'
 import { ICategory } from 'interfaces/category'
+import { observer } from 'mobx-react'
+import Link from 'next/link'
 import React, { useState } from 'react'
 import { getValidArray, removeItemOnce } from 'utils/common'
 import BookCard from './components/BookCard'
 import { MockBookConditions, MockBookCovers } from './components/BookCard/mockData'
-import Link from 'next/link'
 
 export interface IBookWithRelationsListProps {
   bookList: IBookWithRelations[]
@@ -300,4 +300,4 @@ interface CategoryCardProps {
   category: ICategory
 }
 
-export default BookList
+export default observer(BookList)

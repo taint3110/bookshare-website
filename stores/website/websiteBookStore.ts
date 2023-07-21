@@ -13,11 +13,13 @@ export class WebsiteBookStore {
     makeAutoObservable(this)
   }
 
-  websiteBookList: PaginationList<IBook> = {
+  websiteBookList: PaginationList<IBookWithRelations> = {
     results: [],
     totalCount: 0
   }
   bookDetail: IBookWithRelations = {} as IBookWithRelations
+
+  titleFilter: string = ''
 
   async fetchWebsiteBookDetail(id: string) {
     try {
@@ -27,6 +29,7 @@ export class WebsiteBookStore {
       handleError(error as Error, 'stores/WebsiteBookStore.ts', 'fetchWebsiteBookList')
     }
   }
+
   async fetchWebsiteBookList(filter: IFilter<IBookWithRelations> = {}) {
     try {
       const bookList: PaginationList<IBookWithRelations> = await getWebsiteBooks(filter)
@@ -34,5 +37,9 @@ export class WebsiteBookStore {
     } catch (error) {
       handleError(error as Error, 'stores/CMSBookStore.ts', 'fetchWebsiteBookList')
     }
+  }
+
+  setTitleFilter(title: string): void {
+    this.titleFilter = title
   }
 }

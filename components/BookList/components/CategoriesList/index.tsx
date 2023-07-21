@@ -1,5 +1,6 @@
 import { Card, CardBody, Grid, Image, Text } from '@chakra-ui/react'
 import { ICategory } from 'interfaces/category'
+import { observer } from 'mobx-react'
 import Link from 'next/link'
 import { getValidArray } from 'utils/common'
 
@@ -33,4 +34,4 @@ const CategoriesList = (props: ICategoriesListProps) => {
   )
 }
 
-export default CategoriesList
+export default observer(CategoriesList)

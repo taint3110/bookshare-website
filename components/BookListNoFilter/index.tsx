@@ -3,6 +3,8 @@ import BookCard from 'components/BookList/components/BookCard'
 import { IMockCategory, IMockBook } from 'components/BookList/components/BookCard/mockData'
 import Pagination from 'components/BookList/components/Pagination'
 import { IBookWithRelations } from 'interfaces/book'
+import { observer } from 'mobx-react'
+import React from 'react'
 
 export interface IBookWithRelationsListProps {
   bookList: IBookWithRelations[]
@@ -15,7 +17,7 @@ const BookListNoFilter = (props: IBookWithRelationsListProps) => {
   return (
     <Stack>
       {/* BookList Section */}
-      {bookList.length > 0 ? (
+      {Array.isArray(bookList) && bookList.length > 0 ? (
         <Grid templateColumns={'repeat(' + gridColumns + ', 1fr)'} gap={2}>
           {bookList.map((book: IBookWithRelations, indexBook: number) => (
             <BookCard {...book} key={indexBook} />
@@ -30,4 +32,4 @@ const BookListNoFilter = (props: IBookWithRelationsListProps) => {
   )
 }
 
-export default BookListNoFilter
+export default observer(BookListNoFilter)
