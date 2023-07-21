@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { InfoOutlineIcon } from '@chakra-ui/icons'
 import {
   FormControl,
@@ -10,7 +9,8 @@ import {
   InputGroup,
   InputRightElement
 } from '@chakra-ui/react'
-import { Validate, useFormContext } from 'react-hook-form'
+import { useState } from 'react'
+import { useFormContext } from 'react-hook-form'
 import { HiEye, HiEyeOff } from 'react-icons/hi'
 import styles from './styles.module.scss'
 
@@ -19,21 +19,17 @@ export interface IPasswordField {
   name?: string
   label?: string
   placeholder?: string
-  pattern?: { value: RegExp; message: string }
   height?: string
   hasInfoIcon?: boolean
-  validate?: Validate<string> | Record<string, Validate<string>>
 }
 const PasswordField = (props: IPasswordField) => {
   const {
     name = 'password',
     label = 'Password',
     placeholder = 'Enter your password',
-    pattern,
     autoFocus,
     height = '40px',
-    hasInfoIcon,
-    validate
+    hasInfoIcon
   } = props
   const [isShow, toggleShow] = useState(false)
 
@@ -47,7 +43,7 @@ const PasswordField = (props: IPasswordField) => {
   } = useFormContext()
 
   return (
-    <FormControl id={name} isInvalid={errors[name]}>
+    <FormControl id={name} isInvalid={errors[name] ? true : false}>
       <HStack>
         <FormLabel marginBottom={2} marginRight={2} color="gray.700">
           {label}
@@ -79,13 +75,11 @@ const PasswordField = (props: IPasswordField) => {
           placeholder={placeholder}
           height={height}
           {...register(name, {
-            required: `${label} is required`,
-            pattern,
-            validate
+            required: `${label} is required`
           })}
         />
       </InputGroup>
-      <FormErrorMessage>{errors[name] && errors[name]?.message}</FormErrorMessage>
+      <FormErrorMessage>{errors[name] && String(errors[name]?.message)}</FormErrorMessage>
     </FormControl>
   )
 }

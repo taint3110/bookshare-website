@@ -4,12 +4,12 @@ import PasswordField from 'components/PasswordField'
 import { useStores } from 'hooks/useStores'
 import get from 'lodash/get'
 import { observer } from 'mobx-react-lite'
+import { useRouter } from 'next/router'
 import { useState } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { AuthenticatePageType } from '../../constant'
 import UnderlineLink from '../UnderlineLink'
-import { useRouter } from 'next/router'
 
 export interface LoginFormData {
   email: string
