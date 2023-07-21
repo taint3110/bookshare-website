@@ -1,6 +1,4 @@
-import React from 'react'
 import {
-  Box,
   HStack,
   Link,
   LinkProps,
@@ -12,9 +10,7 @@ import {
   Text
 } from '@chakra-ui/react'
 import Icon from 'components/Icon'
-import { CMSInformationPageName, CMSPageName, CMSApplicationPageName } from 'components/pages/CMS/constant'
-import routes from 'routes'
-import SubMenuLink from './components/SubMenuLink'
+import React from 'react'
 import styles from './navLink.module.scss'
 
 interface NavLinkProps extends LinkProps {
@@ -119,49 +115,7 @@ const NavLink = (props: NavLinkProps) => {
           className={hasChildClose || hasChildExpand ? styles.popoverMenuContentWrapper : styles.popoverContentWrapper}
           lineHeight={5}
           fontWeight="400"
-        >
-          {(hasChildClose || hasChildExpand) && isCollapsed ? (
-            label === CMSPageName.INFORMATION ? (
-              <Box marginRight={1} marginY="-2px" maxWidth="200px" alignItems="flex-start">
-                <SubMenuLink
-                  label={CMSInformationPageName.OWNER}
-                  href={routes.cms.ownerPortalInformation.owner.value}
-                ></SubMenuLink>
-                <SubMenuLink
-                  label={CMSInformationPageName.FINANCIAL}
-                  href={routes.cms.ownerPortalInformation.financial.value}
-                ></SubMenuLink>
-                <SubMenuLink
-                  label={CMSInformationPageName.LEASES}
-                  href={routes.cms.ownerPortalInformation.lease.value}
-                ></SubMenuLink>
-                <SubMenuLink
-                  label={CMSInformationPageName.INVOICE}
-                  href={routes.cms.ownerPortalInformation.invoice.value}
-                ></SubMenuLink>
-                <SubMenuLink
-                  label={CMSInformationPageName.PAYMENT}
-                  href={routes.cms.ownerPortalInformation.payment.value}
-                ></SubMenuLink>
-              </Box>
-            ) : (
-              <Box marginRight={1} marginY="-2px" maxWidth="200px" alignItems="flex-start">
-                <SubMenuLink
-                  label={CMSApplicationPageName.APPLICANT}
-                  href={routes.cms.applicationManagement.applicant.value}
-                ></SubMenuLink>
-                <SubMenuLink
-                  label={CMSApplicationPageName.POLICY_SETTING}
-                  href={routes.cms.applicationManagement.policySetting.value}
-                ></SubMenuLink>
-              </Box>
-            )
-          ) : (
-            <Text fontWeight="400" fontSize="sm">
-              {label}
-            </Text>
-          )}
-        </PopoverBody>
+        ></PopoverBody>
       </PopoverContent>
     </Popover>
   )
