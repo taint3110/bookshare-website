@@ -1,6 +1,5 @@
 import React from 'react'
 import CMSLayout from 'components/Layout/CMSLayout'
-import AccountSettingPage from 'components/pages/AccountSettingPage'
 
 const AccountSetting = () => {
   return (
