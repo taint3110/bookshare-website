@@ -14,6 +14,7 @@ import { ReactNode, useState } from 'react'
 import { toast } from 'react-toastify'
 import { getValidArray } from 'utils/common'
 import { getHeaderList } from './constant'
+import { updateOrderById } from 'API/cms/order'
 
 export interface ICartBookListProps {
   order: IOrder
@@ -94,7 +95,7 @@ const CartBookList = (props: ICartBookListProps) => {
   return (
     <Card>
       <Table
-        headerList={getHeaderList()}
+        headerList={getHeaderList(orderStatus === EOrderStatusEnum.NEW)}
         tableData={dataInTable}
         isManualSort
         subComponent={getSubComponent(getHeaderList(), 3)}
